@@ -1,15 +1,9 @@
 ﻿
-<<<<<<< HEAD
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CivilDeveloperTask", "CivilDeveloperTask.vcxproj", "{20ABC8FE-E732-4B20-ADAA-102024F9CC8B}"
-=======
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CivilDeveloperTask", "CivilDeveloperTask.vcproj", "{20ABC8FE-E732-4B20-ADAA-102024F9CC8B}"
->>>>>>> b3690d5b2f029f078bfd182bf7b3949d62d5640f
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +19,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-<<<<<<< HEAD
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36ED3CB6-95C5-4F4D-9DC6-305D799C3B54}
 	EndGlobalSection
-=======
->>>>>>> b3690d5b2f029f078bfd182bf7b3949d62d5640f
 EndGlobal

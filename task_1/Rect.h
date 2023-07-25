@@ -1,6 +1,6 @@
 #pragma once
-#pragma once
 
+#include "WDraw.h"
 #include "Point2d.h"
 #include "Object.h"
 #include "utility"
