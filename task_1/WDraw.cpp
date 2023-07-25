@@ -1,12 +1,11 @@
 #include "WDraw.h"
 #include <stdio.h>
 
-<<<<<<< HEAD
+
 
 int WDraw::detailLevel = 20;
 
-=======
->>>>>>> b3690d5b2f029f078bfd182bf7b3949d62d5640f
+
 WDraw::WDraw(void)
 {
 }
@@ -15,7 +14,7 @@ WDraw::~WDraw(void)
 {
 }
 
-<<<<<<< HEAD
+
 void WDraw::drawSegment(const Point2d& p1, const Point2d& p2) {
     printf("(%f, %f) - (%f, %f)\n", p1.x(), p1.y(), p2.x(), p2.y());
 }
@@ -50,7 +49,7 @@ void WDraw::fillColor(int r, int g, int b)
 void WDraw::translate(const Point2d& p1)
 {
 }
-=======
+
 void WDraw::drawSegment (const Point2d& p1, const Point2d& p2) {
     printf("(%f, %f) - (%f, %f)\n", p1.x(), p1.y(), p2.x(), p2.y());
 }
@@ -58,4 +57,4 @@ void WDraw::drawSegment (const Point2d& p1, const Point2d& p2) {
 void WDraw::drawText(const char* text) {
     printf("%s\n", text);
 }
->>>>>>> b3690d5b2f029f078bfd182bf7b3949d62d5640f
+
