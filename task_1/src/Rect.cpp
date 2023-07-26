@@ -6,4 +6,5 @@ void Rectangle::draw(WDraw& wDraw)
 	wDraw.drawSegment(p1, p2);
 	wDraw.drawSegment(p2, p3);
 	wDraw.drawSegment(p3, p4);
+	wDraw.drawSegment(p4, p1);
 }

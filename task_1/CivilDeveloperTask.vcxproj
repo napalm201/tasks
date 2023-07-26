@@ -90,6 +90,7 @@
     <ClCompile Include="src\Circle.cpp" />
     <ClCompile Include="src\CivilDeveloperTask.cpp" />
     <ClCompile Include="src\DataProvider.cpp" />
+    <ClCompile Include="src\ObjProv.cpp" />
     <ClCompile Include="src\Exceptions.cpp" />
     <ClCompile Include="src\Point2d.cpp" />
     <ClCompile Include="src\PolyLine.cpp" />
@@ -103,7 +104,7 @@
     <ClInclude Include="include\ArcCircle.h" />
     <ClInclude Include="include\Circle.h" />
     <ClInclude Include="include\DataProvider.h" />
-    <ClInclude Include="include\DrawProv.h" />
+    <ClInclude Include="include\ObjProv.h" />
     <ClInclude Include="include\Exceptions.h" />
     <ClInclude Include="include\Object.h" />
     <ClInclude Include="include\Point2d.h" />

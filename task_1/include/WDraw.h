@@ -9,16 +9,14 @@ class WDraw
 {
 
 public:
-
-
     WDraw(void);
     virtual ~WDraw(void);
 
     /************************************************************************/
     /* Основной метод отрисовки                                             */
     /************************************************************************/
+public:
     virtual void drawSegment(const Point2d& p1, const Point2d& p2);
-
     virtual void drawArcCircle(const Point2d& p, double r, double startAngle, double endAngle);
     virtual void drawCircle(const Point2d& p, double r);
 
@@ -26,12 +24,10 @@ public:
     /*                                                                      */
     /************************************************************************/
     virtual void drawText(const char* text);
-
     virtual void fillColor(int r, int g, int b);
     virtual void translate(const Point2d& p1);
 
 private:
-
     struct Color {
         Color() = default;
         Color(int r, int g, int b) : r(r), g(g), b(b) {}

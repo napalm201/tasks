@@ -2,7 +2,7 @@
 #include "Object.h"
 #include "Point2d.h"
 
-class Circle : public Objects {
+class Circle : public Object {
 public:
 	Circle() = default;
 

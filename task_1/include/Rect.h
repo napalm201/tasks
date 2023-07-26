@@ -5,10 +5,17 @@
 #include "Object.h"
 #include "utility"
 
-class Rectangle : public Objects
+class Rectangle : public Object
 {
 public:
 	Rectangle() = default;
+
+	Rectangle(const Point2d& p1, const Point2d& p3)
+		: p1(p1), p3(p3) {
+		p2 = Point2d(p1.x(), p3.y());
+	    p4 = Point2d(p3.x(), p1.y());
+	}
+
 
 	Rectangle(const Point2d& p1, const Point2d& p2,
 		const Point2d& p3, const Point2d& p4)

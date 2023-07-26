@@ -3,7 +3,7 @@
 #include "Point2d.h"
 #include <vector>
 
-class PolyLine : public Objects {
+class PolyLine : public Object {
 
 public:
 	PolyLine() = default;

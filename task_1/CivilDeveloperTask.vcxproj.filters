@@ -40,6 +40,9 @@
     <ClCompile Include="src\WDraw.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ObjProv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -54,7 +57,7 @@
     <ClInclude Include="include\DataProvider.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\DrawProv.h">
+    <ClInclude Include="include\ObjProv.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Exceptions.h">
