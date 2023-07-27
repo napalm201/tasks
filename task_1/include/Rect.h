@@ -28,6 +28,8 @@ public:
 
 public:
 	virtual void draw(WDraw& wDraw) override;
+	virtual Rectangle* box() override;
+	virtual void transform(const Point2d& center);
 
 private:
 	Point2d p1 = Point2d(-1, 0); Point2d p2 = Point2d(0, 1);

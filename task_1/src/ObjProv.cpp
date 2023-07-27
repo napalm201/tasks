@@ -18,6 +18,9 @@ std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
 	catch (const EndOfFile& e) {
 		e.wait();
 	}
+	catch (const UnderfindObj& e) {
+		e.wait();
+	}
 	return objects;
 
 }

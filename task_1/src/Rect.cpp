@@ -9,7 +9,12 @@ void Rectangle::draw(WDraw& wDraw)
 	wDraw.drawSegment(p4, p1);
 }
 
-Rectangle Rectangle::box()
+Rectangle* Rectangle::box()
 {
-	return *this;
+	return this;
+}
+
+void Rectangle::transform(const Point2d& center)
+{
+
 }

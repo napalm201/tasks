@@ -90,11 +90,14 @@
     <ClCompile Include="src\Circle.cpp" />
     <ClCompile Include="src\CivilDeveloperTask.cpp" />
     <ClCompile Include="src\DataProvider.cpp" />
+    <ClCompile Include="src\Decorator.cpp" />
     <ClCompile Include="src\ObjProv.cpp" />
     <ClCompile Include="src\Exceptions.cpp" />
     <ClCompile Include="src\Point2d.cpp" />
+    <ClCompile Include="src\PolyGon.cpp" />
     <ClCompile Include="src\PolyLine.cpp" />
     <ClCompile Include="src\Rect.cpp" />
+    <ClCompile Include="src\Strategys.cpp" />
     <ClCompile Include="src\WDraw.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -104,12 +107,15 @@
     <ClInclude Include="include\ArcCircle.h" />
     <ClInclude Include="include\Circle.h" />
     <ClInclude Include="include\DataProvider.h" />
+    <ClInclude Include="include\Decorator.h" />
     <ClInclude Include="include\ObjProv.h" />
     <ClInclude Include="include\Exceptions.h" />
     <ClInclude Include="include\Object.h" />
     <ClInclude Include="include\Point2d.h" />
+    <ClInclude Include="include\PolyGon.h" />
     <ClInclude Include="include\PolyLine.h" />
     <ClInclude Include="include\Rect.h" />
+    <ClInclude Include="include\Strategys.h" />
     <ClInclude Include="include\WDraw.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

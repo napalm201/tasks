@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
-    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{4423d75e-8bc9-4885-b5cb-ddfc93d74a2d}</UniqueIdentifier>
     </Filter>
@@ -43,6 +39,15 @@
     <ClCompile Include="src\ObjProv.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\PolyGon.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Strategys.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Decorator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -76,6 +81,15 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\WDraw.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PolyGon.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Strategys.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Decorator.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

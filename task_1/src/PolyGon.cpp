@@ -6,7 +6,7 @@ void PolyGon::draw(WDraw& wdraw)
 	wdraw.drawSegment(points[0], points[points.size() - 1]);
 }
 
-Rectangle PolyGon::box()
+Rectangle* PolyGon::box()
 {
 	return PolyLine::box();
 }
