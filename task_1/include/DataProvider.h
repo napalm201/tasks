@@ -10,10 +10,10 @@ public:
     virtual int rdInt();
     virtual double rdDouble();
 
+    void setqdata() {}
 
-
-public:
-
+    void saveqdata() {}
+    void readqdata() {}
 
 private:
 

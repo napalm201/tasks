@@ -8,3 +8,8 @@ void Rectangle::draw(WDraw& wDraw)
 	wDraw.drawSegment(p3, p4);
 	wDraw.drawSegment(p4, p1);
 }
+
+Rectangle Rectangle::box()
+{
+	return *this;
+}

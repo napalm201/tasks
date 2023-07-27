@@ -3,13 +3,13 @@
 
 std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
 
-	Factory factory(dataprov);
+	ReadFactory ReadFactory(dataprov);
 	std::vector<std::shared_ptr<Object>> objects;
 
 	try {
 		int countObject = dataprov->rdInt();	
 		while (true) 
-			objects.push_back(factory.factory(dataprov->rdInt()));
+			objects.push_back(ReadFactory.factory(dataprov->rdInt()));
 
 	}
 	catch(const ReadError& e) {
@@ -22,7 +22,7 @@ std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
 
 }
 
-std::shared_ptr<Object> ObjProv::Factory::factory(int type)
+std::shared_ptr<Object> ObjProv::ReadFactory::factory(int type)
 {
 		if (type == 1) {
 			return greateRect();
@@ -48,7 +48,7 @@ std::shared_ptr<Object> ObjProv::Factory::factory(int type)
 	
 }
 
-std::shared_ptr<Object> ObjProv::Factory::greateRect()
+std::shared_ptr<Object> ObjProv::ReadFactory::greateRect()
 {
 	int countCordinate = dataprov->rdInt();
 
@@ -73,7 +73,7 @@ std::shared_ptr<Object> ObjProv::Factory::greateRect()
 	}
 }
 
-std::shared_ptr<Object> ObjProv::Factory::greateCircle()
+std::shared_ptr<Object> ObjProv::ReadFactory::greateCircle()
 {
 	int countNumbers = dataprov->rdInt();
 
@@ -83,7 +83,7 @@ std::shared_ptr<Object> ObjProv::Factory::greateCircle()
 	return std::shared_ptr<Object>(new Circle(p, r));
 }
 
-std::shared_ptr<Object> ObjProv::Factory::greateArcCircle()
+std::shared_ptr<Object> ObjProv::ReadFactory::greateArcCircle()
 {
 
 	int countNumbers = dataprov->rdInt();
@@ -97,15 +97,20 @@ std::shared_ptr<Object> ObjProv::Factory::greateArcCircle()
 	return std::shared_ptr<Object>(new ArcCircle(p, r, startAngle, endAngle));
 }
 
-std::shared_ptr<Object> ObjProv::Factory::greatePolygon()
+std::shared_ptr<Object> ObjProv::ReadFactory::greatePolygon()
 {
+	int countPoint = dataprov->rdInt();
+
+	PolyGon* polygon = new PolyGon;
+
+	for (int i = 0; i < countPoint; i++)
+		polygon->addPoint(Point2d(dataprov->rdDouble(), dataprov->rdDouble()));
 
 
-
-	return std::shared_ptr<Object>();
+	return std::shared_ptr<Object>(polygon);
 }
 
-std::shared_ptr<Object> ObjProv::Factory::greatePolyLine()
+std::shared_ptr<Object> ObjProv::ReadFactory::greatePolyLine()
 {
 	int countPoint = dataprov->rdInt();
 

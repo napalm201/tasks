@@ -26,8 +26,10 @@ void WDraw::drawArcCircle(const Point2d& p, double r, double startAngle, double 
     startAngle += dAngle;
 
     for (; startAngle <= endAngle; prevAngle = startAngle, startAngle += dAngle) {
-        Point2d p1(r * cos(prevAngle), r * sin(prevAngle));
-        Point2d p2(r * cos(startAngle), r * sin(startAngle));
+
+        Point2d p1(r * cos(prevAngle) + p.x(), r * sin(prevAngle) + p.y());
+        Point2d p2(r * cos(startAngle) + p.x(), r * sin(startAngle) + p.y());
+
         drawSegment(p1, p2);
     }
 }

@@ -27,6 +27,5 @@ public:
     UnderfindObj(void);
     ~UnderfindObj(void);
     virtual void wait() const {};
-    
-
+ 
 };

@@ -5,23 +5,24 @@
 #include "DataProvider.h"
 #include "Rect.h"
 #include "ArcCircle.h"
+#include "PolyGon.h"
 #include "PolyLine.h"
 #include "Circle.h"
 
 class ObjProv {
 public:
-	ObjProv( DataProvider* dataprov) {
+	ObjProv ( DataProvider * dataprov) {
 		ObjProv::dataprov = dataprov;
 	}
 
 	std::vector<std::shared_ptr<Object>> getObjects();
 
 private:
-    DataProvider* dataprov;
+    DataProvider * dataprov;
 	
-	class Factory {
+	class ReadFactory {
 	public:
-		Factory( DataProvider* dataprov) : dataprov(dataprov) {}
+		ReadFactory( DataProvider * dataprov) : dataprov(dataprov) {}
 
 		virtual std::shared_ptr<Object> factory(int type);
 		

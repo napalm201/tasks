@@ -8,6 +8,11 @@ void PolyLine::draw(WDraw& wdraw)
     }
 }
 
+Rectangle PolyLine::box()
+{
+    return AABBStrategy().doAlgorithm(points);
+}
+
 void PolyLine::addPoint(const Point2d& point)
 {
     points.push_back(point);
