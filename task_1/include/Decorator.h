@@ -22,8 +22,8 @@ public:
 	BoxDrawDecorator(Object* object) : Decorator(object) {}
 
 	virtual void draw(WDraw& wdraw) override {
-		Object* rect = object->box();
-		rect->draw(wdraw);	this->object->draw(wdraw);
+		Rectangle rect = object->box();
+		rect.draw(wdraw);	this->object->draw(wdraw);
 	}
 
 };

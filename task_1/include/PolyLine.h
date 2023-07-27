@@ -11,7 +11,7 @@ public:
 
 public:
 	virtual void draw(WDraw& wdraw) override;
-	virtual Rectangle* box() override;
+	virtual Rectangle box() override;
 
 	void addPoint(const Point2d& point);
 protected:

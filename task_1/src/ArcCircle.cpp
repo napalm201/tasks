@@ -6,7 +6,7 @@ void ArcCircle::draw(WDraw& wdraw)
 	wdraw.drawArcCircle(p, r, startAngle, endAngle);
 }
 
-Rectangle* ArcCircle::box()
+Rectangle ArcCircle::box()
 {
 	std::vector<Point2d> points = {Point2d(r * std::cos(startAngle) + p.x(), r * std::sin(startAngle) + p.y()) ,
 		Point2d(r * std::cos(endAngle) + p.x(), r * std::sin(endAngle) + p.y())};
@@ -25,5 +25,5 @@ Rectangle* ArcCircle::box()
 	//Поки працює від стартових кутів: 0 до 2п
 
 	Rectangle rect = AABBStrategy().doAlgorithm(points);
-	return  new Rectangle(rect);
+	return rect;
 }

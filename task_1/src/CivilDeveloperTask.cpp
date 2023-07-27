@@ -16,7 +16,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	WDraw wdraw;
 	for (auto& obj : objs) {
-		obj->box()->draw(wdraw);
+		obj->box().draw(wdraw);
 	}
 
 	return 0;
