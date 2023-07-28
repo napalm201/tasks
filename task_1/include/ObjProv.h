@@ -28,7 +28,8 @@ private:
 		ReadFactory(DataProvider* dataprov);
 
 		virtual std::shared_ptr<Object> factory(int type);
-		
+		double readFromData();
+
 	    std::shared_ptr<Object> greateRect();
 		std::shared_ptr<Object> greateCircle();
 		std::shared_ptr<Object> greateArcCircle();

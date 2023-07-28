@@ -59,14 +59,28 @@ std::shared_ptr<Object> ObjProv::ReadFactory::factory(int type)
 		else if (type == 6) {
 			return greatePolyLine();
 		}
+		else {
+			throw ReadError();
+		}
+}
+
+double ObjProv::ReadFactory::readFromData()
+{
+	try {
+		return dataprov->rdDouble();
+	}
+	catch (const ReadError& e) {
+		e.wait();
+		return 0.0;
+	}
 }
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greateRect()
 {
 	int countCordinate = dataprov->rdInt();
 
-	Point2d p1(dataprov->rdDouble(), dataprov->rdDouble());
-	Point2d p3(dataprov->rdDouble(), dataprov->rdDouble());
+	Point2d p1(readFromData(), readFromData());
+	Point2d p3(readFromData(), readFromData());
 
 	return std::shared_ptr<Object>(new Rectangle(p1, p3));
 
@@ -76,8 +90,8 @@ std::shared_ptr<Object> ObjProv::ReadFactory::greateCircle()
 {
 	int countNumbers = dataprov->rdInt();
 
-	Point2d p(dataprov->rdDouble(), dataprov->rdDouble());
-	double r = dataprov->rdDouble();
+	Point2d p(readFromData(), readFromData());
+	double r = readFromData();
 
 	return std::shared_ptr<Object>(new Circle(p, r));
 }
@@ -87,11 +101,11 @@ std::shared_ptr<Object> ObjProv::ReadFactory::greateArcCircle()
 
 	int countNumbers = dataprov->rdInt();
 
-	Point2d p(dataprov->rdDouble(), dataprov->rdDouble());
-	double r = dataprov->rdDouble();
+	Point2d p(readFromData(), readFromData());
+	double r = readFromData();
 
-	double startAngle = dataprov->rdDouble();
-	double endAngle = dataprov->rdDouble();
+	double startAngle = readFromData();
+	double endAngle = readFromData();
 
 	return std::shared_ptr<Object>(new ArcCircle(p, r, startAngle, endAngle));
 }
@@ -103,7 +117,7 @@ std::shared_ptr<Object> ObjProv::ReadFactory::greatePolygon()
 	PolyGon* polygon = new PolyGon;
 
 	for (int i = 0; i < countNumber / 2; i++)
-		polygon->addPoint(Point2d(dataprov->rdDouble(), dataprov->rdDouble()));
+		polygon->addPoint(Point2d(readFromData(), readFromData()));
 
 
 	return std::shared_ptr<Object>(polygon);
@@ -116,7 +130,7 @@ std::shared_ptr<Object> ObjProv::ReadFactory::greatePolyLine()
 	PolyLine* polyline = new PolyLine;
 
 	for (int i = 0; i < countNumber / 2; i++)
-		polyline->addPoint(Point2d(dataprov->rdDouble(), dataprov->rdDouble()));
+		polyline->addPoint(Point2d(readFromData(), readFromData()));
 
 	return std::shared_ptr<Object>(polyline);
 }

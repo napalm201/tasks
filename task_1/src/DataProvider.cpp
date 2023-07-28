@@ -38,7 +38,7 @@ double gData[] = {
 
     2, // 2 -- тип "окружность"
     3,
-    10.0, 0.0, // при чтении объекта выбросится исключение
+    10.0, THROW_ERR, // при чтении объекта выбросится исключение
     25.0,
 
 
@@ -69,6 +69,7 @@ double gData[] = {
 
 DataProvider::DataProvider(void) : c(0), maxC(sizeof(gData)/sizeof(gData[0]))
 {
+
 }
 
 DataProvider::~DataProvider(void)
