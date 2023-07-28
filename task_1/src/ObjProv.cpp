@@ -98,11 +98,11 @@ std::shared_ptr<Object> ObjProv::ReadFactory::greateArcCircle()
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greatePolygon()
 {
-	int countPoint = dataprov->rdInt();
+	int countNumber = dataprov->rdInt();
 
 	PolyGon* polygon = new PolyGon;
 
-	for (int i = 0; i < countPoint; i++)
+	for (int i = 0; i < countNumber / 2; i++)
 		polygon->addPoint(Point2d(dataprov->rdDouble(), dataprov->rdDouble()));
 
 
@@ -111,11 +111,11 @@ std::shared_ptr<Object> ObjProv::ReadFactory::greatePolygon()
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greatePolyLine()
 {
-	int countPoint = dataprov->rdInt();
+	int countNumber = dataprov->rdInt();
 
 	PolyLine* polyline = new PolyLine;
 
-	for (int i = 0; i < countPoint; i++)
+	for (int i = 0; i < countNumber / 2; i++)
 		polyline->addPoint(Point2d(dataprov->rdDouble(), dataprov->rdDouble()));
 
 	return std::shared_ptr<Object>(polyline);
