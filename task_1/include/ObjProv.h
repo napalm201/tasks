@@ -8,21 +8,24 @@
 #include "PolyGon.h"
 #include "PolyLine.h"
 #include "Circle.h"
+#include <unordered_set>
 
 class ObjProv {
 public:
-	ObjProv ( DataProvider * dataprov) {
-		ObjProv::dataprov = dataprov;
-	}
+	ObjProv(DataProvider* dataprov);
 
 	std::vector<std::shared_ptr<Object>> getObjects();
 
 private:
+	void readNextObject();
+
+private:
     DataProvider * dataprov;
-	
+	std::unordered_set<int> unorderType;
+
 	class ReadFactory {
 	public:
-		ReadFactory( DataProvider * dataprov) : dataprov(dataprov) {}
+		ReadFactory(DataProvider* dataprov);
 
 		virtual std::shared_ptr<Object> factory(int type);
 		

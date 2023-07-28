@@ -21,11 +21,3 @@ public:
     virtual void wait() const {};
 
 };
-
-class UnderfindObj : public Exceptions {
-public:
-    UnderfindObj(void);
-    ~UnderfindObj(void);
-    virtual void wait() const {};
- 
-};

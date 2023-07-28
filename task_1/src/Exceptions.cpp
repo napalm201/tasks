@@ -16,10 +16,4 @@ ReadError::~ReadError(void)
 {
 }
 
-UnderfindObj::UnderfindObj(void)
-{
-}
 
-UnderfindObj::~UnderfindObj(void)
-{
-}
