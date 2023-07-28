@@ -11,13 +11,13 @@ class EndOfFile : public Exceptions
 public:
     EndOfFile(void);
     ~EndOfFile(void);
-    virtual void wait() const {};
+    virtual void wait() const;
 };
 
 class ReadError : public Exceptions{
 public:
     ReadError(void);
     ~ReadError(void);
-    virtual void wait() const {};
+    virtual void wait() const;
 
 };

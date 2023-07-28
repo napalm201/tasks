@@ -21,7 +21,7 @@ private:
 
 private:
     DataProvider * dataprov;
-	std::unordered_set<int> unorderType;
+	
 
 	class ReadFactory {
 	public:

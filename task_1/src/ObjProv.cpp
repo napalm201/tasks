@@ -4,9 +4,10 @@
 ObjProv::ObjProv(DataProvider* dataprov)
 {
 		ObjProv::dataprov = dataprov;
+}
 
-		unorderType.insert(3);
-		unorderType.insert(28);
+ObjProv::ReadFactory::ReadFactory(DataProvider* dataprov) : dataprov(dataprov)
+{
 }
 
 std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
@@ -17,14 +18,17 @@ std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
 	try {
 		int countObject = dataprov->rdInt();
 
-		while (true) {
+		for (int i = 0; i < countObject; i++) {
 
 			int type = dataprov->rdInt();
 
-			if (unorderType.find(type) == unorderType.end())
-				objects.push_back(ReadFactory.factory(type));
-			else 
+			std::shared_ptr<Object> obj = ReadFactory.factory(type);
+
+			if (obj == nullptr)
 				readNextObject();
+			else
+				objects.push_back(obj);
+
 		}
 	}
 	catch(const ReadError& e) {
@@ -38,9 +42,7 @@ std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
 
 }
 
-ObjProv::ReadFactory::ReadFactory(DataProvider* dataprov) : dataprov(dataprov)
-{
-}
+
 
 std::shared_ptr<Object> ObjProv::ReadFactory::factory(int type)
 {
@@ -60,7 +62,7 @@ std::shared_ptr<Object> ObjProv::ReadFactory::factory(int type)
 			return greatePolyLine();
 		}
 		else {
-			throw ReadError();
+			return nullptr;
 		}
 }
 
