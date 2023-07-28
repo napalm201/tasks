@@ -1,5 +1,6 @@
 #include "Rect.h"
 
+
 void Rectangle::draw(WDraw& wDraw)
 {
 	wDraw.fillColor(1, 0, 1);
@@ -12,6 +13,14 @@ void Rectangle::draw(WDraw& wDraw)
 Rectangle Rectangle::box()
 {
 	return *this;
+}
+
+double Rectangle::lengthSeg()
+{
+	double sum = 0;
+	sum += 2 * distance(p1, p2);
+	sum += 2 * distance(p2, p3);
+	return sum;
 }
 
 void Rectangle::transform(const Point2d& center)

@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 
 class Point2d
 {
@@ -11,3 +12,5 @@ private:
     double m_dX;
     double m_dY;
 };
+
+double distance(const Point2d& p1, const Point2d& p2);

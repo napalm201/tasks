@@ -15,3 +15,8 @@ Rectangle Circle::box()
 
 	return Rectangle(Point2d(x1, y1), Point2d(x3 , y3));
 }
+
+double Circle::lengthSeg()
+{
+	return 2 * PI * r;
+}

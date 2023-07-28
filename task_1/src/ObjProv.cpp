@@ -10,7 +10,6 @@ std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
 		int countObject = dataprov->rdInt();	
 		while (true) 
 			objects.push_back(ReadFactory.factory(dataprov->rdInt()));
-
 	}
 	catch(const ReadError& e) {
 		e.wait();
@@ -54,6 +53,7 @@ std::shared_ptr<Object> ObjProv::ReadFactory::factory(int type)
 std::shared_ptr<Object> ObjProv::ReadFactory::greateRect()
 {
 	int countCordinate = dataprov->rdInt();
+
 
 	if (countCordinate == 4) {
 

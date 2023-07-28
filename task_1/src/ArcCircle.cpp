@@ -27,3 +27,8 @@ Rectangle ArcCircle::box()
 	Rectangle rect = AABBStrategy().doAlgorithm(points);
 	return rect;
 }
+
+double ArcCircle::lengthSeg()
+{
+	return ( endAngle - startAngle ) * r;
+}

@@ -29,6 +29,8 @@ public:
 public:
 	virtual void draw(WDraw& wDraw) override;
 	virtual Rectangle box() override;
+	virtual double lengthSeg() override;
+
 	virtual void transform(const Point2d& center);
 
 private:

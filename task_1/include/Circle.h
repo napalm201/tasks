@@ -12,6 +12,7 @@ public:
 public:
 	virtual void draw(WDraw& wDraw) override;
 	virtual Rectangle box() override;
+	virtual double lengthSeg() override;
 protected:
 	Point2d p = Point2d(0, 0);
 	double r = 2;
