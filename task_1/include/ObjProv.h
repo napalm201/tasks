@@ -8,7 +8,7 @@
 #include "PolyGon.h"
 #include "PolyLine.h"
 #include "Circle.h"
-#include <unordered_set>
+
 
 class ObjProv {
 public:
@@ -28,7 +28,7 @@ private:
 		ReadFactory(DataProvider* dataprov);
 
 		virtual std::shared_ptr<Object> factory(int type);
-		double readFromData();
+		double readFromData(bool &isDamaged);
 
 	    std::shared_ptr<Object> greateRect();
 		std::shared_ptr<Object> greateCircle();

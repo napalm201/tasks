@@ -17,6 +17,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	WDraw wdraw;
 	for (auto& obj : objs) {
+
 		wdraw.drawText("Object");
 		obj->draw(wdraw);
 

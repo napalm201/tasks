@@ -22,6 +22,8 @@ void WDraw::drawSegment(const Point2d& p1, const Point2d& p2) {
 void WDraw::drawArcCircle(const Point2d& p, double r, double startAngle, double endAngle)
 {
     double dAngle = (endAngle - startAngle) / detailLevel;
+    double firstAngle = startAngle;
+
     double prevAngle = startAngle;
     startAngle += dAngle;
 
@@ -32,6 +34,11 @@ void WDraw::drawArcCircle(const Point2d& p, double r, double startAngle, double 
 
         drawSegment(p1, p2);
     }
+
+    Point2d p1(r * cos(firstAngle) + p.x(), r * sin(firstAngle) + p.y());
+    Point2d p2(r * cos(startAngle) + p.x(), r * sin(startAngle) + p.y());
+    drawSegment(p1, p2);
+
 }
 
 void WDraw::drawCircle(const Point2d& p, double r)

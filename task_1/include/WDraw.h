@@ -1,8 +1,9 @@
 #pragma once
 #include "Point2d.h"
-
+#include "Event.h"
 #include <cmath>
 #define PI 3.14
+
 
 
 class WDraw
@@ -12,6 +13,13 @@ public:
     WDraw(void);
     virtual ~WDraw(void);
 
+
+public:
+    const int SCREEN_WIDTH = 640;
+    const int SCREEN_HEIGHT = 640;
+
+
+    Event event;
     /************************************************************************/
     /* Основной метод отрисовки                                             */
     /************************************************************************/

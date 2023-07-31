@@ -66,13 +66,14 @@ std::shared_ptr<Object> ObjProv::ReadFactory::factory(int type)
 		}
 }
 
-double ObjProv::ReadFactory::readFromData()
+double ObjProv::ReadFactory::readFromData(bool& isDamaged)
 {
 	try {
 		return dataprov->rdDouble();
 	}
 	catch (const ReadError& e) {
 		e.wait();
+		isDamaged = true;
 		return 0.0;
 	}
 }
@@ -80,47 +81,61 @@ double ObjProv::ReadFactory::readFromData()
 std::shared_ptr<Object> ObjProv::ReadFactory::greateRect()
 {
 	int countCordinate = dataprov->rdInt();
+	bool damaged = false;
 
-	Point2d p1(readFromData(), readFromData());
-	Point2d p3(readFromData(), readFromData());
+	Point2d p1(readFromData(damaged), readFromData(damaged));
+	Point2d p3(readFromData(damaged), readFromData(damaged));
 
-	return std::shared_ptr<Object>(new Rectangle(p1, p3));
+	Rectangle* rect = new Rectangle(p1, p3);
+	rect->isDamaged = damaged;
+
+	return std::shared_ptr<Object>(rect);
 
 }
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greateCircle()
 {
 	int countNumbers = dataprov->rdInt();
+	bool damaged = false;
 
-	Point2d p(readFromData(), readFromData());
-	double r = readFromData();
+	Point2d p(readFromData(damaged), readFromData(damaged));
+	double r = readFromData(damaged);
 
-	return std::shared_ptr<Object>(new Circle(p, r));
+	Circle* circle = new Circle(p, r);
+	circle->isDamaged = damaged;
+
+	return std::shared_ptr<Object>(circle);
 }
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greateArcCircle()
 {
 
 	int countNumbers = dataprov->rdInt();
+	bool damaged = false;
 
-	Point2d p(readFromData(), readFromData());
-	double r = readFromData();
+	Point2d p(readFromData(damaged), readFromData(damaged));
+	double r = readFromData(damaged);
 
-	double startAngle = readFromData();
-	double endAngle = readFromData();
+	double startAngle = readFromData(damaged);
+	double endAngle = readFromData(damaged);
 
-	return std::shared_ptr<Object>(new ArcCircle(p, r, startAngle, endAngle));
+	ArcCircle* arc = new ArcCircle(p, r, startAngle, endAngle);
+	arc->isDamaged = damaged;
+
+	return std::shared_ptr<Object>(arc);
 }
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greatePolygon()
 {
 	int countNumber = dataprov->rdInt();
+	bool damaged = false;
 
 	PolyGon* polygon = new PolyGon;
 
 	for (int i = 0; i < countNumber / 2; i++)
-		polygon->addPoint(Point2d(readFromData(), readFromData()));
+		polygon->addPoint(Point2d(readFromData(damaged), readFromData(damaged)));
 
+	polygon->isDamaged = damaged;
 
 	return std::shared_ptr<Object>(polygon);
 }
@@ -128,11 +143,14 @@ std::shared_ptr<Object> ObjProv::ReadFactory::greatePolygon()
 std::shared_ptr<Object> ObjProv::ReadFactory::greatePolyLine()
 {
 	int countNumber = dataprov->rdInt();
+	bool damaged = false;
 
 	PolyLine* polyline = new PolyLine;
 
 	for (int i = 0; i < countNumber / 2; i++)
-		polyline->addPoint(Point2d(readFromData(), readFromData()));
+		polyline->addPoint(Point2d(readFromData(damaged), readFromData(damaged)));
+
+	polyline->isDamaged = damaged;
 
 	return std::shared_ptr<Object>(polyline);
 }
@@ -143,7 +161,7 @@ void ObjProv::readNextObject()
 
 	double foo;
 
-	for (int i = 0; i < counter; i ++) {
+	for (int i = 0; i < counter; i ++) 
 		foo = dataprov->rdInt();
-	}
+	
 }

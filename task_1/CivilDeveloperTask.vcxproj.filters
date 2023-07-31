@@ -48,6 +48,9 @@
     <ClCompile Include="src\Decorator.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Event.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -90,6 +93,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Decorator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Event.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
