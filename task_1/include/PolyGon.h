@@ -9,7 +9,7 @@ public:
 
 public:
 	virtual void draw(WDraw& wdraw);
-	virtual Rectangle box() override;
+	virtual BoundyBox getBoundyBox() const override;
 	virtual double lengthSeg() override;
 };
 

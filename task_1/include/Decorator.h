@@ -1,7 +1,7 @@
 
 #pragma once
 #include "Object.h"
-#include "Rect.h"
+#include "BoundyBox.h"
 
 class Decorator : public Object
 {

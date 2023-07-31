@@ -7,6 +7,6 @@ void Decorator::draw(WDraw& wdraw)
 
 void BoxDrawDecorator::draw(WDraw& wdraw)
 {
-	Rectangle rect = object->box();
+	Rectangle rect = object->getBoundyBox().getRectangle();
 	rect.draw(wdraw);	this->object->draw(wdraw);
 }

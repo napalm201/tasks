@@ -16,13 +16,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::vector<std::shared_ptr<Object>> objs = prov.getObjects();
 
 	WDraw wdraw;
+
 	for (auto& obj : objs) {
 
 		wdraw.drawText("Object");
 		obj->draw(wdraw);
 
 		wdraw.drawText("AABB");
-		obj->box().draw(wdraw);
+		obj->getBoundyBox().getRectangle().draw(wdraw);
 
 		wdraw.drawText("Length");
 		wdraw.drawText(std::to_string(obj->lengthSeg()).c_str());

@@ -6,10 +6,12 @@ void PolyGon::draw(WDraw& wdraw)
 	wdraw.drawSegment(points[0], points[points.size() - 1]);
 }
 
-Rectangle PolyGon::box()
+BoundyBox PolyGon::getBoundyBox() const
 {
-	return PolyLine::box();
+	return PolyLine::getBoundyBox();
 }
+
+
 
 double PolyGon::lengthSeg()
 {

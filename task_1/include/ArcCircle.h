@@ -3,6 +3,8 @@
 #include <cmath>
 #include <vector>
 #include "Strategys.h"
+#include "BoundyBox.h"
+
 #define PI 3.14
 
 class ArcCircle : public Circle {
@@ -15,7 +17,7 @@ public:
 
 public:
 	virtual void draw(WDraw& wdraw) override;
-	virtual Rectangle box() override;
+	virtual BoundyBox getBoundyBox() const override;
 	virtual double lengthSeg() override;
 
 private:

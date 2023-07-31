@@ -8,10 +8,12 @@ void PolyLine::draw(WDraw& wdraw)
     }
 }
 
-Rectangle PolyLine::box()
+BoundyBox PolyLine::getBoundyBox() const
 {
-    return  AABBStrategy().doAlgorithm(points);
+    Rectangle rect = AABBStrategy().doAlgorithm(points);
+    return BoundyBox();
 }
+
 
 double PolyLine::lengthSeg()
 {

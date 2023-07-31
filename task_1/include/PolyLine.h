@@ -1,7 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "Point2d.h"
-#include "Rect.h"
+#include "BoundyBox.h"
 #include "Strategys.h"
 #include <vector>
 
@@ -11,7 +11,7 @@ public:
 
 public:
 	virtual void draw(WDraw& wdraw) override;
-	virtual Rectangle box() override;
+	virtual BoundyBox getBoundyBox() const override;
 	virtual double lengthSeg() override;
 
 	void addPoint(const Point2d& point);

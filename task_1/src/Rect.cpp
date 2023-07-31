@@ -1,5 +1,5 @@
 #include "Rect.h"
-
+#include "BoundyBox.h"
 
 void Rectangle::draw(WDraw& wDraw)
 {
@@ -10,10 +10,6 @@ void Rectangle::draw(WDraw& wDraw)
 	wDraw.drawSegment(p4, p1);
 }
 
-Rectangle Rectangle::box()
-{
-	return *this;
-}
 
 double Rectangle::lengthSeg()
 {
@@ -22,6 +18,14 @@ double Rectangle::lengthSeg()
 	sum += 2 * distance(p2, p3);
 	return sum;
 }
+
+BoundyBox Rectangle::getBoundyBox() const
+{
+	return BoundyBox(*this);
+}
+
+
+
 
 void Rectangle::transform(const Point2d& center)
 {

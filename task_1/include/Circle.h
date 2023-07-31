@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "Point2d.h"
 #include "Rect.h"
+#include "BoundyBox.h"
 
 class Circle : public Object {
 public:
@@ -11,7 +12,7 @@ public:
 
 public:
 	virtual void draw(WDraw& wDraw) override;
-	virtual Rectangle box() override;
+	virtual BoundyBox getBoundyBox() const override;
 	virtual double lengthSeg() override;
 protected:
 	Point2d p = Point2d(0, 0);

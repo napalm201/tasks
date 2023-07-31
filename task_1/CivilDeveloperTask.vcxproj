@@ -87,6 +87,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ArcCircle.cpp" />
+    <ClCompile Include="src\BoundyBox.cpp" />
     <ClCompile Include="src\Circle.cpp" />
     <ClCompile Include="src\CivilDeveloperTask.cpp" />
     <ClCompile Include="src\DataProvider.cpp" />
@@ -106,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ArcCircle.h" />
+    <ClInclude Include="include\BoundyBox.h" />
     <ClInclude Include="include\Circle.h" />
     <ClInclude Include="include\DataProvider.h" />
     <ClInclude Include="include\Decorator.h" />
