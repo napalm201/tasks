@@ -11,7 +11,7 @@ void PolyLine::draw(WDraw& wdraw)
 BoundyBox PolyLine::getBoundyBox() const
 {
     Rectangle rect = AABBStrategy().doAlgorithm(points);
-    return BoundyBox();
+    return BoundyBox(rect);
 }
 
 

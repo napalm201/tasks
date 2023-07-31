@@ -1,18 +1,65 @@
 #include "WDraw.h"
 #include <stdio.h>
-
-
+#include <functional>
 
 int WDraw::detailLevel = 20;
 
 
 WDraw::WDraw(void)
 {
+    init();
+}
+
+WDraw::WDraw(std::string name) : name(name)
+{
+    init();
 }
 
 WDraw::~WDraw(void)
 {
+    glfwTerminate();
 }
+
+void WDraw::init()
+{
+    if (!glfwInit())
+        return;
+
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, name.c_str(), nullptr, nullptr);
+    
+    if (!window)
+        return;
+
+    glfwMakeContextCurrent(window);
+    glfwSetWindowUserPointer(window, this);
+
+    glfwSetMouseButtonCallback(window, mouseEvent);
+
+    glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, -1, 1);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glfwSwapBuffers(window);
+
+}
+
+ void WDraw::mouseEvent(GLFWwindow* window, int button, int action, int mode)
+{
+    WDraw* wdraw = static_cast<WDraw*>(glfwGetWindowUserPointer(window));
+    wdraw->event.type = MOUSE;
+    
+    double mouseX, mouseY;
+    glfwGetCursorPos(window, &mouseX, &mouseY);
+    
+    wdraw->event.mouse.x = mouseX;
+    wdraw->event.mouse.y = mouseY;
+}
+
+bool WDraw::getStateWindow()
+{
+    return glfwWindowShouldClose(window);
+}
+
 
 
 void WDraw::drawSegment(const Point2d& p1, const Point2d& p2) {
@@ -57,7 +104,10 @@ void WDraw::fillColor(int r, int g, int b)
 
 void WDraw::translate(const Point2d& p1)
 {
+
 }
+
+
 
 
 

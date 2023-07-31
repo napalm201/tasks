@@ -17,6 +17,13 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	WDraw wdraw;
 
+	bool quit = false;
+	while (!quit) {
+
+		quit = wdraw.getStateWindow();
+		glfwPollEvents();
+
+	}
 	for (auto& obj : objs) {
 
 		wdraw.drawText("Object");
