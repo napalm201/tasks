@@ -16,11 +16,11 @@ std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
 	std::vector<std::shared_ptr<Object>> objects;
 
 	try {
-		int countObject = dataprov->rdInt();
+		const int countObject = dataprov->rdInt();
 
 		for (int i = 0; i < countObject; i++) {
 
-			int type = dataprov->rdInt();
+			const int type = dataprov->rdInt();
 
 			std::shared_ptr<Object> obj = ReadFactory.factory(type);
 
@@ -44,7 +44,7 @@ std::vector<std::shared_ptr<Object>> ObjProv::getObjects() {
 
 
 
-std::shared_ptr<Object> ObjProv::ReadFactory::factory(int type)
+std::shared_ptr<Object> ObjProv::ReadFactory::factory(const int type)
 {
 		if (type == 1) {
 			return greateRect();
@@ -80,79 +80,92 @@ double ObjProv::ReadFactory::readFromData(bool& isDamaged)
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greateRect()
 {
-	int countCordinate = dataprov->rdInt();
+	const int countCordinate = dataprov->rdInt();
 	bool damaged = false;
 
-	Point2d p1(readFromData(damaged), readFromData(damaged));
-	Point2d p3(readFromData(damaged), readFromData(damaged));
+	double x = readFromData(damaged); double y = readFromData(damaged);
+	Point2d p1(x, y);
 
-	Rectangle* rect = new Rectangle(p1, p3);
-	rect->isDamaged = damaged;
+	x = readFromData(damaged); y = readFromData(damaged);
+	Point2d p3(x, y);
 
-	return std::shared_ptr<Object>(rect);
+	Rectangle rect(p1, p3);
+	rect.isDamaged = damaged;
+
+	return std::make_shared<Rectangle>(rect);
 
 }
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greateCircle()
 {
-	int countNumbers = dataprov->rdInt();
+	const int countNumbers = dataprov->rdInt();
 	bool damaged = false;
 
-	Point2d p(readFromData(damaged), readFromData(damaged));
+	double x = readFromData(damaged); double y = readFromData(damaged);
+	Point2d p(x, y);
+
 	double r = readFromData(damaged);
 
-	Circle* circle = new Circle(p, r);
-	circle->isDamaged = damaged;
+	Circle circle(p, r);
+	circle.isDamaged = damaged;
 
-	return std::shared_ptr<Object>(circle);
+	return std::make_shared<Circle>(circle);
 }
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greateArcCircle()
 {
 
-	int countNumbers = dataprov->rdInt();
+	const int countNumbers = dataprov->rdInt();
 	bool damaged = false;
-
-	Point2d p(readFromData(damaged), readFromData(damaged));
+	
+	double x = readFromData(damaged); double y = readFromData(damaged);
+	Point2d p(x, y);
+	
 	double r = readFromData(damaged);
 
 	double startAngle = readFromData(damaged);
 	double endAngle = readFromData(damaged);
 
-	ArcCircle* arc = new ArcCircle(p, r, startAngle, endAngle);
-	arc->isDamaged = damaged;
+	ArcCircle arc(p, r, startAngle, endAngle);
+	arc.isDamaged = damaged;
 
-	return std::shared_ptr<Object>(arc);
+	return std::make_shared<ArcCircle>(arc);
 }
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greatePolygon()
 {
-	int countNumber = dataprov->rdInt();
+	const int countNumber = dataprov->rdInt();
 	bool damaged = false;
 
-	PolyGon* polygon = new PolyGon;
+	PolyGon polygon;
+	double x, y;
 
-	for (int i = 0; i < countNumber / 2; i++)
-		polygon->addPoint(Point2d(readFromData(damaged), readFromData(damaged)));
+	for (int i = 0; i < countNumber / 2; i++) {
+		x = readFromData(damaged); y = readFromData(damaged);
+		polygon.addPoint(Point2d(x, y));
+	}
 
-	polygon->isDamaged = damaged;
+	polygon.isDamaged = damaged;
 
-	return std::shared_ptr<Object>(polygon);
+	return std::make_shared<PolyGon>(polygon);
 }
 
 std::shared_ptr<Object> ObjProv::ReadFactory::greatePolyLine()
 {
-	int countNumber = dataprov->rdInt();
+	const int countNumber = dataprov->rdInt();
 	bool damaged = false;
 
-	PolyLine* polyline = new PolyLine;
+	PolyLine polyline;
+	double x, y;
 
-	for (int i = 0; i < countNumber / 2; i++)
-		polyline->addPoint(Point2d(readFromData(damaged), readFromData(damaged)));
+	for (int i = 0; i < countNumber / 2; i++) {
+		x = readFromData(damaged); y = readFromData(damaged);
+		polyline.addPoint(Point2d(x ,y));
+	}
 
-	polyline->isDamaged = damaged;
+	polyline.isDamaged = damaged;
 
-	return std::shared_ptr<Object>(polyline);
+	return std::make_shared<PolyLine>(polyline);
 }
 
 void ObjProv::readNextObject()
