@@ -1,8 +1,9 @@
 #include "PolyLine.h"
 
 
-void PolyLine::draw(WDraw& wdraw)
+void PolyLine::draw(WDraw& wdraw) const
 {
+    wdraw.fillStroke(56, 56, 65);
     for (int i = 0; i < points.size() - 1; i++) {
         wdraw.drawSegment(points[i], points[i + 1]);
     }
@@ -11,11 +12,13 @@ void PolyLine::draw(WDraw& wdraw)
 BoundyBox PolyLine::getBoundyBox() const
 {
     Rectangle rect = AABBStrategy().doAlgorithm(points);
-    return BoundyBox(rect);
+    double lenght = this->lengthSeg();
+
+    return BoundyBox("PolyLine", rect, lenght);
 }
 
 
-double PolyLine::lengthSeg()
+double PolyLine::lengthSeg() const
 {
     double sum = 0;
 

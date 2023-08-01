@@ -26,9 +26,9 @@ public:
 		p3(std::move(p3)), p4(std::move(p4)) {}
 
 public:
-	virtual void draw(WDraw& wDraw) override;
+	virtual void draw(WDraw& wDraw) const override;
 	virtual BoundyBox getBoundyBox() const override;
-	virtual double lengthSeg() override;
+	virtual double lengthSeg() const override;
 
 	virtual void transform(const Point2d& center);
 

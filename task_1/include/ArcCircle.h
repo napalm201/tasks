@@ -16,9 +16,9 @@ public:
 		: Circle(p, r), startAngle(startAngle), endAngle(endAngle) {}
 
 public:
-	virtual void draw(WDraw& wdraw) override;
+	virtual void draw(WDraw& wdraw) const override;
 	virtual BoundyBox getBoundyBox() const override;
-	virtual double lengthSeg() override;
+	virtual double lengthSeg() const override;
 
 private:
 	double startAngle = 0;

@@ -1,6 +1,9 @@
 #include "BoundyBox.h"
 
-Rectangle BoundyBox::getRectangle() const
+void BoundyBox::draw(WDraw& wdraw) const
 {
-	return rect;
+	wdraw.fillStroke(67, 67, 0);
+	rect.draw(wdraw);
+	wdraw.drawText(name.c_str());
+	wdraw.drawText(std::to_string(length).c_str());
 }

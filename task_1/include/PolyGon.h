@@ -8,8 +8,8 @@ public:
 	PolyGon() = default;
 
 public:
-	virtual void draw(WDraw& wdraw);
+	virtual void draw(WDraw& wdraw) const override;
 	virtual BoundyBox getBoundyBox() const override;
-	virtual double lengthSeg() override;
+	virtual double lengthSeg() const override;
 };
 

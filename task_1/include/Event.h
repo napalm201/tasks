@@ -2,19 +2,17 @@
 
 
 enum EventType : int8_t {
-	UNDEF = 1,
-	MOUSE,
-	KEYBOARD
-};
-
-enum Action : int8_t {
-	PRESS = 1,
-	RELEASE
+	UNDEF = 0,
+	MOUSE_PRESS,
+	MOUSE_RELEASE,
+	KEYBOARD_PRESS,
+	KEYBOARD_RELEASE,
+    RESIZE
 };
 
 enum  MouseButton : int8_t {
-	RIGHT = 1,
-	LEFT
+	LEFT = 0,
+	RIGHT
 };
 
 struct Mouse {
@@ -26,8 +24,6 @@ struct Mouse {
 struct Event {
 
 	EventType type;
-
-	Action action;
 
 	union {
 	    

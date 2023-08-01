@@ -1,6 +1,6 @@
 #include "PolyGon.h"
 
-void PolyGon::draw(WDraw& wdraw)
+void PolyGon::draw(WDraw& wdraw) const
 {
 	PolyLine::draw(wdraw);
 	wdraw.drawSegment(points[0], points[points.size() - 1]);
@@ -8,12 +8,13 @@ void PolyGon::draw(WDraw& wdraw)
 
 BoundyBox PolyGon::getBoundyBox() const
 {
-	return PolyLine::getBoundyBox();
+	Rectangle rect = AABBStrategy().doAlgorithm(points);
+	double lenght = this->lengthSeg();
+
+	return BoundyBox("PolyGon", rect, lenght);
 }
 
-
-
-double PolyGon::lengthSeg()
+double PolyGon::lengthSeg() const
 {
 
 	double sum = PolyLine::lengthSeg();

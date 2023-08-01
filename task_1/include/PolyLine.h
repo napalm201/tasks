@@ -10,9 +10,9 @@ public:
 	PolyLine() = default;
 
 public:
-	virtual void draw(WDraw& wdraw) override;
+	virtual void draw(WDraw& wdraw) const override;
 	virtual BoundyBox getBoundyBox() const override;
-	virtual double lengthSeg() override;
+	virtual double lengthSeg() const override;
 
 	void addPoint(const Point2d& point);
 protected:

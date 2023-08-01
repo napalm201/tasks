@@ -9,7 +9,9 @@ public:
 	Decorator() = default;
 	Decorator(Object* object) : object(object) {}
 
-	virtual void draw(WDraw& wdraw) override;
+	virtual void draw(WDraw& wdraw) const override;
+	virtual class BoundyBox getBoundyBox() const override;
+	virtual double lengthSeg() const override;
 
 protected:
 	Object* object;
@@ -19,6 +21,6 @@ class BoxDrawDecorator : public Decorator {
 public:
 	BoxDrawDecorator(Object* object) : Decorator(object) {}
 
-	virtual void draw(WDraw& wdraw) override;
+	virtual void draw(WDraw& wdraw) const override;
 
 };

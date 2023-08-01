@@ -1,12 +1,22 @@
 #include "Decorator.h"
 
-void Decorator::draw(WDraw& wdraw)
+void Decorator::draw(WDraw& wdraw) const
 {
 	this->object->draw(wdraw);
 }
 
-void BoxDrawDecorator::draw(WDraw& wdraw)
+BoundyBox Decorator::getBoundyBox() const
 {
-	Rectangle rect = object->getBoundyBox().getRectangle();
-	rect.draw(wdraw);	this->object->draw(wdraw);
+	return this->object->getBoundyBox();
+}
+
+double Decorator::lengthSeg() const
+{
+	return this->object->lengthSeg();
+}
+
+void BoxDrawDecorator::draw(WDraw& wdraw) const
+{
+	object->getBoundyBox().draw(wdraw);
+	this->object->draw(wdraw);
 }

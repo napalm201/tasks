@@ -1,17 +1,16 @@
 #include "Rect.h"
 #include "BoundyBox.h"
 
-void Rectangle::draw(WDraw& wDraw)
+void Rectangle::draw(WDraw& wDraw) const
 {
-	wDraw.fillColor(1, 0, 1);
-	wDraw.drawSegment(p1, p2);
-	wDraw.drawSegment(p2, p3);
-	wDraw.drawSegment(p3, p4);
-	wDraw.drawSegment(p4, p1);
+	wDraw.fillStroke(1, 0, 1);
+	double w = p4.x() - p1.x();
+	double h = p2.y() - p1.y();
+	wDraw.drawRect(p1, w, h);
 }
 
 
-double Rectangle::lengthSeg()
+double Rectangle::lengthSeg() const
 {
 	double sum = 0;
 	sum += 2 * distance(p1, p2);
@@ -21,7 +20,8 @@ double Rectangle::lengthSeg()
 
 BoundyBox Rectangle::getBoundyBox() const
 {
-	return BoundyBox(*this);
+	double lenght = this->lengthSeg();
+	return BoundyBox("Rect", * this, lenght);
 }
 
 

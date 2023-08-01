@@ -6,12 +6,9 @@
 
 class Object {
 public:
-	virtual void draw(WDraw& wDraw) = 0;
+	virtual void draw(WDraw& wDraw) const = 0;
 	virtual class BoundyBox getBoundyBox() const = 0;
-	virtual double lengthSeg() = 0;
+	virtual double lengthSeg() const = 0;
 
 	bool isDamaged = false;
 };
-
-
-

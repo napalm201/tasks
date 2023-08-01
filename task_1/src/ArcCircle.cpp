@@ -1,8 +1,8 @@
 #include "ArcCircle.h"
 
-void ArcCircle::draw(WDraw& wdraw)
+void ArcCircle::draw(WDraw& wdraw) const
 {
-	wdraw.fillColor(0, 0, 0);
+	wdraw.fillStroke(54, 66, 0);
 	wdraw.drawArcCircle(p, r, startAngle, endAngle);
 }
 
@@ -22,15 +22,14 @@ BoundyBox ArcCircle::getBoundyBox() const
 		}
 	}
 
-	//Поки працює від стартових кутів: 0 до 2п
-
 	Rectangle rect = AABBStrategy().doAlgorithm(points);
+	double lenght = this->lengthSeg();
 
-	return BoundyBox(rect);
+	return BoundyBox("Arc", rect, lenght);
 }
 
 
-double ArcCircle::lengthSeg()
+double ArcCircle::lengthSeg() const
 {
-	return ( endAngle - startAngle ) * r;
+	return (endAngle - startAngle) * r;
 }

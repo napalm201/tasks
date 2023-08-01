@@ -24,7 +24,6 @@ public:
 
     Event event;
  
-private:
     GLFWwindow* window;
    
 public:
@@ -33,27 +32,22 @@ public:
     virtual void drawSegment(const Point2d& p1, const Point2d& p2);
     virtual void drawArcCircle(const Point2d& p, double r, double startAngle, double endAngle);
     virtual void drawCircle(const Point2d& p, double r);
-
+    virtual void drawRect(const Point2d& p1, double w, double h);
 
     virtual void drawText(const char* text);
-    virtual void fillColor(int r, int g, int b);
+
+    virtual void fillStroke(int r, int g, int b);
     virtual void translate(const Point2d& p1);
+    virtual void wStroke(float w);
 
 private:
 
     void init();
     static void mouseEvent(GLFWwindow* window, int button, int action, int mode);
+    static void BoardEvent(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
-    struct Color {
-        Color() = default;
-        Color(int r, int g, int b) : r(r), g(g), b(b) {}
-        int r = 0;
-        int g = 0;
-        int b = 0;
-    };
-
-    Color color;
-
+private:
     static int detailLevel;
 
 };
