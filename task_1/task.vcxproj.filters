@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{b22cdbaf-5e00-449d-97c3-eae97b84fe82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{dda99b93-0eb9-4700-b11f-c05e87c92da4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Objects">
+      <UniqueIdentifier>{ceb7d50b-e1d9-4087-b145-42966f948c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Providers">
+      <UniqueIdentifier>{71102c7f-d50f-46b2-bd4c-3c5b106cf348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Exceptions">
+      <UniqueIdentifier>{b9e3e819-0110-455d-b01b-1936787230f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\BoundyStrategys">
+      <UniqueIdentifier>{a0f76f8c-986b-483b-9d29-78e926762d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\WDraw">
+      <UniqueIdentifier>{bc14a731-6066-4915-a13d-79718e226ae1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="include\BoundyStrategys\AABBStrategy.cpp">
+      <Filter>include\BoundyStrategys</Filter>
+    </ClCompile>
+    <ClCompile Include="include\WDraw\WDraw.cpp">
+      <Filter>include\WDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Objects\ArcCircle.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Objects\Circle.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Objects\PolyGon.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Objects\PolyLine.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Objects\Rectangle.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Providers\ReadFactory.cpp">
+      <Filter>include\Providers</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Objects\Point2d.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Objects\BoundyBox.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Exceptions\EndOfFile.cpp">
+      <Filter>include\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Objects\BoundyBoxObject.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Exceptions\ReadError.cpp">
+      <Filter>include\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Providers\ObjProvider.cpp">
+      <Filter>include\Providers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Exceptions\Exception.h">
+      <Filter>include\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BoundyStrategys\AABBStrategy.h">
+      <Filter>include\BoundyStrategys</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BoundyStrategys\BoundyStrategy.h">
+      <Filter>include\BoundyStrategys</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WDraw\Event.h">
+      <Filter>include\WDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WDraw\WDraw.h">
+      <Filter>include\WDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\ArcCircle.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\BoundyBox.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\Circle.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\Object.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\Point2d.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\PolyGon.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\PolyLine.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\Rectangle.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Providers\ReadFactory.h">
+      <Filter>include\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Exceptions\EndOfFile.h">
+      <Filter>include\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Exceptions\ReadError.h">
+      <Filter>include\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\BoundyBoxObject.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Providers\DataProvider.h">
+      <Filter>include\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\Figures.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Providers\ObjProvider.h">
+      <Filter>include\Providers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
