@@ -10,6 +10,8 @@ namespace Provider {
 	{
 		std::vector<std::shared_ptr<Object>> objects;
 
+		dataprov.reset();
+
 		try {
 			const int countObject = dataprov.rd<int>();
 
@@ -49,12 +51,12 @@ namespace Provider {
 
 	void ObjProvider::saveToFileData(const std::string& patch)
 	{
-		dataprov.savedata(patch);
+
 	}
 
 	void ObjProvider::readFromFileData(const std::string& patch)
 	{
-		dataprov.readdata(patch);
+
 	}
 
 	void ObjProvider::readNextObject()

@@ -21,9 +21,7 @@ namespace Provider {
         U rd();
 
         void setdata(T* data, std::size_t size);
-
-        void savedata(const std::string& patch);
-        void readdata(const std::string& patch);
+        void reset();
 
     private:
         void checkC();
@@ -76,14 +74,10 @@ namespace Provider {
             this->data[i] = data[i];
     }
 
-    template <typename T>
-    void DataProvider<T>::savedata(const std::string& patch) {
-
-    }
-
-    template <typename T>
-    void DataProvider<T>::readdata(const std::string& patch) {
-
+    template<typename T>
+    inline void DataProvider<T>::reset()
+    {
+        c = 0;
     }
 
     template <typename T>
