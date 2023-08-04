@@ -11,12 +11,10 @@ namespace Provider {
     template <typename T>
     class DataProvider
     {
-    private:
+    public:
         DataProvider(void) = default;
         DataProvider(T* data, std::size_t size);
         virtual ~DataProvider(void);
-
-        friend class ObjProvider;
 
     public:
         template <typename U>
@@ -71,6 +69,7 @@ namespace Provider {
     void DataProvider<T>::setdata(T* data, std::size_t size) {
         c = 0;
         maxC = size;
+        delete[] this->data;
         this->data = new T[size];
 
         for (std::size_t i = 0; i < size; ++i)
