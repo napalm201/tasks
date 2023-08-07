@@ -6,8 +6,9 @@ namespace Provider {
 	{
 	}
 
-	std::vector<std::shared_ptr<Object>> ObjProvider::getObject()
+	std::vector<std::shared_ptr<Object>> ObjProvider::getObject(bool& error)
 	{
+		error = false;
 		std::vector<std::shared_ptr<Object>> objects;
 
 		dataprov.reset();
@@ -30,9 +31,11 @@ namespace Provider {
 		}
 		catch (const ReadError& e) {
 			e.wait();
+			error = true;
 		}
 		catch (const EndOfFile& e) {
 			e.wait();
+			error = true;
 			objects.back()->isDamaged = true;
 		}
 
@@ -51,12 +54,14 @@ namespace Provider {
 
 	void ObjProvider::saveToFileData(const std::string& patch)
 	{
-
+		FileProvider<double> file(&dataprov, patch);
+		file.save();
 	}
 
 	void ObjProvider::readFromFileData(const std::string& patch)
 	{
-
+		FileProvider<double> file(&dataprov, patch);
+		file.read();
 	}
 
 	void ObjProvider::readNextObject()

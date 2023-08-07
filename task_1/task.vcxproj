@@ -30,9 +30,9 @@
     <ClCompile Include="include\Objects\PolyGon.cpp" />
     <ClCompile Include="include\Objects\PolyLine.cpp" />
     <ClCompile Include="include\Objects\Rectangle.cpp" />
-    <ClCompile Include="include\Providers\FileProvider.cpp" />
     <ClCompile Include="include\Providers\ObjProvider.cpp" />
     <ClCompile Include="include\Providers\ReadFactory.cpp" />
+    <ClCompile Include="include\WConsole\WConsole.cpp" />
     <ClCompile Include="include\WDraw\WDraw.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -56,6 +56,7 @@
     <ClInclude Include="include\Providers\FileProvider.h" />
     <ClInclude Include="include\Providers\ObjProvider.h" />
     <ClInclude Include="include\Providers\ReadFactory.h" />
+    <ClInclude Include="include\WConsole\WConsole.h" />
     <ClInclude Include="include\WDraw\Event.h" />
     <ClInclude Include="include\WDraw\WDraw.h" />
   </ItemGroup>

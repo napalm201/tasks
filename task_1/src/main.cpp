@@ -4,6 +4,7 @@
 #include "WDraw/WDraw.h"
 #include "Objects/Figures.h"
 #include "Providers/ObjProvider.h"
+#include "WConsole/WConsole.h"
 
 double gData[] = {
     8, // -- число объектов в файле
@@ -71,23 +72,42 @@ double gData[] = {
 int main() {
 
 	WDraw& wdraw = WDraw::getWDraw();
+    WConsole& wconsole = WConsole::getWConsole();
 
 	Provider::ObjProvider prov(gData, sizeof(gData) / sizeof(gData[0]));
 
-	std::vector<std::shared_ptr<Object>> objs = prov.getObject();
+    bool damaged;
+
+	std::vector<std::shared_ptr<Object>> objs = prov.getObject(damaged);
 
     wdraw.background(0, 0, 0);
-	for (const auto& obj : objs) {
+	
+    for (const auto& obj : objs) {
 		obj->draw(wdraw);
         BoundyBoxObject(obj->getBoundyBox(), obj).draw(wdraw);
 	}
+    
     wdraw.render();
 
 	bool quit = false;
 
 	while (!quit) {
-		if (wdraw.event.type == CLOSE)
+    
+        if (wdraw.event.type == CLOSE)
 			quit = true;
+
+        if (wconsole.update == true) {
+
+            std::vector<double> data = wconsole.getData();
+
+            prov.setdata(data.data(), data.size());
+
+
+
+            wconsole.update = false;
+
+        }
+
 		glfwPollEvents();
 	}
 }
