@@ -65,7 +65,7 @@ namespace Provider {
 
 		}
 		catch (const std::ios_base::failure& ex) {
-			std::cout << "ops";
+			std::cout << ex.what();
 		}
 		catch (const ReadError& e) {
 			e.wait();
