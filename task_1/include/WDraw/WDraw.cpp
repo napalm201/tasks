@@ -180,7 +180,7 @@ void WDraw::wStroke(float w)
 
 void WDraw::pullevent()
 {
-    glfwWaitEvents();
+    glfwPollEvents();
 }
 
 
