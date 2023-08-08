@@ -17,7 +17,6 @@ public:
 	MyAplication& operator=(const MyAplication& other) = delete;
 
 	void runTimeConsole();
-	void printError(std::string er) const;
 
 private:
 	MyAplication();

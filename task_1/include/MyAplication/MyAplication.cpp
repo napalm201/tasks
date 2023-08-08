@@ -125,7 +125,6 @@ void MyAplication::runTimeConsole()
          	std::vector<double> numbers;
 	        std::istringstream is(data);
 
-            std::cout << data;
             try {
                 double num;
 
@@ -149,12 +148,6 @@ void MyAplication::runTimeConsole()
    thr1.join();
 
 }
-
-void MyAplication::printError(std::string er) const
-{
-    std::cout << er << std::endl;
-}
-
 
 void MyAplication::runTimeWDraw()
 {
