@@ -62,7 +62,7 @@ namespace Provider {
 					
 
 			}
-
+			
 		}
 		catch (const std::ios_base::failure& ex) {
 			std::cout << ex.what();
@@ -73,7 +73,7 @@ namespace Provider {
 		catch (const EndOfFile& e) {
 			e.wait();
 		}
-
+		file.close();
 	}
 
 	template<typename T>
@@ -113,7 +113,7 @@ namespace Provider {
 			catch (const std::ios_base::failure& ex) {
 				std::cout << ex.what();
 			}
-		
+			file.close();
 
 	}
 
