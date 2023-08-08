@@ -1,5 +1,6 @@
 [Dd]ebug/
 .vs/
+x64/
 *.rsuser
 *.suo
 *.user

@@ -75,7 +75,7 @@ namespace Provider {
     }
 
     template<typename T>
-    inline void DataProvider<T>::reset()
+    void DataProvider<T>::reset()
     {
         c = 0;
     }

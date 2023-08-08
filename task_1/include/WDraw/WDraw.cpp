@@ -1,6 +1,6 @@
 #include "WDraw.h"
 #define PI 3.14
-
+#include <iostream>
 int WDraw::detailLevel = 20;
 
 WDraw& WDraw::getWDraw()
@@ -20,7 +20,7 @@ WDraw::WDraw(std::string name) : name(name)
 
 WDraw::~WDraw(void)
 {
-    glfwTerminate();
+    glfwWindowShouldClose(window);
 }
 
 void WDraw::init()
@@ -154,12 +154,12 @@ void WDraw::background(int r, int g, int b)
 
     glClearColor(rr, gg, bb, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    render();
 }
 
 void WDraw::render()
 {
     glfwSwapBuffers(window);
-
 }
 
 void WDraw::fillStroke(int r, int g, int b)
@@ -177,6 +177,11 @@ void WDraw::fillStroke(int r, int g, int b)
 void WDraw::wStroke(float w)
 {
     glLineWidth(w);
+}
+
+void WDraw::pullevent()
+{
+    glfwPollEvents();
 }
 
 

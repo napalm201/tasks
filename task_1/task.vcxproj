@@ -22,6 +22,7 @@
     <ClCompile Include="include\BoundyStrategys\AABBStrategy.cpp" />
     <ClCompile Include="include\Exceptions\EndOfFile.cpp" />
     <ClCompile Include="include\Exceptions\ReadError.cpp" />
+    <ClCompile Include="include\MyAplication\MyAplication.cpp" />
     <ClCompile Include="include\Objects\ArcCircle.cpp" />
     <ClCompile Include="include\Objects\BoundyBox.cpp" />
     <ClCompile Include="include\Objects\BoundyBoxObject.cpp" />
@@ -32,7 +33,6 @@
     <ClCompile Include="include\Objects\Rectangle.cpp" />
     <ClCompile Include="include\Providers\ObjProvider.cpp" />
     <ClCompile Include="include\Providers\ReadFactory.cpp" />
-    <ClCompile Include="include\WConsole\WConsole.cpp" />
     <ClCompile Include="include\WDraw\WDraw.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -42,6 +42,7 @@
     <ClInclude Include="include\Exceptions\EndOfFile.h" />
     <ClInclude Include="include\Exceptions\Exception.h" />
     <ClInclude Include="include\Exceptions\ReadError.h" />
+    <ClInclude Include="include\MyAplication\MyAplication.h" />
     <ClInclude Include="include\Objects\ArcCircle.h" />
     <ClInclude Include="include\Objects\BoundyBox.h" />
     <ClInclude Include="include\Objects\BoundyBoxObject.h" />
@@ -56,7 +57,6 @@
     <ClInclude Include="include\Providers\FileProvider.h" />
     <ClInclude Include="include\Providers\ObjProvider.h" />
     <ClInclude Include="include\Providers\ReadFactory.h" />
-    <ClInclude Include="include\WConsole\WConsole.h" />
     <ClInclude Include="include\WDraw\Event.h" />
     <ClInclude Include="include\WDraw\WDraw.h" />
   </ItemGroup>

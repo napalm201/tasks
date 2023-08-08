@@ -9,6 +9,8 @@ namespace Provider {
 
 	std::shared_ptr<Object> ReadFactory::factory(const int type)
 	{
+	
+
 		if (type == 1) {
 			return greateRect();
 		}

@@ -32,6 +32,7 @@ public:
 
     void fillStroke(int r, int g, int b);
     void wStroke(float w);
+	void pullevent();
 
 private:
     void init();

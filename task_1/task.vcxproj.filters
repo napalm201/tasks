@@ -22,7 +22,7 @@
     <Filter Include="include\WDraw">
       <UniqueIdentifier>{bc14a731-6066-4915-a13d-79718e226ae1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\WConsole">
+    <Filter Include="include\MyAplication">
       <UniqueIdentifier>{9cbc347e-f650-4c04-851f-59c1d86a7fa7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -72,8 +72,8 @@
     <ClCompile Include="include\Providers\ObjProvider.cpp">
       <Filter>include\Providers</Filter>
     </ClCompile>
-    <ClCompile Include="include\WConsole\WConsole.cpp">
-      <Filter>include\WConsole</Filter>
+    <ClCompile Include="include\MyAplication\MyAplication.cpp">
+      <Filter>include\MyAplication</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,8 +140,8 @@
     <ClInclude Include="include\Providers\FileProvider.h">
       <Filter>include\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="include\WConsole\WConsole.h">
-      <Filter>include\WConsole</Filter>
+    <ClInclude Include="include\MyAplication\MyAplication.h">
+      <Filter>include\MyAplication</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

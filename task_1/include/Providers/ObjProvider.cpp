@@ -11,8 +11,6 @@ namespace Provider {
 		error = false;
 		std::vector<std::shared_ptr<Object>> objects;
 
-		dataprov.reset();
-
 		try {
 			const int countObject = dataprov.rd<int>();
 
