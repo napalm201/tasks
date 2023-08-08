@@ -9,8 +9,6 @@ namespace Provider {
 
 	std::shared_ptr<Object> ReadFactory::factory(const int type)
 	{
-	
-
 		if (type == 1) {
 			return greateRect();
 		}
@@ -41,6 +39,9 @@ namespace Provider {
 			e.wait();
 			isDamaged = true;
 			return 0.0;
+		}
+		catch (const EndOfFile& e) {
+			throw;
 		}
 	}
 

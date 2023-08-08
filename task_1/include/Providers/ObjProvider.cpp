@@ -6,10 +6,12 @@ namespace Provider {
 	{
 	}
 
-	std::vector<std::shared_ptr<Object>> ObjProvider::getObject(bool& error)
+	std::vector<std::shared_ptr<Object>> ObjProvider::getObject()
 	{
-		error = false;
+
 		std::vector<std::shared_ptr<Object>> objects;
+
+		dataprov.reset();
 
 		try {
 			const int countObject = dataprov.rd<int>();
@@ -29,12 +31,9 @@ namespace Provider {
 		}
 		catch (const ReadError& e) {
 			e.wait();
-			error = true;
 		}
 		catch (const EndOfFile& e) {
 			e.wait();
-			error = true;
-			objects.back()->isDamaged = true;
 		}
 
 		return objects;

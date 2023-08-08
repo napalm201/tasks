@@ -68,10 +68,12 @@ namespace Provider {
         c = 0;
         maxC = size;
         delete[] this->data;
+
         this->data = new T[size];
 
         for (std::size_t i = 0; i < size; ++i)
             this->data[i] = data[i];
+
     }
 
     template<typename T>
@@ -83,9 +85,10 @@ namespace Provider {
     template <typename T>
     void DataProvider<T>::checkC() {
 
-        if (c == maxC)
+        if (c == maxC) {
+            reset();
             throw EndOfFile();
-
+        }
     }
 
 }; 

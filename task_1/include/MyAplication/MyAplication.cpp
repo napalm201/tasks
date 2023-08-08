@@ -76,6 +76,7 @@ void MyAplication::runTimeConsole()
     std::thread thr1(&MyAplication::runTimeWDraw, this);
 
 
+
     while (!quit) {
 
         std::getline(std::cin, userInput);
@@ -165,16 +166,16 @@ void MyAplication::runTimeWDraw()
         }
            
         if (update == true) {
-            
-            bool damaged;
 
             std::unique_lock<std::mutex> ul(mtx1);
             
-            objs = objProv.getObject(damaged);
+            objs = objProv.getObject();
 
             update = false;
 
             ul.unlock();
+
+            wdraw.background(0, 0, 0);
 
             for (const auto& obj : objs) {
 

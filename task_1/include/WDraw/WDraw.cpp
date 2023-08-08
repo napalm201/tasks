@@ -152,9 +152,8 @@ void WDraw::background(int r, int g, int b)
     gg /= 255.0f;
     bb /= 255.0f;
 
-    glClearColor(rr, gg, bb, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    render();
+    glClearColor(rr, gg, bb, 1.0f);
 }
 
 void WDraw::render()

@@ -19,7 +19,7 @@ double Point2d::y() const
 }
 
 
-double distance(const Point2d& p1, const Point2d& p2)
+double distance(const Point2d& p1, const Point2d& p2) 
 {
     double dx = p2.x() - p1.x();
     double dy = p2.y() - p1.y();

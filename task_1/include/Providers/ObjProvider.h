@@ -16,14 +16,14 @@ namespace Provider {
         virtual ~ObjProvider(void) = default;
 
     public:
-        virtual std::vector<std::shared_ptr<Object>> getObject(bool& error);
+        virtual std::vector<std::shared_ptr<Object>> getObject();
 
         void setdata(double* data, std::size_t);
         void setdata(std::vector<std::shared_ptr<Object>> objs);
 
         void saveToFileData(const std::string& patch);
         void readFromFileData(const std::string& patch);
-
+                
     private:
         virtual void readNextObject();
 
