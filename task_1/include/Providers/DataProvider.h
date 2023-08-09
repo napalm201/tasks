@@ -24,6 +24,12 @@ namespace Provider {
         template <typename T>
         void add(const T& prim);
 
+        template <typename T>
+        std::vector<T> rd(std::size_t size);
+
+        template <typename T>
+        void add(const std::vector<T>& array);
+
         void reset();
         void clear();
 
@@ -54,12 +60,41 @@ namespace Provider {
     }
 
     template<typename T>
+    std::vector<T> DataProvider::rd(std::size_t size)
+    {
+        if (c + size * sizeof(T) > bytes.size()) 
+            throw EndOfFile();         
+
+        std::vector<T> data;
+        data.reserve(size);
+
+        memcpy(data.data(), bytes.data() + c, size * sizeof(T));
+
+        for (auto dat : data) {
+            if (dat == THROW_ERR)
+                throw ReadError();
+        }
+
+        return data;
+    }
+
+    template<typename T>
     inline void DataProvider::add(const T& prim)
     {
         const uint8_t* d = reinterpret_cast<const uint8_t*>(&prim);
 
         bytes.insert(bytes.end(), d, d + sizeof(T));
         
+    }
+
+    template<typename T>
+    void DataProvider::add(const std::vector<T>& array)
+    {
+        const uint8_t* d = reinterpret_cast<const uint8_t*>(array.data());
+
+        std::size_t size = array.size() * sizeof(T);
+
+        bytes.insert(bytes.end(), d, d + size);
     }
 
 

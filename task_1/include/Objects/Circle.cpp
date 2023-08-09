@@ -4,6 +4,7 @@ Circle::Circle(const Point2d& p, double r) :
 	p(p),
 	r(r)
 {
+	type = CIRCLE;
 }
 
 void Circle::draw(WDraw& wDraw) const
@@ -21,4 +22,12 @@ BoundyBox Circle::getBoundyBox() const
 double Circle::length() const
 {
 	return 2 * PI * r;
+}
+
+void Circle::pack(Provider::DataProvider* dataprov) const
+{
+	dataprov->add<int>(type);
+	dataprov->add<int>(3);
+	dataprov->add<double>(p.x()); dataprov->add<double>(p.y());
+	dataprov->add<double>(r);
 }

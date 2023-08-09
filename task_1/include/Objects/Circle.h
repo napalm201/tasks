@@ -8,12 +8,15 @@ public:
 	Circle(void) = default;
 	Circle(const Point2d& p, double r);
 
-	~Circle(void) = default;
+	virtual ~Circle(void) = default;
 
 public:
 	virtual void draw(WDraw& wDraw) const override;
 	virtual BoundyBox getBoundyBox() const override;
 	virtual double length() const override;
+
+
+	virtual void pack(Provider::DataProvider* dataprov) const override;
 
 protected:
 	Point2d p = Point2d(0, 0);

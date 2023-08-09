@@ -5,6 +5,7 @@ ArcCircle::ArcCircle(const Point2d& p, double r, double startAngle, double endAn
 	startAngle(startAngle), 
 	endAngle(endAngle)
 {
+	type = ARCCIRLE;
 }
 
 void ArcCircle::draw(WDraw& wdraw) const
@@ -22,4 +23,13 @@ BoundyBox ArcCircle::getBoundyBox() const
 double ArcCircle::length() const
 {
 	return (endAngle - startAngle) * r;
+}
+
+void ArcCircle::pack(Provider::DataProvider* dataprov) const
+{
+	dataprov->add<int>(type);
+	dataprov->add<int>(5);
+	dataprov->add<double>(p.x()); dataprov->add<double>(p.y());
+	dataprov->add<double>(r);
+	dataprov->add<double>(startAngle); dataprov->add<double>(endAngle);
 }

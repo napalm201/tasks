@@ -2,6 +2,7 @@
 
 BoundyBoxObject::BoundyBoxObject(const BoundyBox& boundy) : rect(boundy)
 {
+	type = UND;
 }
 
 BoundyBoxObject::BoundyBoxObject(const BoundyBox& boundy, std::shared_ptr<Object> ptrObj) : rect(boundy), objPtr(ptrObj)
@@ -21,4 +22,9 @@ BoundyBox BoundyBoxObject::getBoundyBox() const
 double BoundyBoxObject::length() const
 {
 	return rect.length();
+}
+
+void BoundyBoxObject::pack(Provider::DataProvider* dataprov) const
+{
+
 }

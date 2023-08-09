@@ -7,7 +7,7 @@
 class Rectangle : public Object
 {
 public:
-	Rectangle(void) = default;
+	Rectangle(void);
 
 	Rectangle(const Point2d& p1, const Point2d& p3);
 
@@ -19,12 +19,14 @@ public:
 
 	Rectangle(const BoundyBox& boundy);
 
-	~Rectangle(void) = default;
+    virtual	~Rectangle(void) = default;
 
 public:
 	virtual void draw(WDraw& wDraw) const override;
 	virtual BoundyBox getBoundyBox() const override;
 	virtual double length() const override;
+
+	virtual void pack(Provider::DataProvider* dataprov) const override;
 
 private:
 	Point2d p1 = Point2d(-1, 0); Point2d p2 = Point2d(0, 1);

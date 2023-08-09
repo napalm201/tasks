@@ -1,5 +1,10 @@
 #include "PolyLine.h"
 
+PolyLine::PolyLine(void)
+{
+    type = POLYLINE;
+}
+
 void PolyLine::draw(WDraw& wdraw) const
 {
     wdraw.fillStroke(56, 0, 65);
@@ -23,6 +28,13 @@ double PolyLine::length() const
     }
 
     return sum;
+}
+
+void PolyLine::pack(Provider::DataProvider* dataprov) const
+{
+    dataprov->add<int>(type);
+    dataprov->add<int>(points.size());
+    dataprov->add<Point2d>(points);
 }
 
 void PolyLine::addPoint(const Point2d& point)

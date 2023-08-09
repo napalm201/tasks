@@ -16,6 +16,7 @@ public:
 	virtual class BoundyBox getBoundyBox() const override;
 	virtual double length() const override;
 
+	virtual void pack(Provider::DataProvider* dataprov) const override;
 private:
 	Rectangle rect;
 	std::weak_ptr<Object> objPtr;

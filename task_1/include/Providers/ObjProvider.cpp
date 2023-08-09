@@ -52,6 +52,10 @@ namespace Provider {
 	void ObjProvider::setdata(std::vector<std::shared_ptr<Object>> objs)
 	{
 		dataprov.clear();
+
+		for (auto obj : objs) {
+			obj->pack(&dataprov);
+		}
 	}
 
 	void ObjProvider::saveToFileData(const std::string& patch)
@@ -68,9 +72,8 @@ namespace Provider {
 	{
 		const int counter = dataprov.rd<int>();
 
-		double foo;
 
 		for (int i = 0; i < counter; i++)
-			foo = dataprov.rd<double>();
+			dataprov.rd<double>();
 	}
 }

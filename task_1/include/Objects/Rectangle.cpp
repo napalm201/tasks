@@ -1,6 +1,11 @@
 #include "Rectangle.h"
 
-Rectangle::Rectangle(const Point2d& p1, const Point2d& p3) : 
+Rectangle::Rectangle(void)
+{
+	type = RECT;
+}
+
+Rectangle::Rectangle(const Point2d& p1, const Point2d& p3) :
 	  p1(p1), 
 	  p3(p3) 
 {
@@ -52,4 +57,12 @@ double Rectangle::length() const
 	sum += 2 * distance(p1, p2);
 	sum += 2 * distance(p2, p3);
 	return sum;
+}
+
+void Rectangle::pack(Provider::DataProvider* dataprov) const
+{
+	dataprov->add<int>(type);
+	dataprov->add<int>(4);
+	dataprov->add<double>(p1.x()); dataprov->add<double>(p1.y());
+	dataprov->add<double>(p3.x()); dataprov->add<double>(p3.y());
 }
