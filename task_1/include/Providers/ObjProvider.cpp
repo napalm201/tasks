@@ -2,7 +2,8 @@
 
 namespace Provider {
 
-	ObjProvider::ObjProvider(double* data, std::size_t size) : dataprov(data, size), readFactory(&dataprov)
+
+	ObjProvider::ObjProvider(const DataProvider& dataprov) : dataprov(dataprov), readFactory(&this->dataprov)
 	{
 	}
 
@@ -21,12 +22,14 @@ namespace Provider {
 				const int type = dataprov.rd<int>();
 
 				std::shared_ptr<Object> obj = readFactory.factory(type);
-
+				
 				if (obj == nullptr)
 					readNextObject();
-				else
+				else {
 					objects.push_back(obj);
 
+				}
+				
 			}
 		}
 		catch (const ReadError& e) {
@@ -35,30 +38,30 @@ namespace Provider {
 		catch (const EndOfFile& e) {
 			e.wait();
 		}
-
+		
 		return objects;
 	}
 
-	void ObjProvider::setdata(double* data, std::size_t size)
+
+
+	void ObjProvider::setdata(const DataProvider& dataprov)
 	{
-		dataprov.setdata(data, size);
+		this->dataprov = dataprov;
 	}
 
 	void ObjProvider::setdata(std::vector<std::shared_ptr<Object>> objs)
 	{
-
+		dataprov.clear();
 	}
 
 	void ObjProvider::saveToFileData(const std::string& patch)
 	{
-		FileProvider<double> file(&dataprov, patch);
-		file.save();
+		dataprov.save(patch);
 	}
 
 	void ObjProvider::readFromFileData(const std::string& patch)
 	{
-		FileProvider<double> file(&dataprov, patch);
-		file.read();
+		dataprov.read(patch);
 	}
 
 	void ObjProvider::readNextObject()
@@ -68,6 +71,6 @@ namespace Provider {
 		double foo;
 
 		for (int i = 0; i < counter; i++)
-			foo = dataprov.rd<int>();
+			foo = dataprov.rd<double>();
 	}
 }

@@ -7,7 +7,7 @@ namespace Provider {
 	class ReadFactory {
 	private:
 		ReadFactory(void) = default;
-		ReadFactory(DataProvider<double>* dataprov);
+		ReadFactory(DataProvider* dataprov);
 		virtual ~ReadFactory(void) = default;
 
 		friend class ObjProvider;
@@ -23,7 +23,7 @@ namespace Provider {
 		std::shared_ptr<Object> greatePolyLine();
 
 	private:
-		DataProvider<double>* dataprov = nullptr;
+		DataProvider* dataprov = nullptr;
 	};
 
 

@@ -31,6 +31,7 @@
     <ClCompile Include="include\Objects\PolyGon.cpp" />
     <ClCompile Include="include\Objects\PolyLine.cpp" />
     <ClCompile Include="include\Objects\Rectangle.cpp" />
+    <ClCompile Include="include\Providers\DataProvider.cpp" />
     <ClCompile Include="include\Providers\ObjProvider.cpp" />
     <ClCompile Include="include\Providers\ReadFactory.cpp" />
     <ClCompile Include="include\WDraw\WDraw.cpp" />

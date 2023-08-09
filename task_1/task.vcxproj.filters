@@ -75,6 +75,9 @@
     <ClCompile Include="include\MyAplication\MyAplication.cpp">
       <Filter>include\MyAplication</Filter>
     </ClCompile>
+    <ClCompile Include="include\Providers\DataProvider.cpp">
+      <Filter>include\Providers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Exceptions\Exception.h">

@@ -2,93 +2,65 @@
 #include "Exceptions/Exception.h"
 #include "Exceptions/EndOfFile.h"
 #include "Exceptions/ReadError.h"
+#include <vector>
+#include <cstdlib>
 
 #define PI 3.141
 #define THROW_ERR 23000000
 
 namespace Provider {
 
-    template <typename T>
+
     class DataProvider
     {
     public:
         DataProvider(void) = default;
-        DataProvider(T* data, std::size_t size);
-        virtual ~DataProvider(void);
+        virtual ~DataProvider(void) = default;
 
     public:
-        template <typename U>
-        U rd();
+        template <typename T>
+        T rd();
 
-        void setdata(T* data, std::size_t size);
+        template <typename T>
+        void add(const T& prim);
+
         void reset();
+        void clear();
+
+        void save(const std::string& patch);
+        void read(const std::string& patch);
 
     private:
-        void checkC();
-
-    private:
-        T* data = nullptr;
+        std::vector<uint8_t> bytes;
         std::size_t c = 0;
-        std::size_t maxC = 0;
-
     };
 
-
-    template <typename T>
-    DataProvider<T>::DataProvider(T* data, std::size_t size) :  c(0), maxC(size) 
-    { 
-        this->data = new T[size];
-
-        for (std::size_t i = 0; i < size; ++i)
-            this->data[i] = data[i];
-
-    }
-
     template<typename T>
-    DataProvider<T>::~DataProvider(void)
+    T DataProvider::rd()
     {
-        delete[] data;
-    }
+        if (c == bytes.size())
+            throw EndOfFile();
 
-    template <typename T>
-    template <typename U>
+        T primitive;
 
-    U DataProvider<T>::rd() {
-        checkC();
-        U d = data[c++];
+        memcpy(&primitive, bytes.data() + c, sizeof(T));
 
-        if (d == THROW_ERR)
+        c += sizeof(T);
+
+        if (primitive == THROW_ERR)
             throw ReadError();
 
-        return d;
-    }
-
-    template <typename T>
-    void DataProvider<T>::setdata(T* data, std::size_t size) {
-        c = 0;
-        maxC = size;
-        delete[] this->data;
-
-        this->data = new T[size];
-
-        for (std::size_t i = 0; i < size; ++i)
-            this->data[i] = data[i];
-
+        return primitive;
     }
 
     template<typename T>
-    void DataProvider<T>::reset()
+    inline void DataProvider::add(const T& prim)
     {
-        c = 0;
+        const uint8_t* d = reinterpret_cast<const uint8_t*>(&prim);
+
+        bytes.insert(bytes.end(), d, d + sizeof(T));
+        
     }
 
-    template <typename T>
-    void DataProvider<T>::checkC() {
 
-        if (c == maxC) {
-            reset();
-            throw EndOfFile();
-        }
-    }
-
-}; 
+};

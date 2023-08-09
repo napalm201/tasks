@@ -1,5 +1,5 @@
 #include "MyAplication.h"
-
+#include "Providers/DataProvider.h"
 double gData[] = {
     8, // -- число объектов в файле
 
@@ -64,9 +64,9 @@ double gData[] = {
 };
 
 
-MyAplication::MyAplication() : objProv(gData, sizeof(gData) / sizeof(gData[0]))
+MyAplication::MyAplication()
 {
-    
+    objProv.setdata(gData, sizeof(gData) / sizeof(gData[0]));
 }
 
 void MyAplication::runTimeConsole()
@@ -172,6 +172,7 @@ void MyAplication::runTimeWDraw()
             objs = objProv.getObject();
 
             update = false;
+            
 
             ul.unlock();
 
@@ -181,7 +182,7 @@ void MyAplication::runTimeWDraw()
 
                 obj->draw(wdraw);
                 BoundyBoxObject(obj->getBoundyBox(), obj).draw(wdraw);
-
+               
             }
 
             wdraw.render();

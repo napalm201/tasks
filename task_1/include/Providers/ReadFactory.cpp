@@ -2,7 +2,7 @@
 
 namespace Provider {
 
-	ReadFactory::ReadFactory(DataProvider<double>* dataprov) : dataprov(dataprov)
+	ReadFactory::ReadFactory(DataProvider* dataprov) : dataprov(dataprov)
 	{
 
 	}
