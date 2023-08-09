@@ -34,7 +34,11 @@ void PolyLine::pack(Provider::DataProvider* dataprov) const
 {
     dataprov->add<int>(type);
     dataprov->add<int>(points.size());
-    dataprov->add<Point2d>(points);
+    
+    for (const Point2d& point : points) {
+        dataprov->add<double>(point.x()); dataprov->add<double>(point.y());
+    }
+
 }
 
 void PolyLine::addPoint(const Point2d& point)

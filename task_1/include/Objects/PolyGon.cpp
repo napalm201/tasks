@@ -38,7 +38,10 @@ void PolyGon::pack(Provider::DataProvider* dataprov) const
 {
     dataprov->add<int>(type);
     dataprov->add<int>(points.size());
-    dataprov->add<Point2d>(points); // виправлю, скористався тим, що ця структура вирівнана
+    
+    for (const Point2d& point : points) {
+        dataprov->add<double>(point.x()); dataprov->add<double>(point.y());
+    }
 }
 
 void PolyGon::addPoint(const Point2d point)
