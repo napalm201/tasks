@@ -72,8 +72,6 @@ namespace Provider {
 	{
 		const int counter = dataprov.rd<int>();
 
-
-		for (int i = 0; i < counter; i++)
-			dataprov.rd<double>();
+		dataprov.next<double>(counter);
 	}
 }

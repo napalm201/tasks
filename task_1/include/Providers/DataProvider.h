@@ -30,6 +30,11 @@ namespace Provider {
         template <typename T>
         void add(const std::vector<T>& array);
 
+        template<typename T>
+        void next(std::size_t n);
+
+
+
         void reset();
         void clear();
 
@@ -97,5 +102,8 @@ namespace Provider {
         bytes.insert(bytes.end(), d, d + size);
     }
 
-
+    template<typename T>
+    void DataProvider::next(std::size_t n) {
+        c += sizeof(T) * n;
+    }
 };
