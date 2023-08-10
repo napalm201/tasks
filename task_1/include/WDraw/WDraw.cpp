@@ -41,8 +41,10 @@ void WDraw::init()
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetWindowCloseCallback(window, windowCloseCallback);
 
-
-    glOrtho(CordXS * (float)SCREEN_WIDTH / SCREEN_HEIGHT, CordXE * (float)SCREEN_WIDTH / SCREEN_HEIGHT, CordYS, CordYE, -1, 1);
+    if (SCREEN_WIDTH > SCREEN_HEIGHT)
+        glOrtho(CordXS * (float)SCREEN_WIDTH / SCREEN_HEIGHT, CordXE * (float)SCREEN_WIDTH / SCREEN_HEIGHT, CordYS, CordYE, -1, 1);
+    else
+        glOrtho(CordXS, CordXE, CordYS * (float)SCREEN_HEIGHT / SCREEN_WIDTH, CordYE * (float)SCREEN_HEIGHT / SCREEN_WIDTH, -1, 1);
 
     background(0, 0, 0);
     render();
