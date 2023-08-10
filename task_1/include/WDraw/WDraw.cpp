@@ -42,7 +42,7 @@ void WDraw::init()
     glfwSetWindowCloseCallback(window, windowCloseCallback);
 
 
-    glOrtho(-100/ 2, 400 / 2, -100 / 2, 400 / 2, -1, 1);
+    glOrtho(CordXS * (float)SCREEN_WIDTH / SCREEN_HEIGHT, CordXE * (float)SCREEN_WIDTH / SCREEN_HEIGHT, CordYS, CordYE, -1, 1);
 
     background(0, 0, 0);
     render();
@@ -80,14 +80,18 @@ void WDraw::BoardEvent(GLFWwindow* window, int key, int scancode, int action, in
 
 }
 
-void WDraw::framebufferSizeCallback(GLFWwindow* window, int width, int height)
+void WDraw::framebufferSizeCallback(GLFWwindow* window, int w, int h)
 {
     WDraw* wdraw = static_cast<WDraw*>(glfwGetWindowUserPointer(window));
     wdraw->event.type = RESIZE;
 
-    glOrtho(-width / 2, width / 2, -height / 2, height / 2, -1, 1);
+    glViewport(0, 0, w, h);
+    glLoadIdentity();
 
-    glfwSwapBuffers(window);
+    if(w > h)
+       glOrtho(wdraw->CordXS * (float) w / h, wdraw->CordXE * (float) w / h, wdraw->CordYS, wdraw->CordYE, -1, 1);
+    else 
+       glOrtho(wdraw->CordXS, wdraw->CordXE, wdraw->CordYS * (float) h / w, wdraw->CordYE * (float) h / w, -1, 1);
 }
 
 void WDraw::windowCloseCallback(GLFWwindow* window)

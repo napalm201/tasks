@@ -31,7 +31,7 @@ private:
 
 	bool update = true;
 	bool quit = false;
-
+	std::vector<std::shared_ptr<Object>> objs;
 	Provider::ObjProvider objProv;
 
 public:

@@ -67,6 +67,7 @@ double gData[] = {
 MyAplication::MyAplication()
 {
     objProv.setdata(gData, sizeof(gData) / sizeof(gData[0]));
+    objs = objProv.getObject();
 }
 
 void MyAplication::runTimeConsole()
@@ -104,13 +105,19 @@ void MyAplication::runTimeConsole()
                 break;
 
             std::unique_lock<std::mutex> ul(mtx1);
+
             objProv.readFromFileData(patch);
+            objs = objProv.getObject();
             update = true;
+
             ul.unlock();
         }
         else if (userInput == "Exit") {
+
             std::unique_lock<std::mutex> ul(mtx1);
+
             quit = true;
+
             ul.unlock();
         }
         else if(userInput == "Data") {
@@ -132,9 +139,13 @@ void MyAplication::runTimeConsole()
                 }
 
                 std::unique_lock<std::mutex> ul(mtx1);
+                
                 objProv.setdata(numbers.data(), numbers.size());
                 update = true;
+                objs = objProv.getObject();
+                
                 ul.unlock();
+
             }
 
             catch (const std::invalid_argument& e) {
@@ -153,8 +164,6 @@ void MyAplication::runTimeWDraw()
 {
     WDraw& wdraw = WDraw::getWDraw();
 
-    std::vector<std::shared_ptr<Object>> objs;
-
     wdraw.background(0, 0, 0);
 
     while (!quit) {
@@ -164,15 +173,14 @@ void MyAplication::runTimeWDraw()
             quit = true;
         }
            
-        if (update == true) {
+        if (update == true || wdraw.event.type == RESIZE) {
+
+            wdraw.event.type = UNDEF;
 
             std::unique_lock<std::mutex> ul(mtx1);
-            
-            objs = objProv.getObject();
 
             update = false;
             
-
             ul.unlock();
 
             wdraw.background(0, 0, 0);
@@ -186,7 +194,7 @@ void MyAplication::runTimeWDraw()
 
             wdraw.render();
         }
-
+      
         wdraw.pullevent();
 
     }

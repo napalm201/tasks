@@ -48,6 +48,13 @@ private:
 	const int SCREEN_WIDTH = 640;
 	const int SCREEN_HEIGHT = 640;
 
+
+	const float CordXS = -50;
+	const float CordXE = 200;
+
+	const float CordYS = -50;
+	const float CordYE = 200;
+
 	std::string name;
 	GLFWwindow* window;
 
