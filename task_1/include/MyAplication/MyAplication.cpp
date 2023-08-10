@@ -71,17 +71,13 @@ MyAplication::MyAplication()
 
 void MyAplication::runTimeConsole()
 {
-    std::string userInput;
-
     std::thread thr1(&MyAplication::runTimeWDraw, this);
-
-
 
     while (!quit) {
 
+        std::string userInput;
+        
         std::getline(std::cin, userInput);
-
-        std::unique_lock<std::mutex> ul(mtx1);
 
         if (userInput == "Save") {
 
@@ -93,8 +89,9 @@ void MyAplication::runTimeConsole()
             if (patch == "/q")
                 break;
 
+            std::unique_lock<std::mutex> ul(mtx1);
             objProv.saveToFileData(patch);
-
+            ul.unlock();
         }
         else if (userInput == "Read") {
 
@@ -106,14 +103,15 @@ void MyAplication::runTimeConsole()
             if (patch == "/q")
                 break;
 
+            std::unique_lock<std::mutex> ul(mtx1);
             objProv.readFromFileData(patch);
             update = true;
-
+            ul.unlock();
         }
         else if (userInput == "Exit") {
-
+            std::unique_lock<std::mutex> ul(mtx1);
             quit = true;
-
+            ul.unlock();
         }
         else if(userInput == "Data") {
 
@@ -133,8 +131,10 @@ void MyAplication::runTimeConsole()
                     numbers.push_back(num);
                 }
 
+                std::unique_lock<std::mutex> ul(mtx1);
                 objProv.setdata(numbers.data(), numbers.size());
                 update = true;
+                ul.unlock();
             }
 
             catch (const std::invalid_argument& e) {
@@ -143,7 +143,6 @@ void MyAplication::runTimeConsole()
            
         }
      
-        ul.unlock();
    }
 
    thr1.join();

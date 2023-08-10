@@ -9,23 +9,31 @@ namespace Provider {
 
 	std::shared_ptr<Object> ReadFactory::factory(const int type)
 	{
-		if (type == 1) {
-			return greateRect();
+		try {
+			if (type == 1) {
+				return greateRect();
+			}
+			else if (type == 2) {
+				return greateCircle();
+			}
+			else if (type == 4) {
+				return greateArcCircle();
+			}
+			else if (type == 5) {
+				return greatePolygon();
+			}
+			else if (type == 6) {
+				return greatePolyLine();
+			}
+			else {
+				return nullptr;
+			}
 		}
-		else if (type == 2) {
-			return greateCircle();
+		catch (const EndOfFile& e) {
+			throw e;
 		}
-		else if (type == 4) {
-			return greateArcCircle();
-		}
-		else if (type == 5) {
-			return greatePolygon();
-		}
-		else if (type == 6) {
-			return greatePolyLine();
-		}
-		else {
-			return nullptr;
+		catch (const ReadError& e) {
+			throw e;
 		}
 	}
 
