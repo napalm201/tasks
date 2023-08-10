@@ -64,6 +64,8 @@ namespace Provider {
         return primitive;
     }
 
+
+
     template<typename T>
     std::vector<T> DataProvider::rd(std::size_t size)
     {

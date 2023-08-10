@@ -28,3 +28,8 @@ void BoundyBoxObject::pack(Provider::DataProvider* dataprov) const
 {
 
 }
+
+void BoundyBoxObject::unpack(Provider::DataProvider* dataprov)
+{
+
+}

@@ -27,6 +27,7 @@
     <ClCompile Include="include\Objects\BoundyBox.cpp" />
     <ClCompile Include="include\Objects\BoundyBoxObject.cpp" />
     <ClCompile Include="include\Objects\Circle.cpp" />
+    <ClCompile Include="include\Objects\Object.cpp" />
     <ClCompile Include="include\Objects\Point2d.cpp" />
     <ClCompile Include="include\Objects\PolyGon.cpp" />
     <ClCompile Include="include\Objects\PolyLine.cpp" />

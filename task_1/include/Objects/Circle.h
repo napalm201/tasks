@@ -17,6 +17,7 @@ public:
 
 
 	virtual void pack(Provider::DataProvider* dataprov) const override;
+	virtual void unpack(Provider::DataProvider* dataprov) override;
 
 protected:
 	Point2d p = Point2d(0, 0);

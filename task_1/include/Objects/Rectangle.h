@@ -27,6 +27,7 @@ public:
 	virtual double length() const override;
 
 	virtual void pack(Provider::DataProvider* dataprov) const override;
+	virtual void unpack(Provider::DataProvider* dataprov) override;
 
 private:
 	Point2d p1 = Point2d(-1, 0); Point2d p2 = Point2d(0, 1);

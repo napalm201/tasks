@@ -14,7 +14,6 @@ namespace Provider {
 
 	public:
 		virtual std::shared_ptr<Object> factory(const int type);
-		double readFromData(bool& isDamaged);
 
 		std::shared_ptr<Object> greateRect();
 		std::shared_ptr<Object> greateCircle();

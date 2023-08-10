@@ -31,3 +31,14 @@ void Circle::pack(Provider::DataProvider* dataprov) const
 	dataprov->add<double>(p.x()); dataprov->add<double>(p.y());
 	dataprov->add<double>(r);
 }
+
+void Circle::unpack(Provider::DataProvider* dataprov)
+{
+	const int countNumbers = dataprov->rd<int>();
+
+	double x = readFromDataProv(dataprov); double y = readFromDataProv(dataprov);
+	p = Point2d(x, y);
+
+     r = readFromDataProv(dataprov);
+
+}

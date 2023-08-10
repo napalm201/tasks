@@ -44,6 +44,18 @@ void PolyGon::pack(Provider::DataProvider* dataprov) const
     }
 }
 
+void PolyGon::unpack(Provider::DataProvider* dataprov)
+{
+    const int countNumber = dataprov->rd<int>();
+
+    double x, y;
+    for (int i = 0; i < countNumber / 2; i++) {
+        x = readFromDataProv(dataprov); y = readFromDataProv(dataprov);
+        addPoint(Point2d(x, y));
+    }
+
+}
+
 void PolyGon::addPoint(const Point2d point)
 {
     points.push_back(point);

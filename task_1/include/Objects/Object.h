@@ -28,11 +28,15 @@ public:
 	virtual double length() const = 0;
 
 	virtual void pack(Provider::DataProvider* dataprov) const = 0;
+	virtual void unpack(Provider::DataProvider* dataprov) = 0;
 
 public:
 	bool isDamaged = 0;
 
 protected:
+
+	virtual double readFromDataProv(Provider::DataProvider* dataprov);
+
 	TypeObj type;
 	std::shared_ptr<BoundyStrategy> boundyAlgorithm = std::make_unique<AABBStrategy>();
 };

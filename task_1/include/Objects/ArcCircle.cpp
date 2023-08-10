@@ -33,3 +33,18 @@ void ArcCircle::pack(Provider::DataProvider* dataprov) const
 	dataprov->add<double>(r);
 	dataprov->add<double>(startAngle); dataprov->add<double>(endAngle);
 }
+
+void ArcCircle::unpack(Provider::DataProvider* dataprov)
+{
+	const int countNumbers = dataprov->rd<int>();
+
+	double x = readFromDataProv(dataprov); double y = readFromDataProv(dataprov);
+
+	p = Point2d(x, y);
+
+    r = readFromDataProv(dataprov);
+
+	startAngle = readFromDataProv(dataprov);
+	endAngle = readFromDataProv(dataprov);
+
+}

@@ -30,112 +30,47 @@ namespace Provider {
 	}
 
 
-	double ReadFactory::readFromData(bool& isDamaged)
-	{
-		try {
-			return dataprov->rd<double>();
-		}
-		catch (const ReadError& e) {
-			e.wait();
-			isDamaged = true;
-			return 0.0;
-		}
-		catch (const EndOfFile& e) {
-			throw;
-		}
-	}
-
-
 	std::shared_ptr<Object> ReadFactory::greateRect()
 	{
-		const int countCordinate = dataprov->rd<int>();
-		bool damaged = false;
+		std::shared_ptr<Object> rect = std::make_shared<Rectangle>();
+		rect->unpack(dataprov);
 
-		double x = readFromData(damaged); double y = readFromData(damaged);
-		Point2d p1(x, y);
-
-		x = readFromData(damaged); y = readFromData(damaged);
-		Point2d p3(x, y);
-
-		Rectangle rect(p1, p3);
-		rect.isDamaged = damaged;
-
-		return std::make_shared<Rectangle>(rect);
+		return rect;
 	}
 
 
 	std::shared_ptr<Object> ReadFactory::greateCircle()
 	{
-		const int countNumbers = dataprov->rd<int>();
-		bool damaged = false;
+		std::shared_ptr<Object> circle = std::make_shared<Circle>();
+		circle->unpack(dataprov);
 
-		double x = readFromData(damaged); double y = readFromData(damaged);
-		Point2d p(x, y);
-
-		double r = readFromData(damaged);
-
-		Circle circle(p, r);
-		circle.isDamaged = damaged;
-
-		return std::make_shared<Circle>(circle);
-		
+		return circle;
 	}
 
 
 	std::shared_ptr<Object> ReadFactory::greateArcCircle()
 	{
-		const int countNumbers = dataprov->rd<int>();
-		bool damaged = false;
+		std::shared_ptr<Object> arc = std::make_shared<ArcCircle>();
+		arc->unpack(dataprov);
 
-		double x = readFromData(damaged); double y = readFromData(damaged);
-		Point2d p(x, y);
-
-		double r = readFromData(damaged);
-
-		double startAngle = readFromData(damaged);
-		double endAngle = readFromData(damaged);
-
-		ArcCircle arc(p, r, startAngle, endAngle);
-		arc.isDamaged = damaged;
-
-		return std::make_shared<ArcCircle>(arc);
+		return arc;
 	}
 
 
 	std::shared_ptr<Object> ReadFactory::greatePolygon()
 	{
-		const int countNumber = dataprov->rd<int>();
-		bool damaged = false;
+		std::shared_ptr<Object> polygon = std::make_shared<PolyGon>();
+     	polygon->unpack(dataprov);
 
-		PolyGon polygon;
-		double x, y;
-
-		for (int i = 0; i < countNumber / 2; i++) {
-			x = readFromData(damaged); y = readFromData(damaged);
-			polygon.addPoint(Point2d(x, y));
-		}
-
-		polygon.isDamaged = damaged;
-
-		return std::make_shared<PolyGon>(polygon);
+		return polygon;
 	}
 
 	std::shared_ptr<Object> ReadFactory::greatePolyLine()
 	{
-		const int countNumber = dataprov->rd<int>();
-		bool damaged = false;
+		std::shared_ptr<Object> polyline = std::make_shared<PolyLine>();
+		polyline->unpack(dataprov);
 
-		PolyLine polyline;
-		double x, y;
-
-		for (int i = 0; i < countNumber / 2; i++) {
-			x = readFromData(damaged); y = readFromData(damaged);
-			polyline.addPoint(Point2d(x, y));
-		}
-
-		polyline.isDamaged = damaged;
-
-		return std::make_shared<PolyLine>(polyline);
+		return polyline;
 	}
 
 

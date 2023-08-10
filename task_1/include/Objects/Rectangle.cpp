@@ -66,3 +66,18 @@ void Rectangle::pack(Provider::DataProvider* dataprov) const
 	dataprov->add<double>(p1.x()); dataprov->add<double>(p1.y());
 	dataprov->add<double>(p3.x()); dataprov->add<double>(p3.y());
 }
+
+void Rectangle::unpack(Provider::DataProvider* dataprov)
+{
+	const int countCordinate = dataprov->rd<int>();
+
+	double x = readFromDataProv(dataprov); double y = readFromDataProv(dataprov);
+	p1 = Point2d(x, y);
+
+	x = readFromDataProv(dataprov); y = readFromDataProv(dataprov);
+	p3 = Point2d(x, y);
+
+	p2 = Point2d(p1.x(), p3.y());
+	p4 = Point2d(p3.x(), p1.y());
+
+}

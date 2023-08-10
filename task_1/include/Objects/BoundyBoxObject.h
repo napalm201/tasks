@@ -17,6 +17,7 @@ public:
 	virtual double length() const override;
 
 	virtual void pack(Provider::DataProvider* dataprov) const override;
+	virtual void unpack(Provider::DataProvider* dataprov) override;
 private:
 	Rectangle rect;
 	std::weak_ptr<Object> objPtr;

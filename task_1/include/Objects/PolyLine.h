@@ -13,6 +13,7 @@ public:
 	virtual double length() const override;
 
 	virtual void pack(Provider::DataProvider* dataprov) const override;
+	virtual void unpack(Provider::DataProvider* dataprov) override;
 
 	void addPoint(const Point2d& point);
 
