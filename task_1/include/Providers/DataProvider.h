@@ -2,9 +2,10 @@
 #include "Exceptions/Exception.h"
 #include "Exceptions/EndOfFile.h"
 #include "Exceptions/ReadError.h"
+#include "Serialization.h"
+
 #include <vector>
 #include <cstdlib>
-
 #define PI 3.141
 #define THROW_ERR 23000000
 
@@ -22,18 +23,16 @@ namespace Provider {
         T rd();
 
         template <typename T>
-        void add(const T& prim);
+        void add(T value);
 
         template <typename T>
         std::vector<T> rd(std::size_t size);
 
         template <typename T>
-        void add(const std::vector<T>& array);
+        void add(const std::vector<T>& values);
 
         template<typename T>
         void next(std::size_t n);
-
-
 
         void reset();
         void clear();
@@ -44,6 +43,7 @@ namespace Provider {
     private:
         std::vector<uint8_t> bytes;
         std::size_t c = 0;
+        Serialization::endianness endian = Serialization::endianness::little_endian;
     };
 
     template<typename T>
@@ -52,9 +52,11 @@ namespace Provider {
         if (c == bytes.size())
             throw EndOfFile();
 
-        T primitive;
+        T primitive = Serialization::decode<T>(&bytes, c);
 
-        memcpy(&primitive, bytes.data() + c, sizeof(T));
+
+        if (endian != Serialization::isLittle())
+            primitive = Serialization::swap_bytes<T>(primitive);
 
         c += sizeof(T);
 
@@ -72,36 +74,42 @@ namespace Provider {
         if (c + size * sizeof(T) > bytes.size()) 
             throw EndOfFile();         
 
-        std::vector<T> data;
-        data.reserve(size);
+        std::vector<T> values = Serialization::decode<T>(&bytes, c, size);   
 
-        memcpy(data.data(), bytes.data() + c, size * sizeof(T));
-
-        for (auto dat : data) {
-            if (dat == THROW_ERR)
-                throw ReadError();
+        if (endian != Serialization::isLittle()) {
+            for (T& value : values) {
+                value = Serialization::swap_bytes<T>(value);
+            }
         }
 
-        return data;
+        c += size * sizeof(T);
+
+        for (T& value : values) 
+            if (value = THROW_ERR)
+                throw ReadError();
+
+        return values;
     }
 
-    template<typename T>
-    inline void DataProvider::add(const T& prim)
-    {
-        const uint8_t* d = reinterpret_cast<const uint8_t*>(&prim);
 
-        bytes.insert(bytes.end(), d, d + sizeof(T));
-        
+    template<typename T>
+    inline void DataProvider::add( T value)
+    {
+        if (endian != Serialization::isLittle())
+            value = Serialization::swap_bytes<T>(value);
+
+        Serialization::encode(&bytes, value);
     }
 
+
     template<typename T>
-    void DataProvider::add(const std::vector<T>& array)
+    void DataProvider::add(const std::vector<T>& values)
     {
-        const uint8_t* d = reinterpret_cast<const uint8_t*>(array.data());
-
-        std::size_t size = array.size() * sizeof(T);
-
-        bytes.insert(bytes.end(), d, d + size);
+        if (endian != Serialization::isLittle())
+            for (const T& value : values)
+                add<T>(value);
+        else
+            Serialization::encode(&bytes, values);
     }
 
     template<typename T>

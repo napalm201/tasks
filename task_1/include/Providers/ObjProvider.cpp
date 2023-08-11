@@ -27,7 +27,6 @@ namespace Provider {
 					readNextObject();
 				else {
 					objects.push_back(obj);
-
 				}
 				
 			}

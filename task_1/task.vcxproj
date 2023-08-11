@@ -59,6 +59,7 @@
     <ClInclude Include="include\Providers\FileProvider.h" />
     <ClInclude Include="include\Providers\ObjProvider.h" />
     <ClInclude Include="include\Providers\ReadFactory.h" />
+    <ClInclude Include="include\Providers\Serialization.h" />
     <ClInclude Include="include\WDraw\Event.h" />
     <ClInclude Include="include\WDraw\WDraw.h" />
   </ItemGroup>

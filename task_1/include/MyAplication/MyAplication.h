@@ -7,7 +7,6 @@
 #include "Providers/ObjProvider.h"
 #include "WDraw/WDraw.h"
 #include "Objects/Figures.h"
-#include "Providers/ObjProvider.h"
 
 
 class MyAplication

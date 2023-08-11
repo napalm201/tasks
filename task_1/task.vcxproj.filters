@@ -149,5 +149,8 @@
     <ClInclude Include="include\MyAplication\MyAplication.h">
       <Filter>include\MyAplication</Filter>
     </ClInclude>
+    <ClInclude Include="include\Providers\Serialization.h">
+      <Filter>include\Providers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

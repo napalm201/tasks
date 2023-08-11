@@ -123,7 +123,6 @@ void MyAplication::runTimeConsole()
         else if(userInput == "Data") {
 
             std::cout << "¬вед≥ть дан≥" << std::endl;
-            std::cout << "‘ормат: 1 - к≥льк≥сть об'Їкт≥в, 2 - тип об'Їкту, 3 - к≥льк≥сть даних в об'Їкт≥, дан≥ ..." << std::endl;
 
             std::string data;
             std::getline(std::cin, data);
