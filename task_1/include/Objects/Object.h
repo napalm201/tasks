@@ -38,5 +38,6 @@ protected:
 	virtual double readFromDataProv(Provider::DataProvider* dataprov);
 
 	TypeObj type;
+	int count = 0;
 	std::shared_ptr<BoundyStrategy> boundyAlgorithm = std::make_unique<AABBStrategy>();
 };

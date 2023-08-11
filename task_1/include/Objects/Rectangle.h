@@ -14,9 +14,6 @@ public:
 	Rectangle(const Point2d& p1, const Point2d& p2,
 		const Point2d& p3, const Point2d& p4);
 
-	Rectangle(Point2d&& p1, Point2d&& p2,
-		Point2d&& p3, Point2d&& p4);
-
 	Rectangle(const BoundyBox& boundy);
 
     virtual	~Rectangle(void) = default;

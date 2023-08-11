@@ -3,6 +3,7 @@
 Rectangle::Rectangle(void)
 {
 	type = RECT;
+	count = 4;
 }
 
 Rectangle::Rectangle(const Point2d& p1, const Point2d& p3) :
@@ -18,14 +19,6 @@ Rectangle::Rectangle(const Point2d& p1, const Point2d& p2, const Point2d& p3, co
 	 p2(p2),
 	 p3(p3), 
 	 p4(p4) 
-{
-}
-
-Rectangle::Rectangle(Point2d&& p1, Point2d&& p2, Point2d&& p3, Point2d&& p4) : 
-	p1(std::move(p1)), 
-	p2(std::move(p2)),
-	p3(std::move(p3)), 
-	p4(std::move(p4))
 {
 }
 
@@ -62,20 +55,19 @@ double Rectangle::length() const
 void Rectangle::pack(Provider::DataProvider* dataprov) const
 {
 	dataprov->add<int>(type);
-	dataprov->add<int>(4);
-	dataprov->add<double>(p1.x()); dataprov->add<double>(p1.y());
-	dataprov->add<double>(p3.x()); dataprov->add<double>(p3.y());
+	dataprov->add<int>(count);
+
+	p1.pack(dataprov);
+	p3.pack(dataprov);
+
 }
 
 void Rectangle::unpack(Provider::DataProvider* dataprov)
 {
-	const int countCordinate = dataprov->rd<int>();
+	count = dataprov->rd<int>();
 
-	double x = readFromDataProv(dataprov); double y = readFromDataProv(dataprov);
-	p1 = Point2d(x, y);
-
-	x = readFromDataProv(dataprov); y = readFromDataProv(dataprov);
-	p3 = Point2d(x, y);
+	p1.unpack(dataprov, isDamaged);
+	p3.unpack(dataprov, isDamaged);
 
 	p2 = Point2d(p1.x(), p3.y());
 	p4 = Point2d(p3.x(), p1.y());

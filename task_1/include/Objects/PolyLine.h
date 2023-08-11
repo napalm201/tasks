@@ -1,7 +1,7 @@
-#include "Object.h"
+#include "PolyGon.h"
 #include <vector>
 
-class PolyLine : public Object
+class PolyLine : public PolyGon
 {
 public:
 	PolyLine(void);
@@ -14,9 +14,4 @@ public:
 
 	virtual void pack(Provider::DataProvider* dataprov) const override;
 	virtual void unpack(Provider::DataProvider* dataprov) override;
-
-	void addPoint(const Point2d& point);
-
-protected:
-	std::vector<Point2d> points;
 };

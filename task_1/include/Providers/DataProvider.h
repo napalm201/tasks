@@ -29,7 +29,7 @@ namespace Provider {
         std::vector<T> rd(std::size_t size);
 
         template <typename T>
-        void add(const std::vector<T>& values);
+        void add(std::vector<T> values);
 
         template<typename T>
         void next(std::size_t n);
@@ -43,7 +43,7 @@ namespace Provider {
     private:
         std::vector<uint8_t> bytes;
         std::size_t c = 0;
-        Serialization::endianness endian = Serialization::endianness::little_endian;
+        Serialization::endianness endian = Serialization::endianness::big_endian;
     };
 
     template<typename T>
@@ -75,8 +75,10 @@ namespace Provider {
 
         std::vector<T> values = Serialization::decode<T>(&bytes, c, size);   
 
-        if (endian != Serialization::isLittle()) {
-            for (T& value : values) {
+        if (endian != Serialization::isLittle()) 
+        {
+            for (T& value : values)
+            {
                 value = Serialization::swap_bytes<T>(value);
             }
         }
@@ -92,7 +94,7 @@ namespace Provider {
 
 
     template<typename T>
-    inline void DataProvider::add( T value)
+    inline void DataProvider::add(T value)
     {
         if (endian != Serialization::isLittle())
             value = Serialization::swap_bytes<T>(value);
@@ -102,7 +104,7 @@ namespace Provider {
 
 
     template<typename T>
-    void DataProvider::add(const std::vector<T>& values)
+    void DataProvider::add(std::vector<T> values)
     {
         if (endian != Serialization::isLittle())
             for (T& value : values)

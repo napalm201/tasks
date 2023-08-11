@@ -5,6 +5,7 @@ Circle::Circle(const Point2d& p, double r) :
 	r(r)
 {
 	type = CIRCLE;
+	count = 3;
 }
 
 void Circle::draw(WDraw& wDraw) const
@@ -27,18 +28,19 @@ double Circle::length() const
 void Circle::pack(Provider::DataProvider* dataprov) const
 {
 	dataprov->add<int>(type);
-	dataprov->add<int>(3);
-	dataprov->add<double>(p.x()); dataprov->add<double>(p.y());
-	dataprov->add<double>(r);
+	dataprov->add<int>(count);
+
+	p.pack(dataprov);
+
+    dataprov->add<double>(r);
 }
 
 void Circle::unpack(Provider::DataProvider* dataprov)
 {
-	const int countNumbers = dataprov->rd<int>();
+    count = dataprov->rd<int>();
 
-	double x = readFromDataProv(dataprov); double y = readFromDataProv(dataprov);
-	p = Point2d(x, y);
+	p.unpack(dataprov, isDamaged);
 
-     r = readFromDataProv(dataprov);
+    r = readFromDataProv(dataprov);
 
 }

@@ -6,6 +6,7 @@ ArcCircle::ArcCircle(const Point2d& p, double r, double startAngle, double endAn
 	endAngle(endAngle)
 {
 	type = ARCCIRLE;
+	count = 5;
 }
 
 void ArcCircle::draw(WDraw& wdraw) const
@@ -27,24 +28,15 @@ double ArcCircle::length() const
 
 void ArcCircle::pack(Provider::DataProvider* dataprov) const
 {
-	dataprov->add<int>(type);
-	dataprov->add<int>(5);
-	dataprov->add<double>(p.x()); dataprov->add<double>(p.y());
-	dataprov->add<double>(r);
+	Circle::pack(dataprov);
+
 	dataprov->add<double>(startAngle); dataprov->add<double>(endAngle);
 }
 
 void ArcCircle::unpack(Provider::DataProvider* dataprov)
 {
-	const int countNumbers = dataprov->rd<int>();
-
-	double x = readFromDataProv(dataprov); double y = readFromDataProv(dataprov);
-
-	p = Point2d(x, y);
-
-    r = readFromDataProv(dataprov);
+	Circle::unpack(dataprov);
 
 	startAngle = readFromDataProv(dataprov);
 	endAngle = readFromDataProv(dataprov);
-
 }

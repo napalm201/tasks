@@ -52,9 +52,11 @@ namespace Provider {
 	{
 		dataprov.clear();
 
-		for (auto obj : objs) {
+		for (auto obj : objs)
+		{
 			obj->pack(&dataprov);
 		}
+
 	}
 
 	void ObjProvider::saveToFileData(const std::string& patch)
