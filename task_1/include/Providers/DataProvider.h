@@ -106,10 +106,10 @@ namespace Provider {
     void DataProvider::add(const std::vector<T>& values)
     {
         if (endian != Serialization::isLittle())
-            for (const T& value : values)
-                add<T>(value);
-        else
-            Serialization::encode(&bytes, values);
+            for (T& value : values)
+                value =  Serialization::swap_bytes<T>(value);
+
+       Serialization::encode(&bytes, values);
     }
 
     template<typename T>
