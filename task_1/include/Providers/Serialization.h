@@ -23,17 +23,21 @@ namespace Provider {
 
 
 		template<typename T>
-		inline void encode(std::vector<uint8_t>* buff, const T& value) {
+		inline void encode(std::vector<uint8_t>* buff, std::size_t it, const T& value) {
 			const uint8_t* d = reinterpret_cast<const uint8_t*>(&value);
-			buff->insert(buff->end(), d, d + sizeof(T));
+			std::vector<uint8_t>::iterator itt = buff->begin();
+			std::advance(itt, it);
+			buff->insert(itt, d, d + sizeof(T));
 		}
 
 
 		template<typename T>
-		inline void encode(std::vector<uint8_t>* buff, const std::vector<T> values) {
+		inline void encode(std::vector<uint8_t>* buff, std::size_t it, const std::vector<T> values) {
 			const uint8_t* d = reinterpret_cast<const uint8_t*>(values->data());
 			std::size_t size = values->size() * sizeof(T); 
-			buff->insert(buff->end(), d, d + size);
+			std::vector<uint8_t>::iterator itt = buff->begin();
+			std::advance(itt, it);
+			buff->insert(itt, d, d + size);
 		}
 
 
@@ -57,30 +61,10 @@ namespace Provider {
 
 		template <typename T>
 		inline T swap_bytes(T value) {
-
-			T mask = 0xff;
-			uint8_t offset = sizeof(T) * 8 - 8;
-			T result = 0;
-
-			for (uint8_t i = 0; i < sizeof(T); i++) {
-				result |= (value & mask) << offset;
-				offset -= 16; mask <<= 8;
-				offset = (offset > 0) ? offset : -offset;
-			}
-
+			T result;
+			std::memcpy(&result, &value, sizeof(T));
+			std::reverse(reinterpret_cast<uint8_t*>(&result), reinterpret_cast<uint8_t*>(&result) + sizeof(T));
 			return result;
-		}
-
-		template <>
-		inline float swap_bytes<float>(float value) {
-			uint32_t res = swap_bytes<uint32_t>(*(uint32_t*)&value);
-			return *(float*)&res;
-		}
-
-		template <>
-		inline double swap_bytes<double>(double value) {
-			uint64_t res = swap_bytes<uint64_t>(*(uint64_t*)&value);
-			return *(double*)&res;
 		}
 
 	}

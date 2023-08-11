@@ -54,7 +54,6 @@ namespace Provider {
 
         T primitive = Serialization::decode<T>(&bytes, c);
 
-
         if (endian != Serialization::isLittle())
             primitive = Serialization::swap_bytes<T>(primitive);
 
@@ -85,7 +84,7 @@ namespace Provider {
         c += size * sizeof(T);
 
         for (T& value : values) 
-            if (value = THROW_ERR)
+            if (value == THROW_ERR)
                 throw ReadError();
 
         return values;
@@ -98,7 +97,7 @@ namespace Provider {
         if (endian != Serialization::isLittle())
             value = Serialization::swap_bytes<T>(value);
 
-        Serialization::encode(&bytes, value);
+        Serialization::encode(&bytes, bytes.size(), value);
     }
 
 
@@ -109,7 +108,7 @@ namespace Provider {
             for (T& value : values)
                 value =  Serialization::swap_bytes<T>(value);
 
-       Serialization::encode(&bytes, values);
+       Serialization::encode(&bytes, bytes.size() , values);
     }
 
     template<typename T>
