@@ -2,22 +2,26 @@
 #include "Object.h"
 #include <vector>
 
-class PolyLine : public Object
-{
-public:
-	PolyLine(void);
-	virtual ~PolyLine(void) = default;
+namespace Objects {
 
-public:
-	virtual void draw(WDraw& wdraw) const override;
-	virtual BoundyBox getBoundyBox() const override;
-	virtual double length() const override;
+	class PolyLine : public Object
+	{
+	public:
+		PolyLine(void);
+		virtual ~PolyLine(void) = default;
 
-	virtual void pack(Provider::DataProvider* dataprov) const override;
-	virtual void unpack(Provider::DataProvider* dataprov) override;
+	public:
+		virtual void draw(WDraw& wdraw) const override;
+		virtual BoundyBox getBoundyBox() const override;
+		virtual double length() const override;
 
-	void addPoint(const Point2d& point);
+		virtual void pack(Provider::DataProvider* dataprov) const override;
+		virtual void unpack(Provider::DataProvider* dataprov) override;
 
-protected:
-	std::vector<Point2d> m_arrPoints;
-};
+		void addPoint(const Point2d& point);
+
+	protected:
+		std::vector<Point2d> m_arrPoints;
+	};
+
+}

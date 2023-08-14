@@ -2,6 +2,7 @@
 #include "Objects/Figures.h"
 #include "DataProvider.h"
 
+using namespace Objects;
 namespace Provider {
 
 	class ReadFactory {

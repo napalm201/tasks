@@ -8,6 +8,7 @@
 #include "WDraw/WDraw.h"
 #include "Objects/Figures.h"
 
+using namespace Objects;
 
 class MyAplication
 {

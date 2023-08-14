@@ -1,5 +1,6 @@
 #include "ReadFactory.h"
 
+using namespace Objects;
 namespace Provider {
 
 	ReadFactory::ReadFactory(DataProvider* dataprov) : m_pDataprov(dataprov)

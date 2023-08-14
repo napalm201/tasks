@@ -1,5 +1,7 @@
 #include "ObjProvider.h"
 
+using namespace Objects;
+
 namespace Provider {
 
 

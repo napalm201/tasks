@@ -3,6 +3,7 @@
 #include "DataProvider.h"
 #include "ReadFactory.h"
 
+using namespace Objects;
 
 namespace Provider {
 

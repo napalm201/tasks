@@ -1,5 +1,6 @@
 #include "MyAplication.h"
 #include "Providers/DataProvider.h"
+using namespace Objects;
 double gData[] = {
     8, // -- число объектов в файле
 
