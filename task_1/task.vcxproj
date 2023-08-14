@@ -56,7 +56,6 @@
     <ClInclude Include="include\Objects\PolyLine.h" />
     <ClInclude Include="include\Objects\Rectangle.h" />
     <ClInclude Include="include\Providers\DataProvider.h" />
-    <ClInclude Include="include\Providers\FileProvider.h" />
     <ClInclude Include="include\Providers\ObjProvider.h" />
     <ClInclude Include="include\Providers\ReadFactory.h" />
     <ClInclude Include="include\Providers\Serialization.h" />

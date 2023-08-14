@@ -21,17 +21,23 @@ private:
 	MyAplication();
 	~MyAplication() = default;
 
-	static MyAplication app;
+	static MyAplication m_app;
 
 private:
 	void runTimeWDraw();
 
-	std::mutex mtx1;
+	void save();
+	void read();
+	void data();
+	void exit();
 
-	bool update = true;
-	bool quit = false;
-	std::vector<std::shared_ptr<Object>> objs;
-	Provider::ObjProvider objProv;
+	std::mutex m_mtx1;
+
+	bool m_bUpdate = true;
+	bool m_bQuit = false;
+
+	std::vector<std::shared_ptr<Object>> m_arrObjs;
+	Provider::ObjProvider m_objProv;
 
 public:
 	static MyAplication&  getApp();

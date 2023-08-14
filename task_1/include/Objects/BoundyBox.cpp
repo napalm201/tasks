@@ -1,33 +1,17 @@
 #include "BoundyBox.h"
 
-BoundyBox::BoundyBox(const Point2d& p1, const Point2d& p3) :
-	m_p1(p1),
-	m_p3(p3)
-{
-	m_p2 = Point2d(p1.x(), p3.y());
-	m_p4 = Point2d(p3.x(), p1.y());
-}
-
-BoundyBox::BoundyBox(const Point2d& p1, const Point2d& p2, const Point2d& p3, const Point2d& p4) : m_p1(p1), m_p2(p2), m_p3(p3), m_p4(p4)
+BoundyBox::BoundyBox(const Point2d& min_p, const Point2d& max_p) :
+	m_min_p(min_p),
+	m_max_p(max_p)
 {
 }
 
-Point2d BoundyBox::p1() const
+const Point2d& BoundyBox::minP() const
 {
-	return m_p1;
+	return m_min_p;
 }
 
-Point2d BoundyBox::p2() const
+const Point2d& BoundyBox::maxP() const
 {
-	return m_p2;
-}
-
-Point2d BoundyBox::p3() const
-{
-	return m_p3;
-}
-
-Point2d BoundyBox::p4() const
-{
-	return m_p4;
+	return m_max_p;
 }

@@ -1,7 +1,7 @@
 #include "WDraw.h"
 #define PI 3.14
 #include <iostream>
-int WDraw::detailLevel = 20;
+int WDraw::m_nDetailLevel = 20;
 
 WDraw& WDraw::getWDraw()
 {
@@ -13,14 +13,14 @@ WDraw::WDraw(void)
     init();
 }
 
-WDraw::WDraw(std::string name) : name(name)
+WDraw::WDraw(std::string name) : m_name(name)
 {
     init();
 }
 
 WDraw::~WDraw(void)
 {
-    glfwWindowShouldClose(window);
+    glfwWindowShouldClose(m_window);
 }
 
 void WDraw::init()
@@ -28,18 +28,18 @@ void WDraw::init()
     if (!glfwInit())
         return;
 
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, name.c_str(), nullptr, nullptr);
+    m_window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, m_name.c_str(), nullptr, nullptr);
 
-    if (!window)
+    if (!m_window)
         return;
 
-    glfwMakeContextCurrent(window);
-    glfwSetWindowUserPointer(window, this);
+    glfwMakeContextCurrent(m_window);
+    glfwSetWindowUserPointer(m_window, this);
 
-    glfwSetMouseButtonCallback(window, mouseEvent);
-    glfwSetKeyCallback(window, BoardEvent);
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-    glfwSetWindowCloseCallback(window, windowCloseCallback);
+    glfwSetMouseButtonCallback(m_window, mouseEvent);
+    glfwSetKeyCallback(m_window, BoardEvent);
+    glfwSetFramebufferSizeCallback(m_window, framebufferSizeCallback);
+    glfwSetWindowCloseCallback(m_window, windowCloseCallback);
 
     if (SCREEN_WIDTH > SCREEN_HEIGHT)
         glOrtho(CordXS * (float)SCREEN_WIDTH / SCREEN_HEIGHT, CordXE * (float)SCREEN_WIDTH / SCREEN_HEIGHT, CordYS, CordYE, -1, 1);
@@ -118,8 +118,8 @@ void WDraw::drawArcCircle(const Point2d& p, double r, double startAngle, double 
 
     glBegin(GL_LINE_STRIP);
 
-    for (int i = 0; i <= detailLevel; ++i) {
-        double angle = startAngle + (endAngle - startAngle) * static_cast<double>(i) / detailLevel;
+    for (int i = 0; i <= m_nDetailLevel; ++i) {
+        double angle = startAngle + (endAngle - startAngle) * static_cast<double>(i) / m_nDetailLevel;
         double x = r * std::cos(angle);
         double y = r * std::sin(angle);
         glVertex2d(x, y);
@@ -164,7 +164,7 @@ void WDraw::background(int r, int g, int b)
 
 void WDraw::render()
 {
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(m_window);
 }
 
 void WDraw::fillStroke(int r, int g, int b)

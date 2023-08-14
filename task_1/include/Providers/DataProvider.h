@@ -6,6 +6,8 @@
 
 #include <vector>
 #include <cstdlib>
+#include <fstream>
+
 #define PI 3.141
 #define THROW_ERR 23000000
 
@@ -37,27 +39,27 @@ namespace Provider {
         void reset();
         void clear();
 
-        void save(const std::string& patch);
-        void read(const std::string& patch);
+        void save(const std::string& path);
+        void read(const std::string& path);
 
     private:
-        std::vector<uint8_t> bytes;
-        std::size_t c = 0;
-        Serialization::endianness endian = Serialization::endianness::big_endian;
+        std::vector<uint8_t> m_arrBytes;
+        std::size_t m_nC = 0;
+        Serialization::endianness m_eEndian = Serialization::endianness::big_endian;
     };
 
     template<typename T>
     T DataProvider::rd()
     {
-        if (c == bytes.size())
+        if (m_nC == m_arrBytes.size())
             throw EndOfFile();
 
-        T primitive = Serialization::decode<T>(&bytes, c);
+        T primitive = Serialization::decode<T>(&m_arrBytes, m_nC);
 
-        if (endian != Serialization::isLittle())
+        if (m_eEndian != Serialization::isLittle())
             primitive = Serialization::swap_bytes<T>(primitive);
 
-        c += sizeof(T);
+        m_nC += sizeof(T);
 
         if (primitive == THROW_ERR)
             throw ReadError();
@@ -66,16 +68,15 @@ namespace Provider {
     }
 
 
-
     template<typename T>
     std::vector<T> DataProvider::rd(std::size_t size)
     {
-        if (c + size * sizeof(T) > bytes.size()) 
+        if (m_nC + size * sizeof(T) > m_arrBytes.size()) 
             throw EndOfFile();         
 
-        std::vector<T> values = Serialization::decode<T>(&bytes, c, size);   
+        std::vector<T> values = Serialization::decode<T>(&m_arrBytes, m_nC, size);   
 
-        if (endian != Serialization::isLittle()) 
+        if (m_eEndian != Serialization::isLittle()) 
         {
             for (T& value : values)
             {
@@ -83,7 +84,7 @@ namespace Provider {
             }
         }
 
-        c += size * sizeof(T);
+        m_nC += size * sizeof(T);
 
         for (T& value : values) 
             if (value == THROW_ERR)
@@ -96,25 +97,25 @@ namespace Provider {
     template<typename T>
     inline void DataProvider::add(T value)
     {
-        if (endian != Serialization::isLittle())
+        if (m_eEndian != Serialization::isLittle())
             value = Serialization::swap_bytes<T>(value);
 
-        Serialization::encode(&bytes, bytes.size(), value);
+        Serialization::encode(&m_arrBytes, m_arrBytes.size(), value);
     }
 
 
     template<typename T>
     void DataProvider::add(std::vector<T> values)
     {
-        if (endian != Serialization::isLittle())
+        if (m_eEndian != Serialization::isLittle())
             for (T& value : values)
                 value =  Serialization::swap_bytes<T>(value);
 
-       Serialization::encode(&bytes, bytes.size() , values);
+       Serialization::encode(&m_arrBytes, m_arrBytes.size() , values);
     }
 
     template<typename T>
     void DataProvider::next(std::size_t n) {
-        c += sizeof(T) * n;
+        m_nC += sizeof(T) * n;
     }
 };

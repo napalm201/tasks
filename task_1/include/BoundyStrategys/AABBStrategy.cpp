@@ -2,9 +2,9 @@
 #include <cmath>
 #include <algorithm>
 
-BoundyBox AABBStrategy::doAlgorithm(const Point2d& p1, const Point2d& p2, const Point2d& p3, const Point2d& p4) const
+BoundyBox AABBStrategy::doAlgorithm(const Point2d& min_p, const Point2d& max_p) const
 {
-	return BoundyBox(p1, p2, p3, p4);
+	return BoundyBox(min_p, max_p);
 }
 
 BoundyBox AABBStrategy::doAlgorithm(const Point2d& p, double r) const
@@ -32,6 +32,7 @@ BoundyBox AABBStrategy::doAlgorithm(const Point2d& p, double r, double startAngl
 	Point2d endPoint(endPointX, endPointY);
 
 	std::vector<Point2d> pointsCircle;
+	pointsCircle.reserve(2);
 
 	pointsCircle.push_back(startPoint);
 	pointsCircle.push_back(endPoint);
@@ -57,7 +58,7 @@ BoundyBox AABBStrategy::doAlgorithm(const Point2d& p, double r, double startAngl
 
 }
 
-BoundyBox AABBStrategy::doAlgorithm(std::vector<Point2d> points) const
+BoundyBox AABBStrategy::doAlgorithm(const std::vector<Point2d>& points) const
 {
 	if (points.size() < 1)
 		return BoundyBox();

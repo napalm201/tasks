@@ -15,14 +15,14 @@ namespace Provider {
 	public:
 		virtual std::shared_ptr<Object> factory(const int type);
 
-		std::shared_ptr<Object> greateRect();
-		std::shared_ptr<Object> greateCircle();
-		std::shared_ptr<Object> greateArcCircle();
-		std::shared_ptr<Object> greatePolygon();
-		std::shared_ptr<Object> greatePolyLine();
+		std::shared_ptr<Object> getRect();
+		std::shared_ptr<Object> getCircle();
+		std::shared_ptr<Object> getArcCircle();
+		std::shared_ptr<Object> getPolygon();
+		std::shared_ptr<Object> getPolyLine();
 
 	private:
-		DataProvider* dataprov = nullptr;
+		DataProvider* m_pDataprov = nullptr;
 	};
 
 

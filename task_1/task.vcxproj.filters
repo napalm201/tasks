@@ -39,9 +39,6 @@
     <ClCompile Include="include\Objects\Circle.cpp">
       <Filter>include\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="include\Objects\PolyGon.cpp">
-      <Filter>include\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="include\Objects\PolyLine.cpp">
       <Filter>include\Objects</Filter>
     </ClCompile>
@@ -81,6 +78,9 @@
     <ClCompile Include="include\Objects\Object.cpp">
       <Filter>include\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="include\Objects\PolyGon.cpp">
+      <Filter>include\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Exceptions\Exception.h">
@@ -113,9 +113,6 @@
     <ClInclude Include="include\Objects\Point2d.h">
       <Filter>include\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="include\Objects\PolyGon.h">
-      <Filter>include\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="include\Objects\PolyLine.h">
       <Filter>include\Objects</Filter>
     </ClInclude>
@@ -143,14 +140,14 @@
     <ClInclude Include="include\Providers\ObjProvider.h">
       <Filter>include\Providers</Filter>
     </ClInclude>
-    <ClInclude Include="include\Providers\FileProvider.h">
-      <Filter>include\Providers</Filter>
-    </ClInclude>
     <ClInclude Include="include\MyAplication\MyAplication.h">
       <Filter>include\MyAplication</Filter>
     </ClInclude>
     <ClInclude Include="include\Providers\Serialization.h">
       <Filter>include\Providers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\PolyGon.h">
+      <Filter>include\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

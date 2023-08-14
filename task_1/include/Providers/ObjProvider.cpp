@@ -3,7 +3,7 @@
 namespace Provider {
 
 
-	ObjProvider::ObjProvider(const DataProvider& dataprov) : dataprov(dataprov), readFactory(&this->dataprov)
+	ObjProvider::ObjProvider(const DataProvider& dataprov) : m_dataprov(dataprov), m_readFactory(&this->m_dataprov)
 	{
 	}
 
@@ -12,22 +12,21 @@ namespace Provider {
 
 		std::vector<std::shared_ptr<Object>> objects;
 
-		dataprov.reset();
+		m_dataprov.reset();
 
 		try {
-			const int countObject = dataprov.rd<int>();
+			const int countObject = m_dataprov.rd<int>();
 
 			for (int i = 0; i < countObject; i++) {
 
-				const int type = dataprov.rd<int>();
+				const int type = m_dataprov.rd<int>();
 
-				std::shared_ptr<Object> obj = readFactory.factory(type);
+				std::shared_ptr<Object> obj = m_readFactory.factory(type);
 				
 				if (obj == nullptr)
 					readNextObject();
-				else {
+				else
 					objects.push_back(obj);
-				}
 				
 			}
 		}
@@ -45,34 +44,36 @@ namespace Provider {
 
 	void ObjProvider::setdata(const DataProvider& dataprov)
 	{
-		this->dataprov = dataprov;
+		this->m_dataprov = dataprov;
 	}
 
 	void ObjProvider::setdata(std::vector<std::shared_ptr<Object>> objs)
 	{
-		dataprov.clear();
+		m_dataprov.clear();
+
+		m_dataprov.add<int>(objs.size());
 
 		for (auto obj : objs)
 		{
-			obj->pack(&dataprov);
+			obj->pack(&m_dataprov);
 		}
 
 	}
 
-	void ObjProvider::saveToFileData(const std::string& patch)
+	void ObjProvider::saveToFileData(const std::string& path)
 	{
-		dataprov.save(patch);
+		m_dataprov.save(path);
 	}
 
-	void ObjProvider::readFromFileData(const std::string& patch)
+	void ObjProvider::readFromFileData(const std::string& path)
 	{
-		dataprov.read(patch);
+		m_dataprov.read(path);
 	}
 
 	void ObjProvider::readNextObject()
 	{
-		const int counter = dataprov.rd<int>();
+		const int counter = m_dataprov.rd<int>();
 
-		dataprov.next<double>(counter);
+		m_dataprov.next<double>(counter);
 	}
 }

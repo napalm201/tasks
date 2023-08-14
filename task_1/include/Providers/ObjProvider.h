@@ -1,10 +1,8 @@
 #pragma once
-
-
 #include "Objects/Figures.h"
 #include "DataProvider.h"
 #include "ReadFactory.h"
-#include "FileProvider.h"
+
 
 namespace Provider {
 
@@ -24,36 +22,38 @@ namespace Provider {
         template <typename T>
         void setdata(T* data, std::size_t size);
 
-        void saveToFileData(const std::string& patch);
-        void readFromFileData(const std::string& patch);
+        void saveToFileData(const std::string& path);
+        void readFromFileData(const std::string& path);
                 
     private:
         virtual void readNextObject();
 
     private:
-        ReadFactory readFactory = ReadFactory(&this->dataprov);
-        DataProvider dataprov;
+        ReadFactory m_readFactory = ReadFactory(&this->m_dataprov);
+        DataProvider m_dataprov;
     };
 
     template<typename T>
     void ObjProvider::setdata(T* data, std::size_t size)
     {
-        dataprov.clear();
+        m_dataprov.clear();
 
         int base = 0;
         const int countObj = data[base++];
-        dataprov.add<int>(countObj);
+
+        m_dataprov.add<int>(countObj);
 
         for (int j = 0; j < countObj; j++) {
 
             const int type = data[base++];
             const int countData = data[base++];
-            dataprov.add<int>(type); dataprov.add<int>(countData);
+
+            m_dataprov.add<int>(type); m_dataprov.add<int>(countData);
 
             for (int j = 0; j < countData; j++) {
 
                 const double value = data[base++];
-                dataprov.add<double>(value);
+                m_dataprov.add<double>(value);
 
             }
 

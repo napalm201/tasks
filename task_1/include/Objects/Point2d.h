@@ -14,10 +14,11 @@ public:
     void pack(Provider::DataProvider* dataprov) const;
     void unpack(Provider::DataProvider* dataprov, bool &damaged);
 
+    static double distance(const Point2d& p1, const Point2d& p2);
+
 private:
     double m_dX = 0;
     double m_dY = 0;
 };
 
-double distance(const Point2d& p1, const Point2d& p2);
 

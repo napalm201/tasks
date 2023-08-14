@@ -66,91 +66,31 @@ double gData[] = {
 
 MyAplication::MyAplication()
 {
-    objProv.setdata(gData, sizeof(gData) / sizeof(gData[0]));
-    objs = objProv.getObject();
+    m_objProv.setdata(gData, sizeof(gData) / sizeof(gData[0]));
+    m_arrObjs = m_objProv.getObject();
 }
 
 void MyAplication::runTimeConsole()
 {
     std::thread thr1(&MyAplication::runTimeWDraw, this);
 
-    while (!quit) {
+    while (!m_bQuit) {
 
         std::string userInput;
         
         std::getline(std::cin, userInput);
 
         if (userInput == "Save") {
-
-            std::cout << "Файл куди необхідно зберегти" << std::endl;
-            
-            std::string patch;
-            std::getline(std::cin, patch);
-
-            if (patch == "/q")
-                break;
-
-            std::unique_lock<std::mutex> ul(mtx1);
-            objProv.saveToFileData(patch);
-            ul.unlock();
+            save();
         }
         else if (userInput == "Read") {
-
-            std::cout << "Файл з якого необхідно прочитати" << std::endl;
-
-            std::string patch;
-            std::getline(std::cin, patch);
-
-            if (patch == "/q")
-                break;
-
-            std::unique_lock<std::mutex> ul(mtx1);
-
-            objProv.readFromFileData(patch);
-            objs = objProv.getObject();
-            update = true;
-
-            ul.unlock();
+            read();
         }
-        else if (userInput == "Exit") {
-
-            std::unique_lock<std::mutex> ul(mtx1);
-
-            quit = true;
-
-            ul.unlock();
+        else if (userInput == "Data") {
+            data();
         }
-        else if(userInput == "Data") {
-
-            std::cout << "Введіть дані" << std::endl;
-
-            std::string data;
-            std::getline(std::cin, data);
-
-         	std::vector<double> numbers;
-	        std::istringstream is(data);
-
-            try {
-                double num;
-
-                while (is >> num) {
-                    numbers.push_back(num);
-                }
-
-                std::unique_lock<std::mutex> ul(mtx1);
-                
-                objProv.setdata(numbers.data(), numbers.size());
-                update = true;
-                objs = objProv.getObject();
-                
-                ul.unlock();
-
-            }
-
-            catch (const std::invalid_argument& e) {
-                std::cout<< "Помилка " << e.what() << std::endl;
-            }
-           
+        else if(userInput == "Exit") {
+            exit();
         }
      
    }
@@ -165,26 +105,26 @@ void MyAplication::runTimeWDraw()
 
     wdraw.background(0, 0, 0);
 
-    while (!quit) {
+    while (!m_bQuit) {
 
         if (wdraw.event.type == CLOSE) {
-            std::unique_lock<std::mutex> ul(mtx1);
-            quit = true;
+            std::unique_lock<std::mutex> ul(m_mtx1);
+            m_bQuit = true;
         }
            
-        if (update == true || wdraw.event.type == RESIZE) {
+        if (m_bUpdate == true || wdraw.event.type == RESIZE) {
 
             wdraw.event.type = UNDEF;
 
-            std::unique_lock<std::mutex> ul(mtx1);
+            std::unique_lock<std::mutex> ul(m_mtx1);
 
-            update = false;
+            m_bUpdate = false;
             
             ul.unlock();
 
             wdraw.background(0, 0, 0);
 
-            for (const auto& obj : objs) {
+            for (const auto& obj : m_arrObjs) {
 
                 obj->draw(wdraw);
                 BoundyBoxObject(obj->getBoundyBox(), obj).draw(wdraw);
@@ -200,7 +140,90 @@ void MyAplication::runTimeWDraw()
 
 }
 
+void MyAplication::save()
+{
+    std::cout << "Файл куди необхідно зберегти" << std::endl;
+
+    std::string patch;
+    std::getline(std::cin, patch);
+
+    if (patch == "/q")
+        return;
+
+    std::unique_lock<std::mutex> ul(m_mtx1);
+
+    m_objProv.setdata(m_arrObjs);
+
+    m_objProv.saveToFileData(patch);
+
+    ul.unlock();
+}
+
+void MyAplication::read()
+{
+    std::cout << "Файл з якого необхідно прочитати" << std::endl;
+
+    std::string patch;
+    std::getline(std::cin, patch);
+
+    if (patch == "/q")
+        return;
+
+    std::unique_lock<std::mutex> ul(m_mtx1);
+
+    m_objProv.readFromFileData(patch);
+
+    m_arrObjs = m_objProv.getObject();
+
+    m_bUpdate = true;
+
+    ul.unlock();
+}
+
+void MyAplication::data()
+{
+    std::cout << "Введіть дані" << std::endl;
+
+    std::string data;
+    std::getline(std::cin, data);
+
+    std::vector<double> numbers;
+    std::istringstream is(data);
+
+    try {
+        double num;
+
+        while (is >> num) {
+            numbers.push_back(num);
+        }
+
+        std::unique_lock<std::mutex> ul(m_mtx1);
+
+        m_objProv.setdata(numbers.data(), numbers.size());
+        m_bUpdate = true;
+        m_arrObjs = m_objProv.getObject();
+
+        ul.unlock();
+
+    }
+
+    catch (const std::invalid_argument& e) {
+        std::cout << "Помилка " << e.what() << std::endl;
+    }
+
+}
+
+void MyAplication::exit()
+{
+
+    std::unique_lock<std::mutex> ul(m_mtx1);
+
+    m_bQuit = true;
+
+    ul.unlock();
+}
+
 MyAplication& MyAplication::getApp()
 {
-	static MyAplication app; return app;
+	static MyAplication m_app; return m_app;
 }

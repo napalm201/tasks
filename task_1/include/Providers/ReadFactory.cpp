@@ -2,7 +2,7 @@
 
 namespace Provider {
 
-	ReadFactory::ReadFactory(DataProvider* dataprov) : dataprov(dataprov)
+	ReadFactory::ReadFactory(DataProvider* dataprov) : m_pDataprov(dataprov)
 	{
 
 	}
@@ -10,24 +10,22 @@ namespace Provider {
 	std::shared_ptr<Object> ReadFactory::factory(const int type)
 	{
 		try {
-			if (type == 1) {
-				return greateRect();
-			}
-			else if (type == 2) {
-				return greateCircle();
-			}
-			else if (type == 4) {
-				return greateArcCircle();
-			}
-			else if (type == 5) {
-				return greatePolygon();
-			}
-			else if (type == 6) {
-				return greatePolyLine();
-			}
-			else {
+
+			switch (type) {
+			case 1:
+				return getRect();
+			case 2:
+				return getCircle();
+			case 4:
+				return getArcCircle();
+			case 5:
+				return getPolygon();
+			case 6:
+				return getPolyLine();
+			default:
 				return nullptr;
 			}
+
 		}
 		catch (const EndOfFile& e) {
 			throw e;
@@ -38,45 +36,45 @@ namespace Provider {
 	}
 
 
-	std::shared_ptr<Object> ReadFactory::greateRect()
+	std::shared_ptr<Object> ReadFactory::getRect()
 	{
 		std::shared_ptr<Object> rect = std::make_shared<Rectangle>();
-		rect->unpack(dataprov);
+		rect->unpack(m_pDataprov);
 
 		return rect;
 	}
 
 
-	std::shared_ptr<Object> ReadFactory::greateCircle()
+	std::shared_ptr<Object> ReadFactory::getCircle()
 	{
 		std::shared_ptr<Object> circle = std::make_shared<Circle>();
-		circle->unpack(dataprov);
+		circle->unpack(m_pDataprov);
 
 		return circle;
 	}
 
 
-	std::shared_ptr<Object> ReadFactory::greateArcCircle()
+	std::shared_ptr<Object> ReadFactory::getArcCircle()
 	{
 		std::shared_ptr<Object> arc = std::make_shared<ArcCircle>();
-		arc->unpack(dataprov);
+		arc->unpack(m_pDataprov);
 
 		return arc;
 	}
 
 
-	std::shared_ptr<Object> ReadFactory::greatePolygon()
+	std::shared_ptr<Object> ReadFactory::getPolygon()
 	{
 		std::shared_ptr<Object> polygon = std::make_shared<PolyGon>();
-     	polygon->unpack(dataprov);
+     	polygon->unpack(m_pDataprov);
 
 		return polygon;
 	}
 
-	std::shared_ptr<Object> ReadFactory::greatePolyLine()
+	std::shared_ptr<Object> ReadFactory::getPolyLine()
 	{
 		std::shared_ptr<Object> polyline = std::make_shared<PolyLine>();
-		polyline->unpack(dataprov);
+		polyline->unpack(m_pDataprov);
 
 		return polyline;
 	}

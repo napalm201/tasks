@@ -30,14 +30,16 @@ public:
 	virtual void pack(Provider::DataProvider* dataprov) const = 0;
 	virtual void unpack(Provider::DataProvider* dataprov) = 0;
 
-public:
-	bool isDamaged = 0;
+	bool isDamaged() const;
 
 protected:
-
 	virtual double readFromDataProv(Provider::DataProvider* dataprov);
 
-	TypeObj type;
-	int count = 0;
-	std::shared_ptr<BoundyStrategy> boundyAlgorithm = std::make_unique<AABBStrategy>();
+
+protected:
+	bool m_bDamaged = 0;
+    TypeObj m_eType = UND;
+	int m_nCount = 0;
+
+	std::shared_ptr<BoundyStrategy> m_boundyAlgorithm = std::make_unique<AABBStrategy>();
 };

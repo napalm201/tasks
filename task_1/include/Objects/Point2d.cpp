@@ -33,17 +33,19 @@ void Point2d::unpack(Provider::DataProvider* dataprov, bool& damaged)
         damaged = true;
     }
     catch (const EndOfFile& er) {
-        throw;
+        throw er;
     }
 }
 
-
-double distance(const Point2d& p1, const Point2d& p2) 
+double Point2d::distance(const Point2d& p1, const Point2d& p2)
 {
     double dx = p2.x() - p1.x();
     double dy = p2.y() - p1.y();
 
     return std::sqrt(dx * dx + dy * dy);
 }
+
+
+
 
 

@@ -5,7 +5,7 @@
 
 class Circle : public Object {
 public:
-	Circle(void) = default;
+	Circle(void);
 	Circle(const Point2d& p, double r);
 
 	virtual ~Circle(void) = default;
@@ -19,6 +19,6 @@ public:
 	virtual void unpack(Provider::DataProvider* dataprov) override;
 
 protected:
-	Point2d p = Point2d(0, 0);
-	double r = 2;
+	Point2d m_p = Point2d(0, 0);
+	double m_dr = 2;
 };

@@ -1,46 +1,52 @@
 #include "Circle.h"
 
-Circle::Circle(const Point2d& p, double r) : 
-	p(p),
-	r(r)
+Circle::Circle(void)
 {
-	type = CIRCLE;
-	count = 3;
+	m_eType = CIRCLE;
+	m_nCount = 3;
+}
+
+Circle::Circle(const Point2d& p, double r) :
+	m_p(p),
+	m_dr(r)
+{
+	m_eType = CIRCLE;
+	m_nCount = 3;
 }
 
 void Circle::draw(WDraw& wDraw) const
 {
 	wDraw.fillStroke(34, 34, 34);
 	wDraw.wStroke(3);
-	wDraw.drawCircle(p, r);
+	wDraw.drawCircle(m_p, m_dr);
 }
 
 BoundyBox Circle::getBoundyBox() const
 {
-	return boundyAlgorithm->doAlgorithm(p ,r);
+	return m_boundyAlgorithm->doAlgorithm(m_p , m_dr);
 }
 
 double Circle::length() const
 {
-	return 2 * PI * r;
+	return 2 * PI * m_dr;
 }
 
 void Circle::pack(Provider::DataProvider* dataprov) const
 {
-	dataprov->add<int>(type);
-	dataprov->add<int>(count);
+	dataprov->add<int>(m_eType);
+	dataprov->add<int>(m_nCount);
 
-	p.pack(dataprov);
+	m_p.pack(dataprov);
 
-    dataprov->add<double>(r);
+    dataprov->add<double>(m_dr);
 }
 
 void Circle::unpack(Provider::DataProvider* dataprov)
 {
-    count = dataprov->rd<int>();
+    m_nCount = dataprov->rd<int>();
 
-	p.unpack(dataprov, isDamaged);
+	m_p.unpack(dataprov, m_bDamaged);
 
-    r = readFromDataProv(dataprov);
+    m_dr = readFromDataProv(dataprov);
 
 }

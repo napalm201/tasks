@@ -2,62 +2,44 @@
 
 PolyGon::PolyGon(void)
 {
-    type = POLYGON;
-    count = 0;
+    m_eType = POLYGON;
+    m_nCount = 0;
 }
 
 void PolyGon::draw(WDraw& wdraw) const
 {
-    wdraw.fillStroke(56, 56, 65);
+    if (m_nCount == 0 || m_nCount == 1)
+        return;
 
-    for (int i = 0; i < points.size() - 1; i++) 
-        wdraw.drawSegment(points[i], points[i + 1]);
-    
+    PolyLine::draw(wdraw);
 
-    wdraw.drawSegment(points[0], points[points.size() - 1]);
+    wdraw.drawSegment(m_arrPoints[0], m_arrPoints[m_nCount - 1]);
 }
 
 BoundyBox PolyGon::getBoundyBox() const
 {
-	return boundyAlgorithm->doAlgorithm(points);
+	return m_boundyAlgorithm->doAlgorithm(m_arrPoints);
 }
 
 double PolyGon::length() const
 {
-    double sum = 0;
+    if (m_nCount == 0 || m_nCount == 1)
+        return 0;
 
-    for (int i = 0; i < points.size() - 1; i++) 
-        sum += distance(points[i], points[i + 1]);
+    double sum = PolyLine::length();
     
-    sum += distance(points[0], points[points.size() - 1]);
+    sum += Point2d::distance(m_arrPoints[0], m_arrPoints[m_nCount - 1]);
 
     return sum;
 }
 
 void PolyGon::pack(Provider::DataProvider* dataprov) const
 {
-    dataprov->add<int>(type);
-    dataprov->add<int>(points.size());
-    
-    for (const Point2d& point : points)
-        point.pack(dataprov);
+    PolyLine::pack(dataprov);
 }
 
 void PolyGon::unpack(Provider::DataProvider* dataprov)
 {
-    const int counter = dataprov->rd<int>();
-    
-    for (int i = 0; i < counter / 2; i++) 
-    {
-        Point2d p;
-        p.unpack(dataprov, isDamaged);
-        addPoint(p);
-    }
-
+    PolyLine::unpack(dataprov);
 }
 
-void PolyGon::addPoint(const Point2d point)
-{
-    points.push_back(point);
-    count++;
-}

@@ -1,7 +1,8 @@
-#include "PolyGon.h"
+#pragma once
+#include "Object.h"
 #include <vector>
 
-class PolyLine : public PolyGon
+class PolyLine : public Object
 {
 public:
 	PolyLine(void);
@@ -14,4 +15,9 @@ public:
 
 	virtual void pack(Provider::DataProvider* dataprov) const override;
 	virtual void unpack(Provider::DataProvider* dataprov) override;
+
+	void addPoint(const Point2d& point);
+
+protected:
+	std::vector<Point2d> m_arrPoints;
 };

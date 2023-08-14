@@ -9,10 +9,7 @@ class Rectangle : public Object
 public:
 	Rectangle(void);
 
-	Rectangle(const Point2d& p1, const Point2d& p3);
-
-	Rectangle(const Point2d& p1, const Point2d& p2,
-		const Point2d& p3, const Point2d& p4);
+	Rectangle(const Point2d& min_p, const Point2d& max_p);
 
 	Rectangle(const BoundyBox& boundy);
 
@@ -27,6 +24,6 @@ public:
 	virtual void unpack(Provider::DataProvider* dataprov) override;
 
 private:
-	Point2d p1 = Point2d(-1, 0); Point2d p2 = Point2d(0, 1);
-	Point2d p3 = Point2d(0, 1); Point2d p4 = Point2d(0, -1);
+	Point2d m_min_p = Point2d(-1, -1);
+	Point2d m_max_p = Point2d(1, 1);
 };

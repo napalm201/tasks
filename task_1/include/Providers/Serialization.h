@@ -51,7 +51,7 @@ namespace Provider {
 
 
         template<typename T>
-		inline T& decode(const std::vector<uint8_t>* buff, std::size_t it) {
+		inline T decode(const std::vector<uint8_t>* buff, std::size_t it) {
 
 			T primitive; memcpy(&primitive, buff->data() + it, sizeof(T));
 			

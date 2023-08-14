@@ -8,9 +8,9 @@ public:
 	~AABBStrategy(void) = default;
 
 public:
-	virtual BoundyBox doAlgorithm(const Point2d& p1, const Point2d& p2, const Point2d& p3, const Point2d& p4) const override;
+	virtual BoundyBox doAlgorithm(const Point2d& min_p, const Point2d& max_p) const override;
 	virtual BoundyBox doAlgorithm(const Point2d& p, double r) const override;
 	virtual BoundyBox doAlgorithm(const Point2d& p, double r, double startAngle, double endAngle) const override;
-	virtual BoundyBox doAlgorithm(std::vector<Point2d> points) const override;
+	virtual BoundyBox doAlgorithm(const std::vector<Point2d>& points) const override;
 };
 

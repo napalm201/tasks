@@ -55,8 +55,8 @@ private:
 	const float CordYS = -50;
 	const float CordYE = 200;
 
-	std::string name;
-	GLFWwindow* window;
+	std::string m_name;
+	GLFWwindow* m_window;
 
-	static int detailLevel;
+	static int m_nDetailLevel;
 };
