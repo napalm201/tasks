@@ -43,14 +43,14 @@ namespace Provider {
 
         m_dataprov.add<int>(countObj);
 
-        for (int j = 0; j < countObj; j++) {
+        for (int i = 0; i < countObj; ++i) {
 
             const int type = data[base++];
             const int countData = data[base++];
 
             m_dataprov.add<int>(type); m_dataprov.add<int>(countData);
 
-            for (int j = 0; j < countData; j++) {
+            for (int j = 0; j < countData; ++j) {
 
                 const double value = data[base++];
                 m_dataprov.add<double>(value);

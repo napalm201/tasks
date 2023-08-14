@@ -7,7 +7,6 @@
 #include <vector>
 #include <cstdlib>
 #include <fstream>
-
 #define PI 3.141
 #define THROW_ERR 23000000
 
@@ -39,8 +38,8 @@ namespace Provider {
         void reset();
         void clear();
 
-        void save(const std::string& path);
-        void read(const std::string& path);
+        void save(const std::string& patch);
+        void read(const std::string& patch);
 
     private:
         std::vector<uint8_t> m_arrBytes;
@@ -66,6 +65,7 @@ namespace Provider {
 
         return primitive;
     }
+
 
 
     template<typename T>

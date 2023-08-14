@@ -17,7 +17,7 @@ namespace Provider {
 		try {
 			const int countObject = m_dataprov.rd<int>();
 
-			for (int i = 0; i < countObject; i++) {
+			for (int i = 0; i < countObject; ++i) {
 
 				const int type = m_dataprov.rd<int>();
 

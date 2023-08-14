@@ -39,7 +39,7 @@ BoundyBox AABBStrategy::doAlgorithm(const Point2d& p, double r, double startAngl
 
 	double angles[5] = { 0 , PI / 2, PI, 3 * PI / 2,  2 * PI };
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; ++i) {
 
 		double angle = angles[i];
 

@@ -38,7 +38,7 @@ void Provider::DataProvider::read(const std::string& path)
         file >> size;
         m_arrBytes.resize(size);
 
-        for (uint32_t i = 0; i < size; i++) {
+        for (uint32_t i = 0; i < size; ++i) {
             uint8_t byte;
             file.read(reinterpret_cast<char*>(&byte), sizeof(uint8_t));
             m_arrBytes[i] = byte;
