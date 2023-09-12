@@ -1,6 +1,7 @@
 
 #include "stdAfx.h"
 #include "DbHostAppServices.h"
+#include "DbIdMapping.h"
 
 void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 {
@@ -13,35 +14,25 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 
 
     OdString fname = pIO->getString(OD_T("Enter file name :"));
-    OdDbDatabasePtr pnDb = pSvs->createDatabase();
 
+    OdDbDatabasePtr pnDb = pSvs->createDatabase(true, pDb->getMEASUREMENT());
 
-    if (odSystemServices()->accessFile(fname, Oda::kFileRead)) {
-     
-        try {
+    if (odSystemServices()->accessFile(fname, Oda::kFileRead)) 
             pnDb->readFile(fname);
-        }
-        catch (const OdError* er)
-        {
-            uIO->putString("Greate new file");
-        }
 
-     
-    }
-    OdDbBlockTableRecordPtr pMS = pnDb->getModelSpaceId().safeOpenObject(OdDb::kForWrite);
+
     OdDbSelectionSetPtr pSSet = pIO->select(L"Select objects:", OdEd::kSelAllowEmpty);
-    OdDbSelectionSetIteratorPtr pIter = pSSet->newIterator();
-    
+    OdDbObjectIdArray arraysId = pSSet->objectIdArray();
 
-    while (!pIter->done())
+    if (arraysId.size() == 0)
+        return;
+  
+    OdDbIdMappingPtr pMap = OdDbIdMapping::createObject();
+    pMap->setDestDb(pnDb);
+
+    if (!OdDbEntity::cast(arraysId[0].openObject()).isNull())
     {
-        OdDbObjectId objId = pIter->objectId();
-        OdDbEntityPtr pEnt = objId.openObject();
-
-        if (!pEnt.isNull())
-            pMS->appendOdDbEntity(pEnt);
-
-         pIter->next();
+       pDb->wblockCloneObjects(arraysId, pnDb->getModelSpaceId(), *pMap, OdDb::kDrcReplace);
     }
 
     OdDb::SaveType fileType = OdDb::kDwg;
@@ -50,11 +41,11 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
     try
     {
         pnDb->writeFile(fname, fileType, outVer, true);
-        uIO->putString("ok");
+        uIO->putString("Saved");
     }
     catch (const OdError& er)
     {
-        uIO->putString("no greate");
+        uIO->putString("No Saved");
     }
 
     pnDb.release();
