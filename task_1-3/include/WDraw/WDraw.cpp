@@ -119,6 +119,7 @@ void WDraw::drawArcCircle(const Point2d& p, double r, double startAngle, double 
     glBegin(GL_LINE_STRIP);
 
     for (int i = 0; i <= m_nDetailLevel; ++i) {
+
         double angle = startAngle + (endAngle - startAngle) * static_cast<double>(i) / m_nDetailLevel;
         double x = r * std::cos(angle);
         double y = r * std::sin(angle);

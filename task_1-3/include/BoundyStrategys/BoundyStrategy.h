@@ -3,7 +3,6 @@
 #include "Objects/BoundyBox.h"
 #include <vector>
 
-
 class BoundyStrategy
 {
 public:
