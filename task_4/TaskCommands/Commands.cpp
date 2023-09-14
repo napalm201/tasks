@@ -2,6 +2,10 @@
 #include "stdAfx.h"
 #include "DbHostAppServices.h"
 #include "DbIdMapping.h"
+#include "DbDatabase.h"
+#include "DbBlockTable.h"
+
+
 
 void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 {
@@ -15,11 +19,16 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 
     OdString fname = pIO->getString(OD_T("Enter file name :"));
 
-    OdDbDatabasePtr pnDb = pSvs->createDatabase(true, pDb->getMEASUREMENT());
+    OdDbDatabasePtr pnDb = pSvs->createDatabase();
 
-    if (odSystemServices()->accessFile(fname, Oda::kFileRead)) 
-            pnDb->readFile(fname);
-
+    
+    try {
+        pnDb->appServices()->readFile(fname);
+    }
+    catch (const OdError& er) 
+    {
+        uIO->putString("File will greate");
+    }
 
     OdDbSelectionSetPtr pSSet = pIO->select(L"Select objects:", OdEd::kSelAllowEmpty);
     OdDbObjectIdArray arraysId = pSSet->objectIdArray();
@@ -29,6 +38,8 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
   
     OdDbIdMappingPtr pMap = OdDbIdMapping::createObject();
     pMap->setDestDb(pnDb);
+
+
 
     if (!OdDbEntity::cast(arraysId[0].openObject()).isNull())
     {
@@ -45,7 +56,7 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
     }
     catch (const OdError& er)
     {
-        uIO->putString("No Saved");
+        uIO->putString("NO Saved");
     }
 
     pnDb.release();
