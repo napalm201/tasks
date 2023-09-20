@@ -6,7 +6,7 @@
 #include "DbBlockTable.h"
 
 #include <ctime>
-#include <string>
+#include <sstream>
 
 void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 {
@@ -21,12 +21,12 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
     OdString fname = pIO->getString(OD_T("Enter file name :"));
 
     OdDbDatabasePtr pnDb;
-    
-    try 
+
+    try
     {
         pnDb = pDb->appServices()->readFile(fname);
     }
-    catch (const OdError& er) 
+    catch (const OdError& er)
     {
         pnDb = pSvs->createDatabase();
 
@@ -36,12 +36,12 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
     OdDbSelectionSetPtr pSSet = pIO->select(L"Select objects:", OdEd::kSelAllowEmpty);
     OdDbObjectIdArray arraysId = pSSet->objectIdArray();
 
-    if (arraysId.empty()) 
+    if (arraysId.empty())
     {
         uIO->putString("No select objects");
         return;
     }
-  
+
     OdDbIdMappingPtr pMap = OdDbIdMapping::createObject();
     pMap->setDestDb(pnDb);
 
@@ -66,11 +66,9 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 
 void _ChangeColorNoSelect_func(OdEdCommandContext* pCmdCtx)
 {
-
     clock_t start_time = clock();
-
+   // ExDbCommandContext
     OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
-
     OdEdUserIO* uIO = pCmdCtx->userIO();
     OdDbDatabasePtr pDb = pDbCmdCtx->database();
     OdDbUserIO* pIO = pDbCmdCtx->dbUserIO();
@@ -78,24 +76,40 @@ void _ChangeColorNoSelect_func(OdEdCommandContext* pCmdCtx)
     OdDbSelectionSetPtr pSSet = pIO->select(L"Select objects:", OdEd::kSelAllowEmpty);
     OdDbObjectIdArray arraysId = pSSet->objectIdArray();
 
-    OdDbBlockTableRecordPtr pModelSpace = pDb->getModelSpaceId().safeOpenObject(OdDb::kForRead);
+    OdDbBlockTablePtr pBlockTbl = pDb->getBlockTableId().openObject();
+    OdDbSymbolTableIteratorPtr  blockIt = pBlockTbl->newIterator();
 
-    OdDbObjectIteratorPtr pEntIter = pModelSpace->newIterator();
+    const OdCmColor exampleColor(OdCmEntityColor::kByColor);
+   
+    OdCmColor color = pIO->getColor("Enter color", 0, &exampleColor);
 
-    OdCmColor color = pIO->getColor("Enter color");
-
-    for (; pEntIter->done(); pEntIter->step()) 
+    for (; !blockIt->done(); blockIt->step()) 
     {
-        OdDbEntityPtr pEn = pEntIter->entity(OdDb::kForWrite);
+        OdDbBlockTableRecordPtr block = blockIt->getRecordId().safeOpenObject(OdDb::kForRead);
 
-        if (!arraysId.contains(pEntIter->objectId()))
+        OdDbObjectIteratorPtr pEntIter = block->newIterator();
+
+        for (; !pEntIter->done(); pEntIter->step())
         {
-            pEn->setColor(color);
+            OdDbEntityPtr pEn = pEntIter->entity(OdDb::kForWrite);
+
+            if (!arraysId.contains(pEntIter->objectId()))
+            {
+                pEn->setColor(color);
+            }
+
         }
+
     }
+
     clock_t end_time = clock();
 
     double elapsed_time = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC;
 
-    uIO->putString(std::to_string(elapsed_time).c_str());
+    char buffer[sizeof(double)];
+    snprintf(buffer, sizeof(buffer), "%.4f", elapsed_time);
+
+    OdString resT(buffer);
+
+    uIO->putString(resT);
 }
