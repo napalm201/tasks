@@ -4,19 +4,22 @@
 #include "DbIdMapping.h"
 #include "DbDatabase.h"
 #include "DbBlockTable.h"
+#include "DbLayerTable.h"
+#include "DbLinetypeTable.h"
+#include "DbLine.h"
+#include "DbLinetypeTableRecord.h"
 
 #include <ctime>
 #include <sstream>
+#include <DbLayerTableRecord.h>
+
 
 void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 {
     OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
 
-    OdEdUserIO* uIO = pCmdCtx->userIO();
     OdDbDatabasePtr pDb = pDbCmdCtx->database();
     OdDbUserIO* pIO = pDbCmdCtx->dbUserIO();
-    OdDbHostAppServices* pSvs = pDb->appServices();
-
 
     OdString fname = pIO->getString(OD_T("Enter file name :"));
 
@@ -28,9 +31,9 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
     }
     catch (const OdError& er)
     {
-        pnDb = pSvs->createDatabase();
+        pnDb = pDb->appServices()->createDatabase();
 
-        uIO->putString("File will greate" + er.code() + er.description());
+        pIO->putString("File will greate" + er.code() + er.description());
     }
 
     OdDbSelectionSetPtr pSSet = pIO->select(L"Select objects:", OdEd::kSelAllowEmpty);
@@ -38,7 +41,7 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 
     if (arraysId.empty())
     {
-        uIO->putString("No select objects");
+        pIO->putString("No select objects");
         return;
     }
 
@@ -53,11 +56,11 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
     try
     {
         pnDb->writeFile(fname, fileType, outVer, true);
-        uIO->putString("Saved");
+        pIO->putString("Saved");
     }
     catch (const OdError& er)
     {
-        uIO->putString("NO Saved");
+        pIO->putString("NO Saved");
     }
 
     pnDb.release();
@@ -67,9 +70,8 @@ void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 void _ChangeColorNoSelect_func(OdEdCommandContext* pCmdCtx)
 {
     clock_t start_time = clock();
-   // ExDbCommandContext
+
     OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
-    OdEdUserIO* uIO = pCmdCtx->userIO();
     OdDbDatabasePtr pDb = pDbCmdCtx->database();
     OdDbUserIO* pIO = pDbCmdCtx->dbUserIO();
 
@@ -99,7 +101,6 @@ void _ChangeColorNoSelect_func(OdEdCommandContext* pCmdCtx)
             }
 
         }
-
     }
 
     clock_t end_time = clock();
@@ -111,5 +112,84 @@ void _ChangeColorNoSelect_func(OdEdCommandContext* pCmdCtx)
 
     OdString resT(buffer);
 
-    uIO->putString(resT);
+    pIO->putString(resT);
+}
+
+
+
+OdDbObjectId greateLineType(OdDbDatabasePtr pDb) 
+{
+    OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForWrite);
+
+    OdDbLinetypeTableRecordPtr pLinetype = OdDbLinetypeTableRecord::createObject();
+
+    pLinetype->setName("CustomName");
+
+   OdDbObjectId linetypeId = pLinetypes->add(pLinetype);
+
+   pLinetype->setNumDashes(4);
+
+   pLinetype->setDashLengthAt(0, 0.5);
+   pLinetype->setDashLengthAt(1, 0.25);
+   pLinetype->setDashLengthAt(2, 0.25);
+   pLinetype->setDashLengthAt(3, 0.25);
+
+   pLinetype->setTextAt(0, "-");
+   pLinetype->setTextAt(1, " ");
+   pLinetype->setTextAt(2, "A");
+   pLinetype->setTextAt(3, " ");
+
+   pLinetype->setShapeIsUcsOrientedAt(2, true);
+
+   return linetypeId;
+}
+
+OdDbObjectId greateLayer(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
+{
+   OdDbLayerTablePtr pLayers = pDb->getLayerTableId().safeOpenObject(OdDb::kForWrite);
+
+   OdDbLayerTableRecordPtr pLayer = OdDbLayerTableRecord::createObject();
+
+   pLayer->setName("CustomLayer");
+
+   OdCmColor color = pIO->getColor("Enter color");
+
+   pLayer->setColor(color);
+
+   OdDbObjectId linetype = greateLineType(pDb);
+
+   pLayer->setLinetypeObjectId(linetype);
+
+   OdDbObjectId layerId = pLayers->add(pLayer);
+
+   return layerId;
+}
+
+void _AssignLayerToLine_func(OdEdCommandContext* pCmdCtx) 
+{
+    OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
+    OdDbDatabasePtr pDb = pDbCmdCtx->database();
+    OdDbUserIO* pIO = pDbCmdCtx->dbUserIO();
+
+    OdDbObjectId layer = greateLayer(pDb, pIO);
+    
+    OdDbBlockTablePtr pBlockTbl = pDb->getBlockTableId().openObject();
+    OdDbSymbolTableIteratorPtr  blockIt = pBlockTbl->newIterator();
+
+    for (; !blockIt->done(); blockIt->step())
+    {
+        OdDbBlockTableRecordPtr block = blockIt->getRecordId().safeOpenObject(OdDb::kForRead);
+
+        OdDbObjectIteratorPtr pEntIter = block->newIterator();
+
+        for (; !pEntIter->done(); pEntIter->step())
+        {
+            OdDbEntityPtr pEn = pEntIter->entity(OdDb::kForWrite);
+
+            if (!OdDbLine::cast(pEn.get()).isNull())
+                pEn->setLayer(layer);
+
+        }
+    }
+
 }
