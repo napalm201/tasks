@@ -5,6 +5,8 @@
 #endif
 
 CMD_DEF(SaveDedicatedObjToFile, L"TaskCommands")
+CMD_DEF(ChangeColorNoSelect, L"TaskCommands")
+CMD_DEF(AssignLayerToLine, L"TaskCommands")
 
 #ifdef DO_UNDEF_CMD_DEF
 #undef DO_UNDEF_CMD_DEF

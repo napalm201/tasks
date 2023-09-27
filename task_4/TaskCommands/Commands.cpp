@@ -117,13 +117,15 @@ void _ChangeColorNoSelect_func(OdEdCommandContext* pCmdCtx)
 
 
 
-OdDbObjectId greateLineType(OdDbDatabasePtr pDb) 
+OdDbObjectId greateLineType(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 {
     OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForWrite);
 
     OdDbLinetypeTableRecordPtr pLinetype = OdDbLinetypeTableRecord::createObject();
 
-    pLinetype->setName("CustomName");
+    OdString name = pIO->getString("Name for linetype");
+
+    pLinetype->setName(name);
 
    OdDbObjectId linetypeId = pLinetypes->add(pLinetype);
 
@@ -150,7 +152,9 @@ OdDbObjectId greateLayer(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 
    OdDbLayerTableRecordPtr pLayer = OdDbLayerTableRecord::createObject();
 
-   pLayer->setName("CustomLayer");
+   OdString name = pIO->getString("Name for layer");
+
+   pLayer->setName(name);
 
    OdCmColor color = pIO->getColor("Enter color");
 
