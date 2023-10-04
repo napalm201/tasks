@@ -1,13 +1,5 @@
 
 #include "stdAfx.h"
-#include "DbHostAppServices.h"
-#include "DbIdMapping.h"
-#include "DbDatabase.h"
-#include "DbBlockTable.h"
-#include "DbLayerTable.h"
-#include "DbLinetypeTable.h"
-#include "DbLine.h"
-#include "DbLinetypeTableRecord.h"
 
 #include <ctime>
 #include <sstream>
@@ -82,10 +74,10 @@ void _ChangeColorNoSelect_func(OdEdCommandContext* pCmdCtx)
     OdDbSymbolTableIteratorPtr  blockIt = pBlockTbl->newIterator();
 
     const OdCmColor exampleColor(OdCmEntityColor::kByColor);
-   
+
     OdCmColor color = pIO->getColor("Enter color", 0, &exampleColor);
 
-    for (; !blockIt->done(); blockIt->step()) 
+    for (; !blockIt->done(); blockIt->step())
     {
         OdDbBlockTableRecordPtr block = blockIt->getRecordId().safeOpenObject(OdDb::kForRead);
 
@@ -127,56 +119,56 @@ OdDbObjectId greateLineType(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 
     pLinetype->setName(name);
 
-   OdDbObjectId linetypeId = pLinetypes->add(pLinetype);
+    OdDbObjectId linetypeId = pLinetypes->add(pLinetype);
 
-   pLinetype->setNumDashes(4);
+    pLinetype->setNumDashes(4);
 
-   pLinetype->setDashLengthAt(0, 0.5);
-   pLinetype->setDashLengthAt(1, 0.25);
-   pLinetype->setDashLengthAt(2, 0.25);
-   pLinetype->setDashLengthAt(3, 0.25);
+    pLinetype->setDashLengthAt(0, 0.5);
+    pLinetype->setDashLengthAt(1, 0.25);
+    pLinetype->setDashLengthAt(2, 0.25);
+    pLinetype->setDashLengthAt(3, 0.25);
 
-   pLinetype->setTextAt(0, "-");
-   pLinetype->setTextAt(1, " ");
-   pLinetype->setTextAt(2, "A");
-   pLinetype->setTextAt(3, " ");
+    pLinetype->setTextAt(0, "-");
+    pLinetype->setTextAt(1, " ");
+    pLinetype->setTextAt(2, "A");
+    pLinetype->setTextAt(3, " ");
 
-   pLinetype->setShapeIsUcsOrientedAt(2, true);
+    pLinetype->setShapeIsUcsOrientedAt(2, true);
 
-   return linetypeId;
+    return linetypeId;
 }
 
 OdDbObjectId greateLayer(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 {
-   OdDbLayerTablePtr pLayers = pDb->getLayerTableId().safeOpenObject(OdDb::kForWrite);
+    OdDbLayerTablePtr pLayers = pDb->getLayerTableId().safeOpenObject(OdDb::kForWrite);
 
-   OdDbLayerTableRecordPtr pLayer = OdDbLayerTableRecord::createObject();
+    OdDbLayerTableRecordPtr pLayer = OdDbLayerTableRecord::createObject();
 
-   OdString name = pIO->getString("Name for layer");
+    OdString name = pIO->getString("Name for layer");
 
-   pLayer->setName(name);
+    pLayer->setName(name);
 
-   OdCmColor color = pIO->getColor("Enter color");
+    OdCmColor color = pIO->getColor("Enter color");
 
-   pLayer->setColor(color);
+    pLayer->setColor(color);
 
-   OdDbObjectId linetype = greateLineType(pDb);
+    OdDbObjectId linetype = greateLineType(pDb, pIO);
 
-   pLayer->setLinetypeObjectId(linetype);
+    pLayer->setLinetypeObjectId(linetype);
 
-   OdDbObjectId layerId = pLayers->add(pLayer);
+    OdDbObjectId layerId = pLayers->add(pLayer);
 
-   return layerId;
+    return layerId;
 }
 
-void _AssignLayerToLine_func(OdEdCommandContext* pCmdCtx) 
+void _AssignLayerToLine_func(OdEdCommandContext* pCmdCtx)
 {
     OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
     OdDbDatabasePtr pDb = pDbCmdCtx->database();
     OdDbUserIO* pIO = pDbCmdCtx->dbUserIO();
 
     OdDbObjectId layer = greateLayer(pDb, pIO);
-    
+
     OdDbBlockTablePtr pBlockTbl = pDb->getBlockTableId().openObject();
     OdDbSymbolTableIteratorPtr  blockIt = pBlockTbl->newIterator();
 
@@ -196,4 +188,25 @@ void _AssignLayerToLine_func(OdEdCommandContext* pCmdCtx)
         }
     }
 
+}
+
+
+void _ExCreateEclipse_func(OdEdCommandContext* pCmdCtx)
+{
+
+    OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
+    OdDbDatabasePtr pDb = pDbCmdCtx->database();
+    OdSmartPtr<OdDbUserIO> pIO = pDbCmdCtx->userIO();
+
+    OdDbBlockTableRecordPtr pMS = pDb->getModelSpaceId().openObject(OdDb::kForWrite);
+
+    ExEclipsePtr pEclipse = ExEclipse::createObject();
+    pEclipse->setDatabaseDefaults(pDb);
+
+
+    pEclipse->setCenter(pIO->getPoint(OD_T("\nSpecify center of eclipse: ")));
+    pEclipse->setMajorRadius(pIO->getReal(OD_T("\nSpecify major radius of eclipse: ")));
+    pEclipse->setMinorRadius(pIO->getReal(OD_T("\nSpecify minor radius of eclipse: ")));
+
+    pMS->appendOdDbEntity(pEclipse);
 }

@@ -24,6 +24,9 @@
     <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\TaskCommandsModule.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\ExEclipse.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\stdAfx.h">
@@ -33,6 +36,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\TaskCommandsModule.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\ExEclipse.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

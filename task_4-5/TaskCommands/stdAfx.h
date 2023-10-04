@@ -17,5 +17,15 @@
 #include "DbDatabase.h"
 #include "DbBlockTableRecord.h"
 #include "DbViewport.h"
+#include "DbCircle.h"
+#include "DbHostAppServices.h"
+#include "DbIdMapping.h"
+#include "DbDatabase.h"
+#include "DbBlockTable.h"
+#include "DbLayerTable.h"
+#include "DbLinetypeTable.h"
+#include "DbLine.h"
+#include "DbLinetypeTableRecord.h"
+#include "ExEclipse.h"
 
 #endif 

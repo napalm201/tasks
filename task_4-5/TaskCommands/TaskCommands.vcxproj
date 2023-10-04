@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\Commands.cpp" />
+    <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\ExEclipse.cpp" />
     <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\stdAfx.cpp" />
     <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\TaskCommandsModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\ExEclipse.h" />
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\stdAfx.h" />
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\TaskCmdDef.h" />
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\TaskCommandsModule.h" />
