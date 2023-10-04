@@ -193,10 +193,9 @@ void _AssignLayerToLine_func(OdEdCommandContext* pCmdCtx)
 
 void _ExCreateEclipse_func(OdEdCommandContext* pCmdCtx)
 {
-
     OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
     OdDbDatabasePtr pDb = pDbCmdCtx->database();
-    OdSmartPtr<OdDbUserIO> pIO = pDbCmdCtx->userIO();
+    OdDbUserIO* pIO = pDbCmdCtx->dbUserIO();
 
     OdDbBlockTableRecordPtr pMS = pDb->getModelSpaceId().openObject(OdDb::kForWrite);
 

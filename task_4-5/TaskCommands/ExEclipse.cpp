@@ -5,9 +5,11 @@
 ODRX_DXF_DEFINE_MEMBERS(ExEclipse,                                                            
     OdDbEntity,                                                        
     DBOBJECT_CONSTR,                                                   
-    OdDb::vAC15,                                                     
-    OdDb::kMRelease0,                                                     
-    OdDbProxyEntity::kAllAllowedBits^ OdDbProxyEntity::kTransformAllowed, 
+    OdDb::vAC18,                                                     
+    OdDb::kMReleaseCurrent,
+    OdDbProxyEntity::kTransformAllowed |
+    OdDbProxyEntity::kColorChangeAllowed |
+    OdDbProxyEntity::kLayerChangeAllowed,
     EXECLIPSE,                                                           
     OdExTaskCommandsModuleName | Description: Teigha Run - time Extension Example)
 
@@ -15,7 +17,7 @@ ODRX_DXF_DEFINE_MEMBERS(ExEclipse,
 
 ExEclipse::ExEclipse()
 {
-
+    m_ellip.setAxes(OdGeVector3d(1, 0, 0), OdGeVector3d(0, 1, 0));
 }
 
 ExEclipse::~ExEclipse()
@@ -31,6 +33,7 @@ void ExEclipse::setCenter(const OdGePoint3d& center)
 
 void ExEclipse::setMajorRadius(double majorRadius)
 {
+
     m_ellip.setMajorRadius(majorRadius);
 }
 
@@ -87,7 +90,7 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
 {
     assertReadEnabled();
 
-    pWd->subEntityTraits().setTrueColor(colorF());
+    pWd->subEntityTraits().setTrueColor(entityColor());
     pWd->subEntityTraits().setFillType(kOdGiFillAlways);
     pWd->subEntityTraits().setLineType(linetypeId());
 
@@ -112,7 +115,7 @@ OdResult ExEclipse::dwgInFields(OdDbDwgFiler* pFiler)
     if (res != eOk)
         return res;
 
-    int nVersion = pFiler->rdInt16();
+    int nVersion = pFiler->rdInt8();
     if (nVersion > lastKnownVersion)
         return eMakeMeProxy;
 

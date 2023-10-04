@@ -27,14 +27,19 @@ void TaskCommandsModule::initApp()
          pCommands->addCommand(&m_##CmdName##_cmd);
 #include "TaskCmdDef.h"
 #undef CMD_DEF
+
+    ExEclipse::rxInit();
+
 }
 
 void TaskCommandsModule::uninitApp()
 {
     OdEdCommandStackPtr pCommands = odedRegCmds();
 
+
 #define CMD_DEF(CmdName, GroupName) \
        pCommands->removeCmd(GroupName, OD_T(#CmdName));
 #include "TaskCmdDef.h"
 #undef CMD_DEF
+    ExEclipse::rxUninit();
 }
