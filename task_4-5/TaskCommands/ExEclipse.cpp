@@ -180,7 +180,7 @@ OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) con
 
     double k = OdGeVector2d(x, y).length();
 
-    minorAxis.rotateBy(angleRotate, normal());
+    minorAxis.rotateBy(angleRotate, normal()).normalize();
     minorAxis *= k;
     
     OdGeVector3d center(m_center.x, m_center.y, m_center.z);
