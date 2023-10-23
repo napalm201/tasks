@@ -17,7 +17,7 @@ ODRX_DXF_DEFINE_MEMBERS(ExEclipse,
 
 ExEclipse::ExEclipse()
 {
-    m_ellip.setAxes(OdGeVector3d(1, 0, 0), OdGeVector3d(0, 1, 0));
+    
 }
 
 ExEclipse::~ExEclipse()
@@ -28,61 +28,69 @@ ExEclipse::~ExEclipse()
 
 void ExEclipse::setCenter(const OdGePoint3d& center)
 {
-    m_ellip.setCenter(center);
+    this->m_center = center;
+}
+
+void ExEclipse::setStartAngle(double startAngle)
+{
+    this->m_startAngle = startAngle;
+}
+
+void ExEclipse::setEndAngle(double endAngle)
+{
+    this->m_endAngle = endAngle;
 }
 
 void ExEclipse::setMajorRadius(double majorRadius)
 {
-
-    m_ellip.setMajorRadius(majorRadius);
+    this->m_majorRadius = majorRadius;
 }
 
 void ExEclipse::setMinorRadius(double minorRadius)
 {
-    m_ellip.setMinorRadius(minorRadius);
+    this->m_minorRadius = minorRadius;
 }
 
-void ExEclipse::setAxis(const OdGeVector3d& majorAxis, const OdGeVector3d& minorAxis)
+void ExEclipse::setAxises(const OdGeVector3d& major_axis, const OdGeVector3d& minor_axis)
 {
-    m_ellip.setAxes(majorAxis, minorAxis);
+    this->m_majorAxis = major_axis;
+    this->m_majorAxis.normalize();
+
+    this->m_minorAxis = minor_axis;
+    this->m_minorAxis.normalize();
 }
 
-void ExEclipse::setColorFill(const OdCmEntityColor& color)
-{
-    this->colorFill = color;
-}
 
 
 OdGePoint3d ExEclipse::center() const
 {
-    return m_ellip.center();
+    return m_center;
 }
 
 double ExEclipse::majorRadius() const
 {
-    return m_ellip.majorRadius();
+    return m_majorRadius;
 }
 
 double ExEclipse::minorRadius() const
 {
-    return m_ellip.minorRadius();
+    return m_minorRadius;
 }
 
-OdGeVector3d ExEclipse::majorAxis() const
+double ExEclipse::startAngle() const
 {
-    return m_ellip.majorAxis();
+    return m_startAngle;
 }
 
-OdGeVector3d ExEclipse::minorAxis() const
+double ExEclipse::endAngle() const
 {
-    return m_ellip.minorAxis();
+    return m_endAngle;
 }
 
-OdCmEntityColor ExEclipse::colorF() const
+OdGeVector3d ExEclipse::normal() const
 {
-    return colorFill;
+    return m_majorAxis.crossProduct(m_minorAxis).normalize();
 }
-
 
 
 
@@ -90,12 +98,11 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
 {
     assertReadEnabled();
 
-    pWd->subEntityTraits().setTrueColor(entityColor());
     pWd->subEntityTraits().setFillType(kOdGiFillAlways);
     pWd->subEntityTraits().setLineType(linetypeId());
 
     pWd->subEntityTraits().setSelectionMarker(1);
-    pWd->geometry().ellipArc(m_ellip);
+
 
     OdDbHatchPtr pHatch = OdDbHatch::createObject();
     //
@@ -122,13 +129,13 @@ OdResult ExEclipse::dwgInFields(OdDbDwgFiler* pFiler)
     setCenter(pFiler->rdPoint3d());
     setMajorRadius(pFiler->rdDouble());
     setMinorRadius(pFiler->rdDouble());
+    setStartAngle(pFiler->rdDouble());
+    setEndAngle(pFiler->rdDouble());
 
-    OdGeVector3d majorAxis = pFiler->rdVector3d();
-    OdGeVector3d minorAxis = pFiler->rdVector3d();
+    OdGeVector3d major_axis = pFiler->rdVector3d();
+    OdGeVector3d minor_axis = pFiler->rdVector3d();
 
-    setAxis(majorAxis, minorAxis);
-
-    colorFill.setColor(pFiler->rdInt32());
+    setAxises(major_axis, minor_axis);
 
 
     return eOk;
@@ -142,9 +149,10 @@ void ExEclipse::dwgOutFields(OdDbDwgFiler* pFiler) const
     pFiler->wrPoint3d(center());
     pFiler->wrDouble(majorRadius());
     pFiler->wrDouble(minorRadius());
-    pFiler->wrVector3d(majorAxis());
-    pFiler->wrVector3d(minorAxis());
-    pFiler->wrInt32(colorF().color());
+    pFiler->wrDouble(startAngle());
+    pFiler->wrDouble(endAngle());
+    pFiler->wrVector3d(m_majorAxis);
+    pFiler->wrVector3d(m_minorAxis);
 
 }
 
@@ -156,5 +164,46 @@ OdResult ExEclipse::dxfInFields(OdDbDxfFiler* pFiler)
 void ExEclipse::dxfOutFields(OdDbDxfFiler* pFiler) const
 {
 
+}
+
+OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) const
+{
+
+    OdGeVector3d _normal = normal();
+
+    double angleRotate = param;
+
+    OdGeVector3d minorAxis = m_minorAxis;
+
+    double x = minorRadius() * cos(angleRotate);
+    double y = majorRadius() * sin(angleRotate);
+
+    double k = OdGeVector2d(x, y).length();
+
+    minorAxis.rotateBy(angleRotate, normal());
+    minorAxis *= k;
+    
+    OdGeVector3d center(m_center.x, m_center.y, m_center.z);
+    OdGeVector3d point = center + minorAxis;
+
+    pointOnCurve.x = point.x; pointOnCurve.y = point.y; pointOnCurve.z = point.z;
+
+
+   return eOk;
+}
+
+OdResult ExEclipse::getPlane(OdGePlane& gePlane, OdDb::Planarity& gePlanarity) const
+{
+    gePlane = OdGePlane(center(), normal());
+    gePlanarity = OdDb::Planarity::kPlanar;
+
+    return eOk;
+}
+
+OdResult ExEclipse::subTransformBy(const OdGeMatrix3d& xfm)
+{
+    m_majorAxis.transformBy(xfm);
+    m_minorAxis.transformBy(xfm);
+    return eOk;
 }
 

@@ -30,6 +30,7 @@ void TaskCommandsModule::initApp()
 
     ExEclipse::rxInit();
 
+    ExEclipse::desc()->addX(OdDbGripPointsPE::desc(), &_egp);
 }
 
 void TaskCommandsModule::uninitApp()
@@ -42,4 +43,6 @@ void TaskCommandsModule::uninitApp()
 #include "TaskCmdDef.h"
 #undef CMD_DEF
     ExEclipse::rxUninit();
+
+    ExEclipse::desc()->delX(OdDbGripPointsPE::desc());
 }

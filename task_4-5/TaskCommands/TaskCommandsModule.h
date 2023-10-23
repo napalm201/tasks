@@ -4,7 +4,9 @@
 
 #include "RxDynamicModule.h"
 #include "Ed/EdCommandStack.h"
+#include "OdDbEclipseGripPointsPe.h"
 #include "StaticRxObject.h"
+
 //#define _TOOLKIT_IN_DLL_
 #define ODDB_COMMANDS_GROUP_NAME OD_T("ODDB_EDIT")
 
@@ -24,10 +26,13 @@ public: \
 
 class TaskCommandsModule : public OdRxModule
 {
+
 #define CMD_DEF(CmdName, GroupName) \
   OdStaticRxObject<_##CmdName##_cmd> m_##CmdName##_cmd;
 #include "TaskCmdDef.h"
 #undef CMD_DEF
+
+	OdStaticRxObject<OdDbEclipseGripPointsPE> _egp;
 
 public:
 	void initApp();
