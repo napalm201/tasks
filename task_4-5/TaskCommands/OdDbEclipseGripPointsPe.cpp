@@ -90,7 +90,7 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
         
         OdGeVector3d end_v(xx, yy, zz);
 
-        double delta_angle = end_v.isCodirectionalTo(target) ? end_v.angleTo(start_v) : -end_v.angleTo(start_v);
+        double delta_angle = end_v.isCodirectionalTo(target) ? end_v.angleTo(start_v) : Oda2PI-end_v.angleTo(start_v);
 
         eclipse->setStartAngle(start_angle + delta_angle);
     }
@@ -123,7 +123,7 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
 
         OdGeVector3d end_v(xx, yy, zz);
 
-        double delta_angle = end_v.isCodirectionalTo(target) ? end_v.angleTo(start_v) : -end_v.angleTo(start_v);
+        double delta_angle = end_v.isCodirectionalTo(target) ? end_v.angleTo(start_v) : Oda2PI-end_v.angleTo(start_v);
 
         eclipse->setEndAngle(end_angle + delta_angle);
     
