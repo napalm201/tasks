@@ -22,6 +22,7 @@ public:
         const OdGePoint3d& lastPoint,
         const OdGeMatrix3d& xWorldToEye,
         OdGePoint3dArray& snapPoints) const;
+
 };
 
 #endif 

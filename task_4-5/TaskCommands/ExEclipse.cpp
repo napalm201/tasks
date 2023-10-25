@@ -168,7 +168,6 @@ void ExEclipse::dxfOutFields(OdDbDxfFiler* pFiler) const
 
 OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) const
 {
-
     OdGeVector3d _normal = normal();
 
     double angleRotate = param;
@@ -180,14 +179,10 @@ OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) con
 
     double k = OdGeVector2d(x, y).length();
 
-    minorAxis.rotateBy(angleRotate, normal()).normalize();
+    minorAxis.rotateBy(angleRotate, normal());
     minorAxis *= k;
-    
-    OdGeVector3d center(m_center.x, m_center.y, m_center.z);
-    OdGeVector3d point = center + minorAxis;
-
-    pointOnCurve.x = point.x; pointOnCurve.y = point.y; pointOnCurve.z = point.z;
-
+  
+    pointOnCurve = m_center + minorAxis;
 
    return eOk;
 }
