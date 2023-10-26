@@ -83,7 +83,7 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
 
         eclipse->setStartAngle(start_angle + delta_angle);
 
-        ExEclipse::Type type =  ExEclipse::Type::eArc;
+        ExEclipse::Type type = (end_v.length() > start_v.length()) ? ExEclipse::Type::eArc : ExEclipse::Type::nArc;
 
         eclipse->setType(type);
         break;
@@ -111,7 +111,7 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
 
         eclipse->setEndAngle(end_angle + delta_angle);
     
-        ExEclipse::Type type = ExEclipse::Type::eArc;
+        ExEclipse::Type type = (end_v.length() > start_v.length()) ? ExEclipse::Type::eArc : ExEclipse::Type::nArc;
  
         eclipse->setType(type);
         break;
