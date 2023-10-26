@@ -102,22 +102,53 @@ OdGeVector3d ExEclipse::normal() const
     return m_majorAxis.crossProduct(m_minorAxis).normalize();
 }
 
-
-
 bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
 {
     assertReadEnabled();
 
     pWd->subEntityTraits().setFillType(kOdGiFillAlways);
-    pWd->subEntityTraits().setLineType(linetypeId());
 
     pWd->subEntityTraits().setSelectionMarker(1);
 
+    OdGeMatrix3d elispe_axis;
+    elispe_axis.setCoordSystem(center(),
+        m_minorAxis,
+        m_majorAxis,
+        normal());
+
+    OdGeVector3d normal = OdGeVector3d(0, 0, 1);
+
+    OdGeVector3d start_vector(1, 0,0);
+    start_vector.rotateBy(m_startAngle, normal);
+
+    OdGeVector3d end_vector(1, 0, 0);
+    end_vector.rotateBy(m_endAngle, normal);
+    
+    double delta_angle = start_vector.angleTo(end_vector, normal);
+
+    OdInt32 numSegments = 200;
+
+    OdGePoint3dArray points(numSegments);
 
 
-    //OdGeEllipArc3d eclipse(center(), m_majorAxis, m_minorAxis, majorRadius(), minorRadius(), 0, OdaPI2);
+    for (OdInt32 i = 0; i <= numSegments; ++i)
+    {
+        double angle = m_startAngle + i * delta_angle / numSegments;;
 
-     //pWd->geometry().ellipArc(eclipse);
+        start_vector.set(minorRadius() * cos(angle),
+            majorRadius() * sin(angle),
+            0);
+
+        start_vector.transformBy(elispe_axis);
+
+        points.append(m_center + start_vector);
+    }
+
+    if (type == Type::eArc)
+        points.append(center());
+
+    pWd->geometry().polygon(points.size(), points.getPtr());
+    
 
     //OdDbHatchPtr pHatch = OdDbHatch::createObject();
     ////
@@ -184,22 +215,17 @@ void ExEclipse::dxfOutFields(OdDbDxfFiler* pFiler) const
 OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) const
 {
     double angleRotate = param;
-    OdGeVector3d minorAxis = m_minorAxis;
 
-    OdGeVector2d target1(1, 0);
-    double x = minorRadius() * cos(angleRotate);
-    double y = majorRadius() * sin(angleRotate);
+    OdGeMatrix3d elispe_axis;
+    elispe_axis.setCoordSystem(center(),
+        m_minorAxis,
+        m_majorAxis,
+        normal());
 
-    OdGeVector2d target2(x, y);
+    OdGeVector3d start_vector(minorRadius() * cos(angleRotate), majorRadius() * sin(angleRotate), 0);
+    start_vector.transformBy(elispe_axis);
 
-    angleRotate = target2.angleToCCW(target1);
-
-    double k = target2.length();
-
-    minorAxis.rotateBy(angleRotate, normal());
-    minorAxis *= k;
-  
-    pointOnCurve = m_center + minorAxis;
+    pointOnCurve = m_center + start_vector;
 
     return eOk;
 }

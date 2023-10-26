@@ -75,7 +75,7 @@ public:
 private:
 	OdGePoint3d m_center = OdGePoint3d(0, 0, 0);
 	double m_majorRadius = 2; double m_minorRadius = 1;
-	double m_endAngle = Oda2PI; double m_startAngle = 0;
+	double m_endAngle = Oda2PI-0.0001; double m_startAngle = 0;
 	Type type = eArc;
 	OdGeVector3d m_majorAxis = OdGeVector3d(0, 1, 0);
 	OdGeVector3d m_minorAxis = OdGeVector3d(1, 0, 0);
