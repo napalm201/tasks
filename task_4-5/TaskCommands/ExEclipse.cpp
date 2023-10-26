@@ -31,6 +31,11 @@ void ExEclipse::setCenter(const OdGePoint3d& center)
     this->m_center = center;
 }
 
+void ExEclipse::setType(const Type& type)
+{
+    this->type = type;
+}
+
 void ExEclipse::setStartAngle(double startAngle)
 {
     this->m_startAngle = startAngle;
@@ -77,6 +82,11 @@ double ExEclipse::minorRadius() const
     return m_minorRadius;
 }
 
+OdGeVector3d ExEclipse::minorAxis() const
+{
+    return m_minorAxis;
+}
+
 double ExEclipse::startAngle() const
 {
     return m_startAngle;
@@ -104,12 +114,17 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
     pWd->subEntityTraits().setSelectionMarker(1);
 
 
-    OdDbHatchPtr pHatch = OdDbHatch::createObject();
-    //
-    EdgeArray edges;
 
-    pHatch->appendLoop(OdDbHatch::kDefault, edges);
-    //
+    //OdGeEllipArc3d eclipse(center(), m_majorAxis, m_minorAxis, majorRadius(), minorRadius(), 0, OdaPI2);
+
+     //pWd->geometry().ellipArc(eclipse);
+
+    //OdDbHatchPtr pHatch = OdDbHatch::createObject();
+    ////
+    //EdgeArray edges;
+
+    //pHatch->appendLoop(OdDbHatch::kDefault, edges);
+    ////
 
     return true;
 }
@@ -168,23 +183,25 @@ void ExEclipse::dxfOutFields(OdDbDxfFiler* pFiler) const
 
 OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) const
 {
-    OdGeVector3d _normal = normal();
-
     double angleRotate = param;
-
     OdGeVector3d minorAxis = m_minorAxis;
 
+    OdGeVector2d target1(1, 0);
     double x = minorRadius() * cos(angleRotate);
     double y = majorRadius() * sin(angleRotate);
 
-    double k = OdGeVector2d(x, y).length();
+    OdGeVector2d target2(x, y);
+
+    angleRotate = target2.angleToCCW(target1);
+
+    double k = target2.length();
 
     minorAxis.rotateBy(angleRotate, normal());
     minorAxis *= k;
   
     pointOnCurve = m_center + minorAxis;
 
-   return eOk;
+    return eOk;
 }
 
 OdResult ExEclipse::getPlane(OdGePlane& gePlane, OdDb::Planarity& gePlanarity) const

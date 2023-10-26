@@ -10,6 +10,7 @@
 #include "Gi/GiWorldDraw.h"
 #include "DbFiler.h"
 #include "CmColorBase.h"
+#include "Ge\GeEllipArc3d.h"
 
 class ExEclipse : public OdDbEntity
 {
@@ -17,12 +18,19 @@ class ExEclipse : public OdDbEntity
 public:
 	ODDB_DECLARE_MEMBERS(ExEclipse);
 
+	enum Type
+	{
+		eArc,
+		nArc
+	};
+
 	ExEclipse();
 	virtual ~ExEclipse();
 	int getVersion();
 
 	void setCenter(const OdGePoint3d& center);
-	
+	void setType(const Type& type);
+
 	void setStartAngle(double startAngle);
 	void setEndAngle(double endAngle);
 
@@ -35,6 +43,8 @@ public:
 
 	double majorRadius() const;
 	double minorRadius() const;
+
+	OdGeVector3d minorAxis() const;
 
 	double startAngle() const;
 	double endAngle() const;
@@ -58,13 +68,18 @@ public:
 	virtual OdResult subTransformBy(
 		const OdGeMatrix3d& xfm);
 
+
+
+	
+
 private:
 	OdGePoint3d m_center = OdGePoint3d(0, 0, 0);
 	double m_majorRadius = 2; double m_minorRadius = 1;
-	double m_endAngle = 0; double m_startAngle = OdaPI2;
-
+	double m_endAngle = Oda2PI; double m_startAngle = 0;
+	Type type = eArc;
 	OdGeVector3d m_majorAxis = OdGeVector3d(0, 1, 0);
 	OdGeVector3d m_minorAxis = OdGeVector3d(1, 0, 0);
+
 };
 typedef OdSmartPtr<ExEclipse> ExEclipsePtr;
 

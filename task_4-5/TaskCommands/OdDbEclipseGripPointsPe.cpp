@@ -25,10 +25,8 @@ bool projectOffset(const OdDbDatabase* pDb, const OdGeVector3d& vNormal, OdGeVec
 
 OdResult OdDbEclipseGripPointsPE::getGripPoints(const OdDbEntity* pEntity, OdGePoint3dArray& gripPoints) const
 {
-
     ExEclipsePtr eclipse = pEntity;
     unsigned int size = gripPoints.size();
-
 
     gripPoints.resize(size + 5);
 
@@ -50,7 +48,7 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
     OdGeVector3d offset(off);
     ExEclipsePtr eclipse = pEntity;
                                            
-    if (!projectOffset(eclipse->database(), eclipse->normal(), offset))  
+    if (!projectOffset(eclipse->database(), eclipse->normal(), offset))
         return eOk;
       
     OdGePoint3dArray gripPoints;
@@ -62,25 +60,16 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
     switch (index) {
     case 0 :
         eclipse->setCenter(eclipse->center() + offset);
+        break;
     case 1:
     {
         double start_angle = eclipse->startAngle();
-        double epsilan_angle = 0.001;
 
         double xx = gripPoint.x - eclipse->center().x; 
         double yy = gripPoint.y - eclipse->center().y; 
         double zz = gripPoint.z - eclipse->center().z;
 
         OdGeVector3d start_v(xx, yy, zz); 
-
-        OdGePoint3d p;
-        eclipse->getPointAtParam(start_angle + epsilan_angle, p);
-
-        xx = p.x - eclipse->center().x;
-        yy = p.y - eclipse->center().y;
-        zz = p.z - eclipse->center().z;
-
-        OdGeVector3d target = OdGeVector3d(xx, yy, zz) - start_v;
 
         gripPoint +=  offset;
 
@@ -90,30 +79,25 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
         
         OdGeVector3d end_v(xx, yy, zz);
 
-        double delta_angle = end_v.isCodirectionalTo(target) ? end_v.angleTo(start_v) : Oda2PI-end_v.angleTo(start_v);
+        double delta_angle = end_v.angleTo(start_v, eclipse->normal());
 
         eclipse->setStartAngle(start_angle + delta_angle);
+
+        ExEclipse::Type type = start_v.isCodirectionalTo(end_v) ? ExEclipse::Type::eArc : ExEclipse::Type::nArc;
+
+        eclipse->setType(type);
+        break;
     }
 
     case 2:
     {
         double end_angle = eclipse->endAngle();
-        double epsilan_angle = 0.001;
 
         double xx = gripPoint.x - eclipse->center().x;
         double yy = gripPoint.y - eclipse->center().y;
         double zz = gripPoint.z - eclipse->center().z;
 
         OdGeVector3d start_v(xx, yy, zz);
-
-        OdGePoint3d p;
-        eclipse->getPointAtParam(end_angle + epsilan_angle, p);
-
-        xx = p.x - eclipse->center().x;
-        yy = p.y - eclipse->center().y;
-        zz = p.z - eclipse->center().z;
-
-        OdGeVector3d target = OdGeVector3d(xx, yy, zz) - start_v;
 
         gripPoint += offset;
 
@@ -123,20 +107,26 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
 
         OdGeVector3d end_v(xx, yy, zz);
 
-        double delta_angle = end_v.isCodirectionalTo(target) ? end_v.angleTo(start_v) : Oda2PI-end_v.angleTo(start_v);
+        double delta_angle = end_v.angleTo(start_v, eclipse->normal());
 
         eclipse->setEndAngle(end_angle + delta_angle);
     
+        ExEclipse::Type type = start_v.isCodirectionalTo(end_v) ? ExEclipse::Type::eArc : ExEclipse::Type::nArc;
+ 
+        eclipse->setType(type);
+        break;
     }
     case 3:
     {
         OdGePoint3d point = gripPoint + offset;
         eclipse->setMajorRadius(eclipse->center().distanceTo(point));
+        break;
     }
     case 4: 
     {
         OdGePoint3d point = gripPoint + offset;
         eclipse->setMinorRadius(eclipse->center().distanceTo(point));
+        break;
     }
     
     }
@@ -146,12 +136,12 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
 
 OdResult OdDbEclipseGripPointsPE::getStretchPoints(const OdDbEntity* pEntity, OdGePoint3dArray& stretchPoints) const
 {
-	return OdResult();
+	return eOk;
 }
 
 OdResult OdDbEclipseGripPointsPE::moveStretchPointsAt(OdDbEntity* pEntity, const OdIntArray& indices, const OdGeVector3d& offset)
 {
-	return OdResult();
+    return eOk;
 }
 
 OdResult OdDbEclipseGripPointsPE::getOsnapPoints(const OdDbEntity* pEntity, OdDb::OsnapMode osnapMode, OdGsMarker gsSelectionMark, const OdGePoint3d& pickPoint, const OdGePoint3d& lastPoint, const OdGeMatrix3d& xWorldToEye, OdGePoint3dArray& snapPoints) const
