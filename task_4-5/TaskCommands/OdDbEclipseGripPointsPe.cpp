@@ -2,6 +2,7 @@
 #include "AbstractViewPE.h"
 #include "DbViewport.h"
 
+
 bool projectOffset(const OdDbDatabase* pDb, const OdGeVector3d& vNormal, OdGeVector3d& vOffset)
 {
     OdDbObjectId idVp = pDb->activeViewportId();
@@ -32,7 +33,7 @@ OdResult OdDbEclipseGripPointsPE::getGripPoints(const OdDbEntity* pEntity, OdGeP
 
     gripPoints[size + 0] = eclipse->center();                            
 
-    eclipse->getPointAtParam(eclipse->startAngle(), gripPoints[size + 1]);
+    eclipse->getPointAtParam(eclipse->startAngle() + 0.001, gripPoints[size + 1]);
     eclipse->getPointAtParam(eclipse->endAngle(), gripPoints[size + 2]);
     eclipse->getPointAtParam(OdaPI2, gripPoints[size + 3]);           
     eclipse->getPointAtParam(OdaPI, gripPoints[size + 4]);            
@@ -55,74 +56,70 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
     eclipse->getGripPoints(gripPoints);
 
     int index = indices[0];
+
+    enum TypePoint : int
+    {
+        CENTER_POINT = 0,
+        START_ANGLE_POINT,
+        END_ANGLE_POINT,
+        MAJOR_POINT,
+        MINOR_POINT,
+    }
+    type_point = static_cast<TypePoint>(index);
+
     OdGePoint3d gripPoint = gripPoints[index];
 
-    switch (index) {
-    case 0 :
+    switch (type_point) 
+    {
+    case CENTER_POINT:
         eclipse->setCenter(eclipse->center() + offset);
         break;
-    case 1:
+    case START_ANGLE_POINT:
     {
         double start_angle = eclipse->startAngle();
 
-        double xx = gripPoint.x - eclipse->center().x; 
-        double yy = gripPoint.y - eclipse->center().y; 
-        double zz = gripPoint.z - eclipse->center().z;
+        OdGeVector3d start_v = gripPoint - eclipse->center();
 
-        OdGeVector3d start_v(xx, yy, zz); 
+        gripPoint += offset;
 
-        gripPoint +=  offset;
-
-        xx = gripPoint.x - eclipse->center().x;
-        yy = gripPoint.y - eclipse->center().y;
-        zz = gripPoint.z - eclipse->center().z;
-        
-        OdGeVector3d end_v(xx, yy, zz);
+        OdGeVector3d end_v = gripPoint - eclipse->center();
 
         double delta_angle = end_v.angleTo(start_v, eclipse->normal());
 
         eclipse->setStartAngle(start_angle + delta_angle);
 
-        ExEclipse::Type type = (end_v.length() > start_v.length()) ? ExEclipse::Type::eArc : ExEclipse::Type::nArc;
+        ExEclipse::Type type = eclipse->colisionPoint(gripPoint) ? ExEclipse::Type::eArc : ExEclipse::Type::nArc;
 
         eclipse->setType(type);
         break;
     }
 
-    case 2:
+    case END_ANGLE_POINT:
     {
         double end_angle = eclipse->endAngle();
 
-        double xx = gripPoint.x - eclipse->center().x;
-        double yy = gripPoint.y - eclipse->center().y;
-        double zz = gripPoint.z - eclipse->center().z;
-
-        OdGeVector3d start_v(xx, yy, zz);
+        OdGeVector3d start_v = gripPoint - eclipse->center();
 
         gripPoint += offset;
 
-        xx = gripPoint.x - eclipse->center().x;
-        yy = gripPoint.y - eclipse->center().y;
-        zz = gripPoint.z - eclipse->center().z;
-
-        OdGeVector3d end_v(xx, yy, zz);
+        OdGeVector3d end_v = gripPoint - eclipse->center();
 
         double delta_angle = end_v.angleTo(start_v, eclipse->normal());
 
         eclipse->setEndAngle(end_angle + delta_angle);
-    
-        ExEclipse::Type type = (end_v.length() > start_v.length()) ? ExEclipse::Type::eArc : ExEclipse::Type::nArc;
+
+        ExEclipse::Type type = eclipse->colisionPoint(gripPoint) ? ExEclipse::Type::eArc : ExEclipse::Type::nArc;
  
         eclipse->setType(type);
         break;
     }
-    case 3:
+    case MAJOR_POINT:
     {
         OdGePoint3d point = gripPoint + offset;
         eclipse->setMajorRadius(eclipse->center().distanceTo(point));
         break;
     }
-    case 4: 
+    case MINOR_POINT:
     {
         OdGePoint3d point = gripPoint + offset;
         eclipse->setMinorRadius(eclipse->center().distanceTo(point));

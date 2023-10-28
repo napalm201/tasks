@@ -135,10 +135,14 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
     {
         double angle = m_startAngle + i * delta_angle / numSegments;;
 
-        start_vector.set(minorRadius() * cos(angle),
-            majorRadius() * sin(angle),
-            0);
+        start_vector.set(1,0,0);
+        start_vector.rotateBy(angle, normal);
 
+        double phase = atan(minorRadius() * tan(angle) / majorRadius());
+
+        start_vector *= OdGeVector2d(minorRadius() * cos(phase), majorRadius() * sin(phase)).length();
+        // TODO
+        
         start_vector.transformBy(elispe_axis);
 
         points.append(m_center + start_vector);
@@ -148,14 +152,7 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
         points.append(center());
 
     pWd->geometry().polygon(points.size(), points.getPtr());
-    
-
-    //OdDbHatchPtr pHatch = OdDbHatch::createObject();
-    ////
-    //EdgeArray edges;
-
-    //pHatch->appendLoop(OdDbHatch::kDefault, edges);
-    ////
+   
 
     return true;
 }
@@ -218,11 +215,19 @@ OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) con
 
     OdGeMatrix3d elispe_axis;
     elispe_axis.setCoordSystem(center(),
-        m_minorAxis,
-        m_majorAxis,
+       m_minorAxis,
+       m_majorAxis,
         normal());
+    
+    OdGeVector3d start_vector(1, 0, 0);
 
-    OdGeVector3d start_vector(minorRadius() * cos(angleRotate), majorRadius() * sin(angleRotate), 0);
+    start_vector.rotateBy(angleRotate, OdGeVector3d(0,0,1));
+
+    double phase = atan(minorRadius() * tan(angleRotate) / majorRadius());
+
+    start_vector *= OdGeVector2d(minorRadius() * cos(phase), majorRadius() * sin(phase)).length();
+    // TODO
+
     start_vector.transformBy(elispe_axis);
 
     pointOnCurve = m_center + start_vector;
@@ -243,5 +248,17 @@ OdResult ExEclipse::subTransformBy(const OdGeMatrix3d& xfm)
     m_majorAxis.transformBy(xfm);
     m_minorAxis.transformBy(xfm);
     return eOk;
+}
+
+bool ExEclipse::colisionPoint(const OdGePoint3d& pointOnCurve) const
+{
+    OdGeVector3d target = pointOnCurve - this->center();
+    double angle_target = m_minorAxis.angleTo(target, normal());
+
+    OdGePoint3d p;
+    getPointAtParam(angle_target, p);
+
+    OdGeVector3d radius = p - this->center();
+    return target.length() >= radius.length();
 }
 

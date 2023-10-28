@@ -69,8 +69,10 @@ public:
 		const OdGeMatrix3d& xfm);
 
 
-
+	virtual bool colisionPoint(const OdGePoint3d& pointOnCurve) const;
 	
+protected:
+	double getEclipseAngle(double angle) const;
 
 private:
 	OdGePoint3d m_center = OdGePoint3d(0, 0, 0);
