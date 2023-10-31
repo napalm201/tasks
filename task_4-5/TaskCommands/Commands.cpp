@@ -202,10 +202,56 @@ void _ExCreateEclipse_func(OdEdCommandContext* pCmdCtx)
     ExEclipsePtr pEclipse = ExEclipse::createObject();
     pEclipse->setDatabaseDefaults(pDb);
 
+    pEclipse ->setCenter(pIO->getPoint(OD_T("Enter circle center:"), true));
 
-    pEclipse->setCenter(pIO->getPoint(OD_T("\nSpecify center of eclipse: ")));
-    pEclipse->setMajorRadius(pIO->getReal(OD_T("\nSpecify major radius of eclipse: ")));
-    pEclipse->setMinorRadius(pIO->getReal(OD_T("\nSpecify minor radius of eclipse: ")));
+    struct MinorRadiusTracker : OdStaticRxObject<OdEdRealTracker>
+    {
+        ExEclipsePtr _ent;
+        MinorRadiusTracker(ExEclipsePtr _ent) : _ent(_ent) {}
+
+        virtual void setValue(double r)
+        {
+            _ent->setMinorRadius(r);
+        }
+
+        virtual int addDrawables(OdGsView* pView)
+        {
+            pView->add(_ent, 0);
+            return 1;
+        }
+
+        virtual void removeDrawables(OdGsView* pView)
+        {
+            pView->erase(_ent);
+        }
+    }
+    tracker_minor(pEclipse);
+
+    struct MajorRadiusTracker : OdStaticRxObject<OdEdRealTracker>
+    {
+        ExEclipsePtr _ent;
+        MajorRadiusTracker(ExEclipsePtr _ent) : _ent(_ent) {}
+
+        virtual void setValue(double r)
+        {
+            _ent->setMajorRadius(r);
+        }
+
+        virtual int addDrawables(OdGsView* pView)
+        {
+            pView->add(_ent, 0);
+            return 1;
+        }
+
+        virtual void removeDrawables(OdGsView* pView)
+        {
+            pView->erase(_ent);
+        }
+    }
+    tracker_major(pEclipse);
+
+    pEclipse->setMinorRadius(pIO->getDist(OD_T("\n Specify minor radius of eclipse: "), OdEd::kGdsFromLastPoint, 0.0, OdString::kEmpty, &tracker_minor));
+    pEclipse->setMajorRadius(pIO->getDist(OD_T("\n Specify major radius of eclipse: "), OdEd::kGdsFromLastPoint, 0.0, OdString::kEmpty, &tracker_major));
 
     pMS->appendOdDbEntity(pEclipse);
 }

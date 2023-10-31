@@ -55,7 +55,8 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
     OdGePoint3dArray gripPoints;
     eclipse->getGripPoints(gripPoints);
 
-    int index = indices[0];
+    unsigned int index = indices[0];
+
 
     enum TypePoint : int
     {
