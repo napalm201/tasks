@@ -89,7 +89,7 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
 
         OdGeVector3d end_v = gripPoint - eclipse->center();
 
-        double delta_angle = end_v.angleTo(start_v, eclipse->normal());
+        double delta_angle = start_v.angleTo(end_v, eclipse->normal());
 
         eclipse->setStartAngle(start_angle + delta_angle);
 
@@ -109,7 +109,7 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
 
         OdGeVector3d end_v = gripPoint - eclipse->center();
 
-        double delta_angle = end_v.angleTo(start_v, eclipse->normal());
+        double delta_angle = start_v.angleTo(end_v, eclipse->normal());
 
         eclipse->setEndAngle(end_angle + delta_angle);
 

@@ -2,8 +2,7 @@
 #include "DbProxyEntity.h"
 #include "DbHatch.h"
 #include "DbBlockTableRecord.h"
-#include "AbstractViewPE.h"
-#include "DbViewport.h"
+
 
 ODRX_DXF_DEFINE_MEMBERS(ExEclipse,                                                            
     OdDbEntity,                                                        
@@ -102,7 +101,7 @@ double ExEclipse::endAngle() const
 
 OdGeVector3d ExEclipse::normal() const
 {
-    return m_majorAxis.crossProduct(m_minorAxis).normalize();
+    return m_minorAxis.crossProduct(m_majorAxis).normalize();
 }
 
 bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
@@ -155,22 +154,10 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
     }
 
     
-
     if (type == Type::eArc)
         points.append(center());
 
-    pWd->geometry().polygon(points.size(), points.getPtr());
-
-
-
-    OdDbObjectId idVp = database()->activeViewportId();
-    OdDbObjectPtr pVp(idVp.openObject());
-    OdAbstractViewPEPtr pAVp(pVp);
-
-    OdGeVector3d vViewDir = pAVp->direction(pVp);
-    OdGePlane hatchPlane(OdGePoint3d::kOrigin, vViewDir);
-
-
+    //pWd->geometry().polygon(points.size(), points.getPtr());
 
     OdDbHatchPtr pHatch = OdDbHatch::createObject();
 
@@ -179,13 +166,16 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
 
     pHatch->setNormal(this->normal());
 
-    pHatch->setPropertiesFrom(this);
-   
+    OdGePoint2dArray  hatch_points(numSegments);
+
+    for (OdInt32 i = 0; i < points.size(); ++i)
+        hatch_points.append(points[i].convert2d());
+
     OdHatchPattern     lines;
     OdHatchPatternLine line;
    
     line.m_dLineAngle = OdaPI / 4;
-    line.m_basePoint = OdGePoint2d(-0.1, 0);
+    line.m_basePoint = OdGePoint2d(0, 0);
     line.m_dashes.clear();
     line.m_dashes.push_back(1);
     line.m_dashes.push_back(-1);
@@ -196,7 +186,7 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
     pHatch->setPattern(OdDbHatch::kCustomDefined, OD_T("custom"), 0, 1, lines);
 
     OdGeDoubleArray   vertexBulges;
-    pHatch->appendLoop(OdDbHatch::kExternal | OdDbHatch::kPolyline, ); //?
+    pHatch->appendLoop(OdDbHatch::kExternal | OdDbHatch::kPolyline, hatch_points, vertexBulges);
 
     pHatch->worldDraw(pWd);
 
@@ -267,7 +257,7 @@ OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) con
     
     OdGeVector3d start_vector(1, 0, 0);
 
-    start_vector.rotateBy(angleRotate, OdGeVector3d(0,0,1));
+    start_vector.rotateBy(angleRotate, OdGeVector3d(0 , 0, 1));
 
     double phase = atan(minorRadius() * tan(angleRotate) / majorRadius());
 
