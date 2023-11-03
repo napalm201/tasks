@@ -45,4 +45,5 @@ void TaskCommandsModule::uninitApp()
     ExEclipse::rxUninit();
 
     ExEclipse::desc()->delX(OdDbGripPointsPE::desc());
+
 }

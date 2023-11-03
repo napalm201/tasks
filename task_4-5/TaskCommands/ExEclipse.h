@@ -79,7 +79,6 @@ private:
 	Type type = eArc;
 	OdGeVector3d m_majorAxis = OdGeVector3d(0, 1, 0);
 	OdGeVector3d m_minorAxis = OdGeVector3d(1, 0, 0);
-
 };
 typedef OdSmartPtr<ExEclipse> ExEclipsePtr;
 

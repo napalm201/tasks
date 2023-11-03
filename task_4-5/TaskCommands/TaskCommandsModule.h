@@ -33,7 +33,6 @@ class TaskCommandsModule : public OdRxModule
 #undef CMD_DEF
 
 	OdStaticRxObject<OdDbEclipseGripPointsPE> _egp;
-
 public:
 	void initApp();
 	void uninitApp();

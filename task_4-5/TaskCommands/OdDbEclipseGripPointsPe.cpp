@@ -33,7 +33,7 @@ OdResult OdDbEclipseGripPointsPE::getGripPoints(const OdDbEntity* pEntity, OdGeP
 
     gripPoints[size + 0] = eclipse->center();                            
 
-    eclipse->getPointAtParam(eclipse->startAngle() + 0.001, gripPoints[size + 1]);
+    eclipse->getPointAtParam(eclipse->startAngle() + 0.005, gripPoints[size + 1]);
     eclipse->getPointAtParam(eclipse->endAngle(), gripPoints[size + 2]);
     eclipse->getPointAtParam(OdaPI2, gripPoints[size + 3]);           
     eclipse->getPointAtParam(OdaPI, gripPoints[size + 4]);            
@@ -55,8 +55,12 @@ OdResult OdDbEclipseGripPointsPE::moveGripPointsAt(OdDbEntity* pEntity, const Od
     OdGePoint3dArray gripPoints;
     eclipse->getGripPoints(gripPoints);
 
-    unsigned int index = indices[0];
+    int off_arr = gripPoints.size() - 5;
 
+    unsigned int index = indices[0] - off_arr;
+
+    if (index < 0)
+        return eOk;
 
     enum TypePoint : int
     {
@@ -146,3 +150,19 @@ OdResult OdDbEclipseGripPointsPE::getOsnapPoints(const OdDbEntity* pEntity, OdDb
 {
 	return OdResult();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
