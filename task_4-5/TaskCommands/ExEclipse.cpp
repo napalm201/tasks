@@ -2,7 +2,7 @@
 #include "DbProxyEntity.h"
 #include "DbHatch.h"
 #include "DbBlockTableRecord.h"
-
+#include "AbstractViewPE.h"
 
 ODRX_DXF_DEFINE_MEMBERS(ExEclipse,                                                            
     OdDbEntity,                                                        
@@ -113,7 +113,8 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
     pWd->subEntityTraits().setSelectionMarker(1);
 
     OdGeMatrix3d elispe_axis;
-    elispe_axis.setCoordSystem(center(),
+    elispe_axis.setCoordSystem(
+        center(),
         m_minorAxis,
         m_majorAxis,
         normal());
@@ -130,10 +131,11 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
 
     OdInt32 numSegments = 200;
 
-    OdGePoint3dArray points(numSegments);
+    //OdGePoint3dArray points(numSegments);
 
     double angle = 0, phase = 0;
     OdGePoint3d point;
+    OdGePoint2dArray  hatch_points(numSegments);
 
     for (OdInt32 i = 0; i <= numSegments; ++i)
     {
@@ -146,17 +148,22 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
 
         start_vector *= OdGeVector2d(minorRadius() * cos(phase), majorRadius() * sin(phase)).length();
         
-        start_vector.transformBy(elispe_axis);
+
+        //start_vector.transformBy(elispe_axis);
 
         point = m_center + start_vector;
+        hatch_points.append(point.convert2d());
 
-        points.append(point);
+       // points.append(point);
     }
 
     
-    if (type == Type::eArc)
-        points.append(center());
-
+    if (type == Type::eArc) 
+    {
+        //points.append(center());
+        hatch_points.append(m_center.convert2d());
+    }
+        
     //pWd->geometry().polygon(points.size(), points.getPtr());
 
     OdDbHatchPtr pHatch = OdDbHatch::createObject();
@@ -165,11 +172,6 @@ bool ExEclipse::subWorldDraw(OdGiWorldDraw* pWd) const
     pHatch->setHatchStyle(OdDbHatch::HatchStyle::kNormal);
 
     pHatch->setNormal(this->normal());
-
-    OdGePoint2dArray  hatch_points(numSegments);
-
-    for (OdInt32 i = 0; i < points.size(); ++i)
-        hatch_points.append(points[i].convert2d());
 
     OdHatchPattern     lines;
     OdHatchPatternLine line;
