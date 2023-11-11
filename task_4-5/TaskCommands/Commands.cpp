@@ -265,9 +265,10 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb)
 
     OdDbLayerTableRecordPtr pLayer = OdDbLayerTableRecord::createObject();
 
-    OdString name = "LineTypeTask";
+    OdString nameLayer = "LayerTask";
+    OdString nameLinetype = "фантом";
 
-    pLayer->setName(name);
+    pLayer->setName(nameLayer);
 
     OdCmColor color(OdCmEntityColor::ColorMethod::kByACI);
 
@@ -275,14 +276,71 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb)
 
     pLayer->setColor(color);
 
-    OdDbLinetypeTableRecordPtr pLinetype = OdDbLinetypeTableRecord::createObject();
+    pDb->loadLineTypeFile("*", "/acad.lin");
+
+    OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
+    OdDbObjectId pLinetype_ID = pLinetypes->getAt(nameLinetype);
 
 
-    //pLayer->setLinetypeObjectId();
+    pLayer->setLinetypeObjectId(pLinetype_ID);
 
     OdDbObjectId layerId = pLayers->add(pLayer);
 
     return layerId;
+}
+
+
+
+void getAllEntityModelSpace(OdDbObjectId pMS_Id, OdDbObjectIdArray& arraysCopyId)
+{
+    OdDbBlockTableRecordPtr pMS = pMS_Id.safeOpenObject(OdDb::kForWrite);
+    OdDbObjectIteratorPtr pEntIter = pMS->newIterator();
+
+    for (; !pEntIter->done(); pEntIter->step())
+    {
+        OdDbEntityPtr pEntity = pEntIter->entity();
+        OdDbObjectId objectId = pEntIter->objectId();
+
+        if (!OdDbLine::cast(pEntity.get()).isNull())
+        {
+            arraysCopyId.append(objectId);
+        }
+
+        OdDbBlockReferencePtr blckRef = OdDbBlockReference::cast(pEntity.get());
+
+        if (!blckRef.isNull())
+        {
+            OdDbObjectId block = blckRef->blockTableRecord();
+            getAllEntityModelSpace(block, arraysCopyId);
+        }
+
+    }
+}
+
+
+OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabasePtr pDb_1, OdDbDatabasePtr pDb_2, OdDbObjectIdArray& arraysCopyId)
+{
+    OdDbBlockTablePtr       pBlockTable_2 = pDb_2->getBlockTableId().safeOpenObject(OdDb::kForWrite);
+    OdDbBlockTableRecordPtr pMS_2 = pDb_2->getModelSpaceId().safeOpenObject(OdDb::kForWrite);
+
+    OdDbBlockTableRecordPtr pCopyLines = OdDbBlockTableRecord::createObject();
+
+    pCopyLines->setName("copyLines");
+
+    OdDbObjectId idBlockLines = pBlockTable_2->add(pCopyLines);
+
+    OdDbBlockReferencePtr pBlkRef_2 = OdDbBlockReference::createObject();
+    pBlkRef_2->setDatabaseDefaults(pDb_2);
+
+    OdDbObjectId brefId = pMS_2->appendOdDbEntity(pBlkRef_2);
+    pBlkRef_2->setBlockTableRecord(pCopyLines->objectId());
+
+    OdDbIdMappingPtr pMap = OdDbIdMapping::createObject();
+    pMap->setDestDb(pDb_1);
+
+    pDb_2->wblockCloneObjects(arraysCopyId, idBlockLines, *pMap, OdDb::kDrcReplace);
+
+    return idBlockLines;
 }
 
 void _CopyLines_func(OdEdCommandContext* pCmdCtx)
@@ -295,53 +353,26 @@ void _CopyLines_func(OdEdCommandContext* pCmdCtx)
 
     OdDbDatabasePtr pDb_2 = svcs->createDatabase(false);
     pDb_2->readFile("/database2.dwg");
-    OdDbObjectId layer_2 = greateLayer_2(pDb_2);
-
-    OdDbIdMappingPtr pMap = OdDbIdMapping::createObject();
-    pMap->setDestDb(pDb_1);
 
     OdDbObjectIdArray arraysCopyId;
+    OdDbObjectId pMS_1 = pDb_1->getModelSpaceId();
 
-    OdDbBlockTableRecordPtr pMS_1 = pDb_1->getModelSpaceId().openObject(OdDb::kForWrite);
+    getAllEntityModelSpace(pMS_1, arraysCopyId);
 
-    OdDbObjectIteratorPtr pEntIter = pMS_1->newIterator();
+    OdDbObjectId pCopyLines_ID =  copyLinesFromDataBaseToDataBase(pDb_1, pDb_2, arraysCopyId);
+    OdDbBlockTableRecordPtr pCopyLinesBlock = pCopyLines_ID.safeOpenObject(OdDb::kForWrite);
 
-    for (; !pEntIter->done(); pEntIter->step())
-    {
-        OdDbEntityPtr pEntity = pEntIter->entity();
-        OdDbObjectId objectId = pEntIter->objectId();
+   
 
-        if (!OdDbLine::cast(pEntity.get()).isNull())
-        {
-            arraysCopyId.append(objectId);
-        }
-    }
+    OdDbObjectId layer_2 = greateLayer_2(pDb_2);
 
-    OdDbBlockTablePtr       pBlockTable_2 = pDb_2->getBlockTableId().safeOpenObject(OdDb::kForWrite);
-    OdDbBlockTableRecordPtr pMS_2 = pDb_2->getModelSpaceId().openObject(OdDb::kForWrite);
-    
-    OdDbBlockTableRecordPtr pCopyLines = OdDbBlockTableRecord::createObject();
-
-    pCopyLines->setName("copyLines");
-
-    OdDbObjectId idBlockLines  = pBlockTable_2->add(pCopyLines);
-
-    OdDbBlockReferencePtr pBlkRef_2 = OdDbBlockReference::createObject();
-    pBlkRef_2->setDatabaseDefaults(pDb_2);
-
-    OdDbObjectId brefId = pMS_2->appendOdDbEntity(pBlkRef_2);
-    pBlkRef_2->setBlockTableRecord(pCopyLines->objectId());
-
-    pDb_2->wblockCloneObjects(arraysCopyId, idBlockLines, *pMap, OdDb::kDrcReplace);
-
-
-    pEntIter = pCopyLines->newIterator();
+    OdDbObjectIteratorPtr pEntIter = pCopyLinesBlock->newIterator();
 
     OdCmColor color(OdCmEntityColor::ColorMethod::kByACI);
 
     color.setColorIndex(OdCmEntityColor::kACIWhite);
 
-    for (; !pEntIter->done(); pEntIter->step())
+    for (; !pEntIter->done(); pEntIter->step()) 
     {
         OdDbEntityPtr pEn = pEntIter->entity(OdDb::kForWrite);
 
