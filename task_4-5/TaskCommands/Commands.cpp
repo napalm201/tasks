@@ -1,4 +1,4 @@
-
+ï»¿
 #include "stdAfx.h"
 
 #include <ctime>
@@ -258,7 +258,6 @@ void _ExCreateEclipse_func(OdEdCommandContext* pCmdCtx)
 }
 
 
-
 OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 {
     OdDbLayerTablePtr pLayers = pDb->getLayerTableId().safeOpenObject(OdDb::kForWrite);
@@ -279,9 +278,9 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
     OdString fname = pIO->getString(OD_T("Enter lin file name :"));
 
 
-    pDb->loadLineTypeFile("*îñåâàÿ", fname);
+    pDb->loadLineTypeFile("*Ð¾ÑÐµÐ²Ð°Ñ", fname);
 
-    OdString nameLinetype = "îñåâàÿ";
+    OdString nameLinetype = "*Ð¾ÑÐµÐ²Ð°Ñ";
 
 
     OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
@@ -324,17 +323,17 @@ void getAllEntityModelSpace(OdDbObjectId pMS_Id, OdDbObjectIdArray& arraysCopyId
 }
 
 
-OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabasePtr pDb_1, OdDbDatabasePtr pDb_2, const OdDbObjectIdArray& arraysCopyId)
+OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabase* pDb_1, OdDbDatabase* pDb_2, const OdDbObjectIdArray& arraysCopyId)
 {
     OdDbBlockTablePtr       pBlockTable_2 = pDb_2->getBlockTableId().safeOpenObject(OdDb::kForWrite);
     OdDbBlockTableRecordPtr pMS_2 = pDb_2->getModelSpaceId().safeOpenObject(OdDb::kForWrite);
-
+    
     OdDbBlockTableRecordPtr pCopyLines = OdDbBlockTableRecord::createObject();
 
     pCopyLines->setName("copyLines");
 
+    
     OdDbObjectId idBlockLines = pBlockTable_2->add(pCopyLines);
-
 
     OdDbBlockReferencePtr pBlkRef_2 = OdDbBlockReference::createObject();
     pBlkRef_2->setDatabaseDefaults(pDb_2);
@@ -342,6 +341,8 @@ OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabasePtr pDb_1, OdDbDatabase
 
     OdDbObjectId brefId = pMS_2->appendOdDbEntity(pBlkRef_2);
     pBlkRef_2->setBlockTableRecord(pCopyLines->objectId());
+    
+    
 
     OdDbIdMappingPtr pMap = OdDbIdMapping::createObject();
     pMap->setDestDb(pDb_2);
@@ -350,6 +351,30 @@ OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabasePtr pDb_1, OdDbDatabase
 
     return idBlockLines;
 }
+
+
+void updateColor(OdDbObjectId block_id, OdDbObjectId layer)
+{
+    OdDbBlockTableRecordPtr pCopyLinesBlock = block_id.safeOpenObject(OdDb::kForWrite);
+
+    OdDbObjectIteratorPtr pEntIter = pCopyLinesBlock->newIterator();
+
+    OdCmColor color(OdCmEntityColor::ColorMethod::kByACI);
+
+    color.setColorIndex(OdCmEntityColor::kACIWhite);
+
+
+    for (; !pEntIter->done(); pEntIter->step())
+    {
+        OdDbEntityPtr pEn = pEntIter->entity(OdDb::kForWrite);
+
+        if (pEn->color() == color)
+        {
+            pEn->setLayer(layer);
+        }
+    }
+}
+
 
 void _CopyLines_func(OdEdCommandContext* pCmdCtx)
 {
@@ -362,11 +387,11 @@ void _CopyLines_func(OdEdCommandContext* pCmdCtx)
 
     OdString fname = pIO->getString(OD_T("Enter file name :"));
 
-    OdDbDatabasePtr pDb_2;
+    OdDbDatabasePtr pDb_2 = pDb_1->appServices()->createDatabase(false);
 
     try
     {
-        pDb_2 = pDb_1->appServices()->readFile(fname);
+        pDb_2->readFile(fname);
     }
     catch (const OdError& er)
     {
@@ -379,31 +404,11 @@ void _CopyLines_func(OdEdCommandContext* pCmdCtx)
 
     getAllEntityModelSpace(pMS_1, arraysCopyId);
 
+    OdDbObjectId  pCopyLines_ID = copyLinesFromDataBaseToDataBase(pDb_1, pDb_2, arraysCopyId);
 
-
-    OdDbObjectId pCopyLines_ID =  copyLinesFromDataBaseToDataBase(pDb_1, pDb_2, arraysCopyId);
-
-   
     OdDbObjectId layer_2 = greateLayer_2(pDb_2, pIO);
+    updateColor(pCopyLines_ID, layer_2);
 
-    OdDbBlockTableRecordPtr pCopyLinesBlock = pCopyLines_ID.safeOpenObject(OdDb::kForWrite);
-
-    OdDbObjectIteratorPtr pEntIter = pCopyLinesBlock->newIterator();
-
-    OdCmColor color(OdCmEntityColor::ColorMethod::kByACI);
-
-    color.setColorIndex(OdCmEntityColor::kACIWhite);
-
-
-    for (; !pEntIter->done(); pEntIter->step()) 
-    {
-        OdDbEntityPtr pEn = pEntIter->entity(OdDb::kForWrite);
-
-        if (pEn->color() == color)
-        {
-            pEn->setLayer(layer_2);
-        }
-    }
 
     OdDb::SaveType fileType = OdDb::kDwg;
     OdDb::DwgVersion outVer = OdDb::vAC24;
@@ -417,5 +422,7 @@ void _CopyLines_func(OdEdCommandContext* pCmdCtx)
     {
         pIO->putString("No Saved");
     }
+
     pDb_2.release();
+
 }
