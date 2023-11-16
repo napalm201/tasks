@@ -8,6 +8,7 @@ CMD_DEF(SaveDedicatedObjToFile, L"TaskCommands")
 CMD_DEF(ChangeColorNoSelect, L"TaskCommands")
 CMD_DEF(AssignLayerToLine, L"TaskCommands")
 CMD_DEF(ExCreateEclipse, L"TaskCommands")
+CMD_DEF(CopyLines, L"TaskCommands")
 
 #ifdef DO_UNDEF_CMD_DEF
 #undef DO_UNDEF_CMD_DEF

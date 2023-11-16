@@ -259,14 +259,13 @@ void _ExCreateEclipse_func(OdEdCommandContext* pCmdCtx)
 
 
 
-OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb)
+OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 {
     OdDbLayerTablePtr pLayers = pDb->getLayerTableId().safeOpenObject(OdDb::kForWrite);
 
     OdDbLayerTableRecordPtr pLayer = OdDbLayerTableRecord::createObject();
 
     OdString nameLayer = "LayerTask";
-    OdString nameLinetype = "фантом";
 
     pLayer->setName(nameLayer);
 
@@ -276,7 +275,14 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb)
 
     pLayer->setColor(color);
 
-    pDb->loadLineTypeFile("*", "/acad.lin");
+
+    OdString fname = pIO->getString(OD_T("Enter lin file name :"));
+
+
+    pDb->loadLineTypeFile("*осевая", fname);
+
+    OdString nameLinetype = "осевая";
+
 
     OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
     OdDbObjectId pLinetype_ID = pLinetypes->getAt(nameLinetype);
@@ -318,7 +324,7 @@ void getAllEntityModelSpace(OdDbObjectId pMS_Id, OdDbObjectIdArray& arraysCopyId
 }
 
 
-OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabasePtr pDb_1, OdDbDatabasePtr pDb_2, OdDbObjectIdArray& arraysCopyId)
+OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabasePtr pDb_1, OdDbDatabasePtr pDb_2, const OdDbObjectIdArray& arraysCopyId)
 {
     OdDbBlockTablePtr       pBlockTable_2 = pDb_2->getBlockTableId().safeOpenObject(OdDb::kForWrite);
     OdDbBlockTableRecordPtr pMS_2 = pDb_2->getModelSpaceId().safeOpenObject(OdDb::kForWrite);
@@ -329,16 +335,18 @@ OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabasePtr pDb_1, OdDbDatabase
 
     OdDbObjectId idBlockLines = pBlockTable_2->add(pCopyLines);
 
+
     OdDbBlockReferencePtr pBlkRef_2 = OdDbBlockReference::createObject();
     pBlkRef_2->setDatabaseDefaults(pDb_2);
+
 
     OdDbObjectId brefId = pMS_2->appendOdDbEntity(pBlkRef_2);
     pBlkRef_2->setBlockTableRecord(pCopyLines->objectId());
 
     OdDbIdMappingPtr pMap = OdDbIdMapping::createObject();
-    pMap->setDestDb(pDb_1);
+    pMap->setDestDb(pDb_2);
 
-    pDb_2->wblockCloneObjects(arraysCopyId, idBlockLines, *pMap, OdDb::kDrcReplace);
+    pDb_1->wblockCloneObjects(arraysCopyId, idBlockLines, *pMap, OdDb::kDrcReplace);
 
     return idBlockLines;
 }
@@ -347,30 +355,45 @@ void _CopyLines_func(OdEdCommandContext* pCmdCtx)
 {
 
     OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
+    OdDbUserIO* pIO = pDbCmdCtx->dbUserIO();
 
     OdDbDatabasePtr pDb_1 = pDbCmdCtx->database();
     OdDbHostAppServices* svcs = pDb_1->appServices();
 
-    OdDbDatabasePtr pDb_2 = svcs->createDatabase(false);
-    pDb_2->readFile("/database2.dwg");
+    OdString fname = pIO->getString(OD_T("Enter file name :"));
+
+    OdDbDatabasePtr pDb_2;
+
+    try
+    {
+        pDb_2 = pDb_1->appServices()->readFile(fname);
+    }
+    catch (const OdError& er)
+    {
+        pIO->putString("not read");
+        return;
+    }
 
     OdDbObjectIdArray arraysCopyId;
     OdDbObjectId pMS_1 = pDb_1->getModelSpaceId();
 
     getAllEntityModelSpace(pMS_1, arraysCopyId);
 
+
+
     OdDbObjectId pCopyLines_ID =  copyLinesFromDataBaseToDataBase(pDb_1, pDb_2, arraysCopyId);
-    OdDbBlockTableRecordPtr pCopyLinesBlock = pCopyLines_ID.safeOpenObject(OdDb::kForWrite);
 
    
+    OdDbObjectId layer_2 = greateLayer_2(pDb_2, pIO);
 
-    OdDbObjectId layer_2 = greateLayer_2(pDb_2);
+    OdDbBlockTableRecordPtr pCopyLinesBlock = pCopyLines_ID.safeOpenObject(OdDb::kForWrite);
 
     OdDbObjectIteratorPtr pEntIter = pCopyLinesBlock->newIterator();
 
     OdCmColor color(OdCmEntityColor::ColorMethod::kByACI);
 
     color.setColorIndex(OdCmEntityColor::kACIWhite);
+
 
     for (; !pEntIter->done(); pEntIter->step()) 
     {
@@ -381,4 +404,18 @@ void _CopyLines_func(OdEdCommandContext* pCmdCtx)
             pEn->setLayer(layer_2);
         }
     }
+
+    OdDb::SaveType fileType = OdDb::kDwg;
+    OdDb::DwgVersion outVer = OdDb::vAC24;
+
+    try
+    {
+        pDb_2->writeFile(fname, fileType, outVer, true);
+        pIO->putString("Saved");
+    }
+    catch (const OdError& er)
+    {
+        pIO->putString("No Saved");
+    }
+    pDb_2.release();
 }
