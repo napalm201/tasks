@@ -274,18 +274,14 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 
     pLayer->setColor(color);
 
-
-    OdString fname = pIO->getString(OD_T("Enter lin file name :"));
-
+    OdString fname = pIO->getFilePath(OD_T("Enter lin file name :"));
 
     pDb->loadLineTypeFile("*осевая", fname);
 
     OdString nameLinetype = "*осевая";
 
-
     OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
     OdDbObjectId pLinetype_ID = pLinetypes->getAt(nameLinetype);
-
 
     pLayer->setLinetypeObjectId(pLinetype_ID);
 
@@ -296,7 +292,7 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 
 
 
-void getAllEntityModelSpace(OdDbObjectId pMS_Id, OdDbObjectIdArray& arraysCopyId)
+void getAllLinesfromModelSpace(OdDbObjectId pMS_Id, OdDbObjectIdArray& arraysCopyId)
 {
     OdDbBlockTableRecordPtr pMS = pMS_Id.safeOpenObject(OdDb::kForWrite);
     OdDbObjectIteratorPtr pEntIter = pMS->newIterator();
@@ -306,7 +302,7 @@ void getAllEntityModelSpace(OdDbObjectId pMS_Id, OdDbObjectIdArray& arraysCopyId
         OdDbEntityPtr pEntity = pEntIter->entity();
         OdDbObjectId objectId = pEntIter->objectId();
 
-        if (!OdDbLine::cast(pEntity.get()).isNull())
+        if (!OdDbLine::cast(pEntity.get()).isNull()) 
         {
             arraysCopyId.append(objectId);
         }
@@ -316,14 +312,14 @@ void getAllEntityModelSpace(OdDbObjectId pMS_Id, OdDbObjectIdArray& arraysCopyId
         if (!blckRef.isNull())
         {
             OdDbObjectId block = blckRef->blockTableRecord();
-            getAllEntityModelSpace(block, arraysCopyId);
+            getAllLinesfromModelSpace(block, arraysCopyId);
         }
 
     }
 }
 
 
-OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabase* pDb_1, OdDbDatabase* pDb_2, const OdDbObjectIdArray& arraysCopyId)
+OdDbObjectId copyObjectsFromDataBaseToDataBase(OdDbDatabase* pDb_1, OdDbDatabase* pDb_2, const OdDbObjectIdArray& arraysCopyId)
 {
     OdDbBlockTablePtr       pBlockTable_2 = pDb_2->getBlockTableId().safeOpenObject(OdDb::kForWrite);
     OdDbBlockTableRecordPtr pMS_2 = pDb_2->getModelSpaceId().safeOpenObject(OdDb::kForWrite);
@@ -352,77 +348,109 @@ OdDbObjectId copyLinesFromDataBaseToDataBase(OdDbDatabase* pDb_1, OdDbDatabase* 
     return idBlockLines;
 }
 
+void getRGBColor(OdInt8& red, OdInt8& green, OdInt8& blue, OdDbEntityPtr pEn);
+void getRGBColor(OdInt8& red, OdInt8& green, OdInt8& blue, OdCmEntityColor color);
 
-void updateColor(OdDbObjectId block_id, OdDbObjectId layer)
+void updateEntitys(OdDbObjectId block_id, OdDbObjectId layer)
 {
     OdDbBlockTableRecordPtr pCopyLinesBlock = block_id.safeOpenObject(OdDb::kForWrite);
 
     OdDbObjectIteratorPtr pEntIter = pCopyLinesBlock->newIterator();
 
-    OdCmColor color(OdCmEntityColor::ColorMethod::kByACI);
-
-    color.setColorIndex(OdCmEntityColor::kACIWhite);
-
+    OdCmColor color(OdCmEntityColor::ColorMethod::kByLayer);
 
     for (; !pEntIter->done(); pEntIter->step())
     {
         OdDbEntityPtr pEn = pEntIter->entity(OdDb::kForWrite);
 
-        if (pEn->color() == color)
+        OdInt8 k = 253;
+
+        OdInt8 red = 0, green = 0, blue = 0;
+
+        getRGBColor(red, green, blue, pEn);
+   
+        if (green > k && red > k && blue > k)
         {
+            
             pEn->setLayer(layer);
+            pEn->setColor(color);
         }
     }
 }
 
+void getRGBColor(OdInt8 & red, OdInt8& green, OdInt8& blue, OdDbEntityPtr pEn)
+{
+    OdCmEntityColor color = pEn->entityColor();
+
+    if (color.isByLayer())
+    {
+        OdDbLayerTableRecordPtr layer = pEn->layerId().safeOpenObject(OdDb::kForRead);
+        color = layer->color().entityColor();
+    }
+    else  if (color.isByBlock())
+    {
+        OdDbBlockTableRecordPtr pBlock = pEn->blockId().safeOpenObject(OdDb::kForRead);
+
+        OdDbObjectIdArray referenceIds;
+        pBlock->getBlockReferenceIds(referenceIds);
+
+        if (!referenceIds.isEmpty())
+        {
+            OdDbBlockReferencePtr block_ref = referenceIds.first().safeOpenObject(OdDb::kForRead);
+            getRGBColor(red, green, blue, block_ref);
+        }
+       
+    }
+
+     getRGBColor(red, green, blue, color);
+
+}
+
+
+
+void getRGBColor(OdInt8& red, OdInt8& green, OdInt8& blue, OdCmEntityColor color)
+{
+    if (color.isByColor())
+    {
+        red = color.red(); green = color.green(); blue = color.blue();
+
+    }
+    else if (color.isByACI())
+    {
+        OdInt16 indexColor = color.colorIndex();
+        OdInt32 rgb = color.lookUpRGB(indexColor);
+
+        red = ODGETRED(rgb);  green = ODGETGREEN(rgb);  blue = ODGETBLUE(rgb);
+    }
+}
 
 void _CopyLines_func(OdEdCommandContext* pCmdCtx)
 {
-
     OdDbCommandContextPtr pDbCmdCtx(pCmdCtx);
     OdDbUserIO* pIO = pDbCmdCtx->dbUserIO();
 
     OdDbDatabasePtr pDb_1 = pDbCmdCtx->database();
     OdDbHostAppServices* svcs = pDb_1->appServices();
 
-    OdString fname = pIO->getString(OD_T("Enter file name :"));
+    OdString fname = pIO->getFilePath(OD_T("Enter file name :"));
 
-    OdDbDatabasePtr pDb_2 = pDb_1->appServices()->createDatabase(false);
-
-    try
-    {
-        pDb_2->readFile(fname);
-    }
-    catch (const OdError& er)
-    {
-        pIO->putString("not read");
-        return;
-    }
+    OdDbDatabasePtr pDb_2 = pDb_1->appServices()->readFile(fname);
 
     OdDbObjectIdArray arraysCopyId;
     OdDbObjectId pMS_1 = pDb_1->getModelSpaceId();
 
-    getAllEntityModelSpace(pMS_1, arraysCopyId);
+    getAllLinesfromModelSpace(pMS_1, arraysCopyId);
 
-    OdDbObjectId  pCopyLines_ID = copyLinesFromDataBaseToDataBase(pDb_1, pDb_2, arraysCopyId);
+    OdDbObjectId  pCopyLines_ID = copyObjectsFromDataBaseToDataBase(pDb_1, pDb_2, arraysCopyId);
 
     OdDbObjectId layer_2 = greateLayer_2(pDb_2, pIO);
-    updateColor(pCopyLines_ID, layer_2);
+
+    updateEntitys(pCopyLines_ID, layer_2);
 
 
     OdDb::SaveType fileType = OdDb::kDwg;
     OdDb::DwgVersion outVer = OdDb::vAC24;
 
-    try
-    {
-        pDb_2->writeFile(fname, fileType, outVer, true);
-        pIO->putString("Saved");
-    }
-    catch (const OdError& er)
-    {
-        pIO->putString("No Saved");
-    }
-
+    pDb_2->writeFile(fname, fileType, outVer);
     pDb_2.release();
-
 }
