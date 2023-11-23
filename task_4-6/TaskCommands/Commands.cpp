@@ -279,7 +279,7 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 
     OdString linetype = pIO->getString(OD_T("Enter typeline :"));
 
-    pDb->loadLineTypeFile(linetype, fname);
+    pDb->loadLineTypeFile("*", fname);
 
     OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
     OdDbObjectId pLinetype_ID = pLinetypes->getAt(linetype);
@@ -487,6 +487,7 @@ OdDbObjectId greate_testBlock(OdDbDatabasePtr pDb)
 
 #include "DbLeader.h"
 #include "DbMText.h"
+#include "DbText.h"
 
 void addEntitys(OdDbObjectId block_id)
 {
@@ -514,45 +515,77 @@ void addEntitys(OdDbObjectId block_id)
     pArc2->setCenter(center2);
     pArc2->setRadius(r2);
 
+    
+    
+    
     OdDbLeaderPtr pLeader = OdDbLeader::createObject();
-    pLeader->setToStraightLeader();
-
     testBlock->appendOdDbEntity(pLeader);
-
 
     OdGePoint3d point_start = center1;
     point_start.x += r1;
 
-    double k2 = 1.5;
-
     OdGePoint3d point_middle = center1;
-    point_middle.x += r2 + k;
-    point_middle.y += r1 / k;
+    point_middle.x += r2 + 1.5;
+    point_middle.y += r1 / 8;
 
     OdGePoint3d point_end = point_middle;
-    point_end.x += k2;
+    point_end.x += 1.5;
 
     pLeader->appendVertex(point_start);
     pLeader->appendVertex(point_middle);
     pLeader->appendVertex(point_end);
 
-    OdGePoint3d point = OdGePoint3d(0, 0, 0);
     OdDbMTextPtr pMText = OdDbMText::createObject();
-
     OdDbObjectId mTextId = testBlock->appendOdDbEntity(pMText);
 
-    pMText->setLocation(point);
     pMText->setAttachment(OdDbMText::kMiddleLeft);
-
     pMText->setContents(OD_T("Trim #2"));
 
+    pLeader->setToStraightLeader();
     pLeader->attachAnnotation(mTextId);
     pLeader->enableArrowHead();
     pLeader->setDimtad(0);
     pLeader->setDimgap(0.3);
 
+    OdCmColor color_leader;
+    color_leader.setRGB(0, 0, 180);
+    pLeader->setDimclrd(color_leader);
 
-    OdCmColor color;
-    color.setRGB(0, 0, 180);
-    pLeader->setDimclrd(color);
+
+
+    
+    
+    OdDbLinePtr pline = OdDbLine::createObject();
+    testBlock->appendOdDbEntity(pline);
+
+
+    OdDbLinetypeTablePtr pLinetypes = blck_ref->database()->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
+    OdDbObjectId pLinetype_ID = pLinetypes->getAt("*осевая");
+
+    point_start = center1;
+
+    point_end = point_start;
+    point_end.x -= 2 * r2;
+
+    pline->setStartPoint(point_start);
+    pline->setEndPoint(point_end);
+    pline->setLinetype(pLinetype_ID);
+
+    OdCmColor color_line;
+    color_line.setRGB(250, 0, 0);
+    pline->setColor(color_line);
+
+
+    OdDbTextPtr ptext = OdDbText::createObject();
+    testBlock->appendOdDbEntity(ptext);
+    ptext->setTextString("Center");
+
+    ptext->setPosition(point_end);
+    ptext->mirrorInX(false);
+    ptext->setWidthFactor(r2 / 2);
+    ptext->setHeight(r2 / 8);
+    ptext->setVerticalMode(OdDb::kTextBottom);
+    ptext->setColor(color_line);
+
+
 }
