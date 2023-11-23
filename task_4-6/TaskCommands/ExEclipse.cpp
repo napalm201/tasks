@@ -255,11 +255,11 @@ OdResult ExEclipse::getPointAtParam(double param, OdGePoint3d& pointOnCurve) con
     elispe_axis.setCoordSystem(center(),
        m_minorAxis,
        m_majorAxis,
-        normal());
+       normal());
     
     OdGeVector3d start_vector(1, 0, 0);
 
-    start_vector.rotateBy(angleRotate, OdGeVector3d(0 , 0, 1));
+    start_vector.rotateBy(angleRotate, OdGeVector3d(0 , 0, 1) );
 
     double phase = atan(minorRadius() * tan(angleRotate) / majorRadius());
 

@@ -6,6 +6,7 @@
 #include <DbLayerTableRecord.h>
 #include "DbBlockTableRecord.h"
 #include "DbBlockReference.h"
+#include "DbArc.h"
 
 void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 {
@@ -276,16 +277,16 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 
     OdString fname = pIO->getFilePath(OD_T("Enter lin file name :"));
 
-    pDb->loadLineTypeFile("*осевая", fname);
+    OdString linetype = pIO->getString(OD_T("Enter typeline :"));
 
-    OdString nameLinetype = "*осевая";
+    pDb->loadLineTypeFile(linetype, fname);
 
     OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
-    OdDbObjectId pLinetype_ID = pLinetypes->getAt(nameLinetype);
+    OdDbObjectId pLinetype_ID = pLinetypes->getAt(linetype);
 
     pLayer->setLinetypeObjectId(pLinetype_ID);
 
-    OdDbObjectId layerId = pLayers->add(pLayer);
+    OdDbObjectId layerId = pLayers->add(pLayer); 
 
     return layerId;
 }
@@ -348,8 +349,8 @@ OdDbObjectId copyObjectsFromDataBaseToDataBase(OdDbDatabase* pDb_1, OdDbDatabase
     return idBlockLines;
 }
 
-void getRGBColor(OdInt8& red, OdInt8& green, OdInt8& blue, OdDbEntityPtr pEn);
-void getRGBColor(OdInt8& red, OdInt8& green, OdInt8& blue, OdCmEntityColor color);
+void getRGBColor(OdUInt8& red, OdUInt8& green, OdUInt8& blue, OdDbEntityPtr pEn);
+void getRGBColor(OdUInt8& red, OdUInt8& green, OdUInt8& blue, OdCmEntityColor color);
 
 void updateEntitys(OdDbObjectId block_id, OdDbObjectId layer)
 {
@@ -363,22 +364,21 @@ void updateEntitys(OdDbObjectId block_id, OdDbObjectId layer)
     {
         OdDbEntityPtr pEn = pEntIter->entity(OdDb::kForWrite);
 
-        OdInt8 k = 253;
+        OdUInt8 k = 253;
 
-        OdInt8 red = 0, green = 0, blue = 0;
+        OdUInt8 red = 0, green = 0, blue = 0;
 
         getRGBColor(red, green, blue, pEn);
    
-        if (green > k && red > k && blue > k)
+        if (green  > k && red > k && blue > k)
         {
-            
             pEn->setLayer(layer);
             pEn->setColor(color);
         }
     }
 }
 
-void getRGBColor(OdInt8 & red, OdInt8& green, OdInt8& blue, OdDbEntityPtr pEn)
+void getRGBColor(OdUInt8 & red, OdUInt8& green, OdUInt8& blue, OdDbEntityPtr pEn)
 {
     OdCmEntityColor color = pEn->entityColor();
 
@@ -408,7 +408,7 @@ void getRGBColor(OdInt8 & red, OdInt8& green, OdInt8& blue, OdDbEntityPtr pEn)
 
 
 
-void getRGBColor(OdInt8& red, OdInt8& green, OdInt8& blue, OdCmEntityColor color)
+void getRGBColor(OdUInt8& red, OdUInt8& green, OdUInt8& blue, OdCmEntityColor color)
 {
     if (color.isByColor())
     {
@@ -423,6 +423,9 @@ void getRGBColor(OdInt8& red, OdInt8& green, OdInt8& blue, OdCmEntityColor color
         red = ODGETRED(rgb);  green = ODGETGREEN(rgb);  blue = ODGETBLUE(rgb);
     }
 }
+
+OdDbObjectId greate_testBlock(OdDbDatabasePtr pDb);
+void addEntitys(OdDbObjectId block_id);
 
 void _CopyLines_func(OdEdCommandContext* pCmdCtx)
 {
@@ -446,11 +449,110 @@ void _CopyLines_func(OdEdCommandContext* pCmdCtx)
     OdDbObjectId layer_2 = greateLayer_2(pDb_2, pIO);
 
     updateEntitys(pCopyLines_ID, layer_2);
+    OdDbObjectId testBlock_ID = greate_testBlock(pDb_2);
 
+    addEntitys(testBlock_ID);
 
     OdDb::SaveType fileType = OdDb::kDwg;
     OdDb::DwgVersion outVer = OdDb::vAC24;
 
     pDb_2->writeFile(fname, fileType, outVer);
     pDb_2.release();
+}
+
+
+
+OdDbObjectId greate_testBlock(OdDbDatabasePtr pDb)
+{
+    OdDbBlockTablePtr       blocks = pDb->getBlockTableId().safeOpenObject(OdDb::kForWrite);
+    OdDbBlockTableRecordPtr pMS = pDb->getModelSpaceId().safeOpenObject(OdDb::kForWrite);
+
+    OdDbBlockTableRecordPtr testBlock = OdDbBlockTableRecord::createObject();
+
+    testBlock->setName("testBlock");
+
+
+    OdDbObjectId testBlock_ID = blocks->add(testBlock);
+
+    OdDbBlockReferencePtr pBlkRef = OdDbBlockReference::createObject();
+    pBlkRef->setDatabaseDefaults(pDb);
+
+    OdDbObjectId brefId = pMS->appendOdDbEntity(pBlkRef);
+
+    pBlkRef->setBlockTableRecord(testBlock->objectId());
+
+    return brefId;
+
+}
+
+#include "DbLeader.h"
+#include "DbMText.h"
+
+void addEntitys(OdDbObjectId block_id)
+{
+    OdDbBlockReferencePtr blck_ref = block_id.safeOpenObject(OdDb::kForWrite);
+    OdDbBlockTableRecordPtr testBlock = blck_ref->blockId().safeOpenObject(OdDb::kForRead);
+
+    OdDbArcPtr pArc1 = OdDbArc::createObject();
+    OdDbArcPtr pArc2 = OdDbArc::createObject();
+
+    testBlock->appendOdDbEntity(pArc1);
+    testBlock->appendOdDbEntity(pArc2);
+
+    OdGePoint3d center1(0, 0, 0);
+    OdGePoint3d center2 = center1;
+
+    double k = 2;
+    double r1 = 40;
+    double r2 = k * r1;
+
+    pArc1->setCenter(center1);
+    pArc1->setRadius(r1);
+    pArc1->setStartAngle(OdaToRadian(90));
+    pArc1->setEndAngle(OdaToRadian(360));
+
+    pArc2->setCenter(center2);
+    pArc2->setRadius(r2);
+
+    OdDbLeaderPtr pLeader = OdDbLeader::createObject();
+    pLeader->setToStraightLeader();
+
+    testBlock->appendOdDbEntity(pLeader);
+
+
+    OdGePoint3d point_start = center1;
+    point_start.x += r1;
+
+    double k2 = 1.5;
+
+    OdGePoint3d point_middle = center1;
+    point_middle.x += r2 + k;
+    point_middle.y += r1 / k;
+
+    OdGePoint3d point_end = point_middle;
+    point_end.x += k2;
+
+    pLeader->appendVertex(point_start);
+    pLeader->appendVertex(point_middle);
+    pLeader->appendVertex(point_end);
+
+    OdGePoint3d point = OdGePoint3d(0, 0, 0);
+    OdDbMTextPtr pMText = OdDbMText::createObject();
+
+    OdDbObjectId mTextId = testBlock->appendOdDbEntity(pMText);
+
+    pMText->setLocation(point);
+    pMText->setAttachment(OdDbMText::kMiddleLeft);
+
+    pMText->setContents(OD_T("Trim #2"));
+
+    pLeader->attachAnnotation(mTextId);
+    pLeader->enableArrowHead();
+    pLeader->setDimtad(0);
+    pLeader->setDimgap(0.3);
+
+
+    OdCmColor color;
+    color.setRGB(0, 0, 180);
+    pLeader->setDimclrd(color);
 }
