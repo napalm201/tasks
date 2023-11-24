@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\Commands.cpp" />
     <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\ExEclipse.cpp" />
+    <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\OdDbEclipseGripPointsPe.cpp" />
     <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\stdAfx.cpp" />
     <ClCompile Include="..\..\..\..\..\Core\Examples\TaskCommands\TaskCommandsModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\ExEclipse.h" />
+    <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\OdDbEclipseGripPointsPe.h" />
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\stdAfx.h" />
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\TaskCmdDef.h" />
     <ClInclude Include="..\..\..\..\..\Core\Examples\TaskCommands\TaskCommandsModule.h" />
@@ -91,10 +93,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>;D:\rabota\Teigha_vc14_amd64dlldbg_\Core\Examples\TaskCommands</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,11 +122,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>UNICODE;_UNICODE;_CRT_SECURE_NO_DEPRECATE;WIN64;_WIN64;_WINDOWS;_CRT_NOFORCE_MANIFEST;_STL_NOFORCE_MANIFEST;_DEBUG;_CRTDBG_MAP_ALLOC;EXCOMMANDS_DLL_EXPORTS;ODA_LINT;_TOOLKIT_IN_DLL_;CMAKE_INTDIR="Debug";MTest_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\..\Core\Extensions\DbConstraints;..\..\..\..\..\Core\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\Core\Extensions\DbConstraints;..\..\..\..\..\Core\Include;D:\rabota\Teigha_vc14_amd64dlldbg_\Core\Examples\TaskCommands</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <Optimization>Disabled</Optimization>
