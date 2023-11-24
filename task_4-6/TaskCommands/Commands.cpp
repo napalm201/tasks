@@ -277,12 +277,18 @@ OdDbObjectId greateLayer_2(OdDbDatabasePtr pDb, OdDbUserIO* pIO)
 
     OdString fname = pIO->getFilePath(OD_T("Enter lin file name :"));
 
-    pDb->loadLineTypeFile("*осевая", fname);
+    pDb->loadLineTypeFile("*", fname, OdDb::kDltReplace);
 
     OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
-    OdDbObjectId pLinetype_ID = pLinetypes->getAt("*осевая");
 
-    pLayer->setLinetypeObjectId(pLinetype_ID);
+    OdDbSymbolTableIteratorPtr newIterator = pLinetypes->newIterator();
+
+    for (; !newIterator->done(); newIterator->step())
+    {
+       
+        pIO->putString("tl");
+    }
+
 
     OdDbObjectId layerId = pLayers->add(pLayer); 
 
@@ -492,10 +498,7 @@ void addEntitys(OdDbObjectId block_id)
     OdDbBlockReferencePtr blck_ref = block_id.safeOpenObject(OdDb::kForWrite);
     OdDbBlockTableRecordPtr testBlock = blck_ref->blockTableRecord().safeOpenObject(OdDb::kForWrite);
 
-    testBlock->setExplodable(true);
-
     OdDbDatabasePtr pDb = blck_ref->database();
-   
 
     OdDbArcPtr pArc = OdDbArc::createObject();
     OdDbCirclePtr pCircle = OdDbCircle::createObject();
@@ -540,26 +543,23 @@ void addEntitys(OdDbObjectId block_id)
     testBlock->appendOdDbEntity(pLeader);
 
     OdDbMTextPtr pMText = OdDbMText::createObject();
+    pMText->setDatabaseDefaults(pDb);
     OdDbObjectId mTextId = testBlock->appendOdDbEntity(pMText);
     
-    pMText->setDatabaseDefaults(pDb);
 
     pMText->setLocation(point_annotation);
     pMText->setContents(OD_T("Trim #2"));
+    pMText->setWidth(wT);
+    pMText->setHeight(hT);
+    pMText->setTextHeight(hT);
 
     pLeader->appendVertex(point_start);
     pLeader->appendVertex(point_end);
     pLeader->setDimscale(40);
     pLeader->setDimtad(0);
     pLeader->attachAnnotation(mTextId);
-
-    pMText->setWidth(wT);
-    pMText->setHeight(hT);
-    pMText->setTextHeight(hT);
-
     pLeader->enableArrowHead();
     pLeader->setLineWeight(OdDb::kLnWt040);
- 
     pLeader->setDimclrd(color_leader);
 
     blck_ref->setPosition(OdGePoint3d(200, 0, 0));
