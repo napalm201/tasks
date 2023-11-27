@@ -6,7 +6,7 @@
 #include <DbLayerTableRecord.h>
 #include "DbBlockTableRecord.h"
 #include "DbBlockReference.h"
-#include "DbArc.h"
+
 
 void _SaveDedicatedObjToFile_func(OdEdCommandContext* pCmdCtx)
 {
@@ -462,8 +462,7 @@ void _CopyLines_func(OdEdCommandContext* pCmdCtx)
 
 
 #include "DbLeader.h"
-#include "DbMText.h"
-#include "DbText.h"
+
 
 OdDbObjectId greate_testBlock(OdDbDatabasePtr pDb)
 {
@@ -490,47 +489,56 @@ OdDbObjectId greate_testBlock(OdDbDatabasePtr pDb)
 
 #include "DbTextStyleTable.h"
 #include "DbTextStyleTableRecord.h"
+#include "DbPolyLine.h"
+#include "DbArc.h"
+#include "DbMText.h"
+#include "DbText.h"
+#include "Db3dPolylineVertex.h"
+#include "Db3dPolyline.h"
 
 void addEntitys(OdDbObjectId block_id)
 {
     OdDbBlockReferencePtr blck_ref = block_id.safeOpenObject(OdDb::kForWrite);
     OdDbBlockTableRecordPtr testBlock = blck_ref->blockTableRecord().safeOpenObject(OdDb::kForWrite);
-
     OdDbDatabasePtr pDb = blck_ref->database();
+
+    OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
+    OdDbObjectId linetypeID = pLinetypes->getAt("штриховая");
+    OdDbLinetypeTableRecordPtr linetype = linetypeID.safeOpenObject(OdDb::kForWrite);
 
     OdDbTextStyleTablePtr pStyles = pDb->getTextStyleTableId().safeOpenObject(OdDb::kForWrite);
     OdDbTextStyleTableRecordPtr pStyleAnotation = OdDbTextStyleTableRecord::createObject();
-
     pStyleAnotation->setName("anotationtextsyle");
     pStyleAnotation->setFont(OD_T("Calibri"), false, false, 0, 3);
     OdDbObjectId pStyleId = pStyles->add(pStyleAnotation);
 
 
-
+    //Arc
     OdDbArcPtr pArc = OdDbArc::createObject();
-    OdDbCirclePtr pCircle = OdDbCircle::createObject();
-
-    pArc->setDatabaseDefaults(pDb); pCircle->setDatabaseDefaults(pDb);
-
     testBlock->appendOdDbEntity(pArc);
-    testBlock->appendOdDbEntity(pCircle);
 
     OdGePoint3d center1(0, 0, 0);
-    OdGePoint3d center2 = center1;
-
-    double k = 2;
     double r1 = 40;
-    double r2 = k * r1;
 
     pArc->setCenter(center1);
     pArc->setRadius(r1);
     pArc->setStartAngle(OdaToRadian(90));
     pArc->setEndAngle(OdaToRadian(360));
 
+
+    //Circle
+    OdDbCirclePtr pCircle = OdDbCircle::createObject();
+    testBlock->appendOdDbEntity(pCircle);
+
+    double r2 = 2 * r1;
+    OdGePoint3d center2 = center1;
+
     pCircle->setCenter(center2);
     pCircle->setRadius(r2);
 
 
+
+    //Leader
     OdDbLeaderPtr pLeader = OdDbLeader::createObject();
     testBlock->appendOdDbEntity(pLeader);
 
@@ -545,7 +553,6 @@ void addEntitys(OdDbObjectId block_id)
     color_leader.setRGB(128, 166, 255);
 
     OdDbMTextPtr pMText = OdDbMText::createObject();
-    pMText->setDatabaseDefaults(pDb);
     OdDbObjectId mTextId = testBlock->appendOdDbEntity(pMText);
 
     double wT = 15;
@@ -572,6 +579,7 @@ void addEntitys(OdDbObjectId block_id)
     pLeader->setColor(color_leader);
 
 
+    //line
     OdDbLinePtr pline = OdDbLine::createObject();
     testBlock->appendOdDbEntity(pline);
 
@@ -582,31 +590,88 @@ void addEntitys(OdDbObjectId block_id)
     OdCmColor color_line;
     color_line.setRGB(180, 0, 0);
 
-    OdDbLinetypeTablePtr pLinetypes = pDb->getLinetypeTableId().safeOpenObject(OdDb::kForRead);
-    OdDbObjectId linetypeID = pLinetypes->getAt("штриховая");
-
-    OdDbLinetypeTableRecordPtr linetype = linetypeID.safeOpenObject(OdDb::kForWrite);
-
-    linetype->setDashLengthAt(0, 3);
-
     pline->setStartPoint(pointln_start);
     pline->setEndPoint(pointln_end);
     pline->setLineWeight(OdDb::kLnWt100);
     pline->setColor(color_line);
     pline->setLinetype(linetype->id());
 
+
+    //text
     OdDbTextPtr ptext = OdDbText::createObject();
     testBlock->appendOdDbEntity(ptext);
 
     OdGePoint3d pointtx = pointln_end;
     pointtx.y += 3;
 
-
     ptext->setTextString("Center");
     ptext->setHeight((r2 - r1) / 4.5);
     ptext->setPosition(pointtx);
     ptext->setColor(color_line);
 
+
+
+    //polyline
+    OdDb3dPolylinePtr polyline = OdDb3dPolyline::createObject();
+    testBlock->appendOdDbEntity(polyline);
+
+    double wh = 5;
+
+    OdGePoint3d v0 = center1;
+    v0.y += r1 + wh / 2;
+
+    OdGePoint3d v1 = v0;
+    v1.x -= wh / 2;
+
+    OdGePoint3d v2 = v1;
+    v2.y -= wh;
+
+    OdGePoint3d v3 = v2;
+    v3.x += wh;
+
+    OdGePoint3d v4 = v3;
+    v4.y += wh;
+
+    OdGePoint3d v5 = v0;
+    v5.y += r2 - r1 + 10;
+
+    OdGePoint3d v6 = v5;
+    v6.x += r2 - r1;
+
+    OdDb3dPolylineVertexPtr vertex0 = OdDb3dPolylineVertex::createObject();
+    vertex0->setPosition(v0);
+
+    OdDb3dPolylineVertexPtr vertex1 = OdDb3dPolylineVertex::createObject();
+    vertex1->setPosition(v1);
+
+    OdDb3dPolylineVertexPtr vertex2 = OdDb3dPolylineVertex::createObject();
+    vertex2->setPosition(v2);
+
+    OdDb3dPolylineVertexPtr vertex3 = OdDb3dPolylineVertex::createObject();
+    vertex3->setPosition(v3);
+
+    OdDb3dPolylineVertexPtr vertex4 = OdDb3dPolylineVertex::createObject();
+    vertex4->setPosition(v4);
+
+    OdDb3dPolylineVertexPtr vertex5 = OdDb3dPolylineVertex::createObject();
+    vertex5->setPosition(v5);
+
+    OdDb3dPolylineVertexPtr vertex6 = OdDb3dPolylineVertex::createObject();
+    vertex6->setPosition(v6);
+
+    OdCmColor color_polyline;
+    color_polyline.setRGB(0, 250, 0);
+
+    polyline->appendVertex(vertex0); polyline->appendVertex(vertex1);
+    polyline->appendVertex(vertex2); polyline->appendVertex(vertex3);
+    polyline->appendVertex(vertex4); polyline->appendVertex(vertex0);
+    polyline->appendVertex(vertex5); polyline->appendVertex(vertex6);
+
+    polyline->setColor(color_polyline);
+
+
+
+    //text2
     blck_ref->setPosition(OdGePoint3d(300, 0, 0));
 }
 
