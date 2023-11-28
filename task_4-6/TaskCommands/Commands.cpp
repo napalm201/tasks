@@ -508,9 +508,11 @@ void addEntitys(OdDbObjectId block_id)
 
     OdDbTextStyleTablePtr pStyles = pDb->getTextStyleTableId().safeOpenObject(OdDb::kForWrite);
     OdDbTextStyleTableRecordPtr pStyleAnotation = OdDbTextStyleTableRecord::createObject();
+
     pStyleAnotation->setName("anotationtextsyle");
     pStyleAnotation->setFont(OD_T("Calibri"), false, false, 0, 3);
-    OdDbObjectId pStyleId = pStyles->add(pStyleAnotation);
+
+    OdDbObjectId pStyleAnotationID = pStyles->add(pStyleAnotation);
 
 
     //Arc
@@ -552,34 +554,43 @@ void addEntitys(OdDbObjectId block_id)
     OdCmColor color_leader;
     color_leader.setRGB(128, 166, 255);
 
-    OdDbMTextPtr pMText = OdDbMText::createObject();
-    OdDbObjectId mTextId = testBlock->appendOdDbEntity(pMText);
-
-    double wT = 15;
-    double hT = 2;
-
-    OdGePoint3d point_annotation = pointld_end;
-    point_annotation.x += wT + 0.1 * wT;
-
-    pMText->setLocation(point_annotation);
-    pMText->setContents(OD_T("Trim #2"));
-    pMText->setWidth(wT);
-    pMText->setTextHeight(hT);
-    pMText->setAttachment(OdDbMText::kMiddleLeft);
-    pMText->setColor(color_leader);
-    pMText->setTextStyle(pStyleId);
-
     pLeader->appendVertex(pointld_start);
     pLeader->appendVertex(pointld_end);
     pLeader->setDimscale(40);
     pLeader->setDimtad(0);
-    pLeader->attachAnnotation(mTextId);
     pLeader->enableArrowHead();
     pLeader->setLineWeight(OdDb::kLnWt100);
     pLeader->setColor(color_leader);
 
 
-    //line
+
+    //Text Anotation 1
+    OdDbMTextPtr ptext1 = OdDbMText::createObject();
+    OdDbObjectId ptext1ID = testBlock->appendOdDbEntity(ptext1);
+
+
+    OdCmColor color_tx1 = color_leader;
+
+    double wTx1 = 15;
+    double hTx1 = 2;
+    double txoffen = 0.1 * wTx1;
+
+    OdGePoint3d point_tx1 = pointld_end;
+    point_tx1.x += txoffen;
+
+    ptext1->setLocation(point_tx1);
+    ptext1->setContents(OD_T("Trim #2"));
+    ptext1->setTextHeight(hTx1);
+    ptext1->setAttachment(OdDbMText::kMiddleLeft);
+    ptext1->setColor(color_tx1);
+    ptext1->setTextStyle(pStyleAnotationID);
+
+    pLeader->attachAnnotation(ptext1ID);
+
+    
+
+
+    //Line
     OdDbLinePtr pline = OdDbLine::createObject();
     testBlock->appendOdDbEntity(pline);
 
@@ -597,21 +608,25 @@ void addEntitys(OdDbObjectId block_id)
     pline->setLinetype(linetype->id());
 
 
-    //text
-    OdDbTextPtr ptext = OdDbText::createObject();
-    testBlock->appendOdDbEntity(ptext);
+    //Text Anotation 2
+    OdDbTextPtr ptext2 = OdDbText::createObject();
+    testBlock->appendOdDbEntity(ptext2);
 
-    OdGePoint3d pointtx = pointln_end;
-    pointtx.y += 3;
+    OdCmColor color_tx2 = color_leader;
 
-    ptext->setTextString("Center");
-    ptext->setHeight((r2 - r1) / 4.5);
-    ptext->setPosition(pointtx);
-    ptext->setColor(color_line);
+    OdGePoint3d point_tx2 = pointln_end;
+    point_tx2.y += 3;
+
+    double hTx2 = (r2 - r1) / 4.5;
+
+    ptext2->setTextString("Center");
+    ptext2->setHeight(hTx2);
+    ptext2->setPosition(point_tx2);
+    ptext2->setColor(color_line);
 
 
 
-    //polyline
+    //Polyline
     OdDb3dPolylinePtr polyline = OdDb3dPolyline::createObject();
     testBlock->appendOdDbEntity(polyline);
 
@@ -671,7 +686,23 @@ void addEntitys(OdDbObjectId block_id)
 
 
 
-    //text2
+    //Text Anotation 3
+    OdDbTextPtr ptext3 = OdDbText::createObject();
+    testBlock->appendOdDbEntity(ptext3);
+
+    OdCmColor color_tx3;
+    color_tx3.setRGB(250, 250, 250);
+
+    OdGePoint3d point_tx3 = v6;
+    point_tx3.x += txoffen;
+    point_tx3.y -= hTx1 / 2 ;
+
+    ptext3->setTextString("Trim #1");
+    ptext3->setPosition(point_tx3);
+    ptext3->setHeight(hTx1);
+    ptext3->setTextStyle(pStyleAnotationID);
+    ptext3->setColor(color_tx3);
+
     blck_ref->setPosition(OdGePoint3d(300, 0, 0));
 }
 
